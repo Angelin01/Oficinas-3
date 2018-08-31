@@ -1,0 +1,3 @@
+https://pypi.org/project/PySoundFile/
+
+https://www.raspberrypi.org/blog/accelerating-fourier-transforms-using-the-gpu/
