@@ -3,6 +3,9 @@ import numpy as np
 import scipy.fftpack
 import matplotlib.pyplot as plt
 
+from FrequencyAnalyzer import FrequencyAnalyzer
+
+
 class SoundAnalyzer():
 
 
@@ -33,15 +36,16 @@ class SoundAnalyzer():
 
 			music_samples = music_data[samples_position : samples_position + self.NUMBER_OF_SAMPLES]
 
-			fourier_amplitudes = scipy.fftpack.fft(music_samples)
+			fourier_amplitudes = FrequencyAnalyzer.calculateFFT(music_samples, using_scipy=True)
+
 			fourier_points = np.linspace(0.0, 1.0 / (2.0*sample_spacing), self.NUMBER_OF_SAMPLES // 2)
 
 			printable_x = fourier_points[:self.NUMBER_OF_SAMPLES // 2]
 			printable_y = fourier_amplitudes[:self.NUMBER_OF_SAMPLES // 2]
 
-			indexes_to_get = [1,2,5,8,10,12,15,18,20,25,30,35,40,50,60,75,90,100,150,200,250,300,375,450]
-			printable_x = list(printable_x[indexes_to_get])
-			printable_y = list(printable_y[indexes_to_get])
+			# indexes_to_get = [1,2,5,8,10,12,15,18,20,25,30,35,40,50,60,75,90,100,150,200,250,300,375,450]
+			# printable_x = list(printable_x[indexes_to_get])
+			# printable_y = list(printable_y[indexes_to_get])
 
 			self.plot(printable_x, printable_y)
 
