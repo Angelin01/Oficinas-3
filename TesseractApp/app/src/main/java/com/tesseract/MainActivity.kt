@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
-import android.arch.lifecycle.ViewModelProvider
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +32,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.nav_about -> {
                     setFragment(AboutFragment() as Fragment)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.nav_connections-> {
+                    setFragment(ConnectionsFragment() as Fragment)
                     return@setOnNavigationItemSelectedListener true
                 }
                 else -> {

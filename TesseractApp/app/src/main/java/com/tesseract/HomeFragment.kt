@@ -70,7 +70,7 @@ class HomeFragment : Fragment() {
         }
 
         val seekBar: SeekBar = view.findViewById(R.id.seekMusicProgress)
-        seekBar.setOnTouchListener { v, event -> true }
+        seekBar.setOnTouchListener { _, _ -> true }
 
         return view
     }

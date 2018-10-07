@@ -18,9 +18,9 @@
         android:title="@string/Spotify" />
 
     <item
-        android:id="@+id/nav_outro"
-        android:icon="@drawable/ic_launcher_background"
-        android:title="outro" />
+        android:id="@+id/nav_connections"
+        android:icon="@drawable/ic_bluetooth"
+        android:title="Connections" />
 
     <item
         android:id="@+id/nav_about"

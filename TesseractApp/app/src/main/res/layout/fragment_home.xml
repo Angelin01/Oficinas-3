@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/homeBluetoothStatus"
         app:srcCompat="@mipmap/ic_launcher"
         tools:src="@tools:sample/avatars" />
 
@@ -47,7 +47,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <RelativeLayout
-        android:id="@+id/relativeLayout2"
+        android:id="@+id/homeBluetoothStatus"
         android:layout_width="wrap_content"
         android:layout_height="33dp"
         android:background="@color/secondaryColor"
@@ -57,7 +57,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageVIewBluetoothConnection"
             android:layout_width="wrap_content"
             android:layout_height="28dp"
             android:layout_alignParentEnd="true"
@@ -68,17 +68,17 @@
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:src="@drawable/ic_wifi" />
+            android:src="@drawable/ic_bluetooth" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textViewBluetoothConnection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="5dp"
-            android:layout_toStartOf="@+id/imageView3"
+            android:layout_toStartOf="@+id/imageVIewBluetoothConnection"
             android:contentDescription="TOdo"
             android:text="@string/home_tesseract_status_connection"
             android:textAlignment="center"
