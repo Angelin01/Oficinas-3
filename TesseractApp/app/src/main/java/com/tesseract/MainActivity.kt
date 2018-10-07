@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
+import android.arch.lifecycle.ViewModelProvider
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val mMainNav: BottomNavigationView = findViewById<BottomNavigationView>(R.id.home_nav_bar)
+        val mMainNav: BottomNavigationView = findViewById(R.id.home_nav_bar)
 
         setFragment(HomeFragment() as Fragment)
 
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         transaction.replace(R.id.home_view_frame, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
-
     }
+
+
 }

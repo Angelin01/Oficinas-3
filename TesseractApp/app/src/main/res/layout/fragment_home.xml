@@ -7,76 +7,20 @@
     android:background="@color/colorPrimary"
     tools:context=".HomeFragment">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout3"
-        android:layout_width="215dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="40dp"
-        android:background="@color/Commands"
+    <ImageView
+        android:id="@+id/imageViewMusicCover"
+        android:layout_width="0dp"
+        android:layout_height="299dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="39dp"
+        android:contentDescription="TODO"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
-
-        <ImageButton
-            android:id="@+id/button2"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="0dp"
-            android:contentDescription="TODO"
-            android:padding="0dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_play_previous"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/button5"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="0dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:contentDescription="TODO"
-            android:padding="0dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_play"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.33" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="142dp" />
-
-        <ImageButton
-            android:id="@+id/imageButton"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_play_next"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.111"
-            app:layout_constraintStart_toStartOf="@+id/guideline4"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </android.support.constraint.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
+        app:srcCompat="@mipmap/ic_launcher"
+        tools:src="@tools:sample/avatars" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline3"
@@ -84,45 +28,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.114583336" />
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout2"
-        android:layout_width="0dp"
-        android:layout_height="93dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/Commands"
-        app:layout_constraintEnd_toStartOf="@+id/guideline5"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/guideline7">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="82dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:contentDescription="TODO"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/ic_launcher"
-            tools:src="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="0dp"
-            android:layout_height="27dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Musica" />
-    </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline5"
@@ -135,38 +40,34 @@
         android:id="@+id/guideline7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="39dp"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.24" />
-
-    <SeekBar
-        android:id="@+id/seekBar"
-        style="@android:style/Widget.Material.SeekBar.Discrete"
-        android:layout_width="185dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="32dp"
-        android:progressBackgroundTint="@color/design_default_color_primary_dark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+        app:layout_constraintEnd_toStartOf="@+id/imageViewMusicCover"
+        app:layout_constraintGuide_percent="0.24"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <RelativeLayout
-        android:layout_width="273dp"
-        android:layout_height="41dp"
-        android:background="@color/Commands"
+        android:id="@+id/relativeLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="33dp"
+        android:background="@color/secondaryColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="56dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="28dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:src="@drawable/ic_wifi" />
 
         <TextView
@@ -178,9 +79,152 @@
             android:layout_marginStart="12dp"
             android:layout_marginEnd="5dp"
             android:layout_toStartOf="@+id/imageView3"
-            android:contentDescription="'"
-            android:text="Status Tesseract"
-            android:textAlignment="center" />
+            android:contentDescription="TOdo"
+            android:text="@string/home_tesseract_status_connection"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="0dp"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:padding="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/buttonPlayShuffle"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="51dp"
+            android:layout_height="51dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="23dp"
+            android:layout_toStartOf="@+id/buttonPlayPrevious"
+            android:contentDescription="TODO"
+            android:padding="0dp"
+            android:scaleType="centerCrop"
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+            android:src="@drawable/ic_play_shuffle" />
+
+        <ImageButton
+            android:id="@+id/buttonPlayPrevious"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="51dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="23dp"
+            android:layout_toStartOf="@+id/buttonPlay"
+            android:contentDescription="TODO"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+            android:src="@drawable/ic_play_previous" />
+
+        <ImageButton
+            android:id="@+id/buttonPlay"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="TODO"
+            android:padding="0dp"
+            android:scaleType="centerCrop"
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+            android:src="@drawable/ic_play" />
+
+        <ImageButton
+            android:id="@+id/buttonPlayNext"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@+id/buttonPlayShuffle"
+            android:layout_marginStart="24dp"
+            android:layout_toEndOf="@+id/buttonPlay"
+            android:contentDescription="TODO"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+            android:src="@drawable/ic_play_next" />
+
+        <ImageButton
+            android:id="@+id/buttonVolume"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="22dp"
+            android:layout_toEndOf="@+id/buttonPlayNext"
+            android:contentDescription="TODO"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play_volume" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textViewMusicName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Music Name"
+        android:textColor="@color/Commands"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewMusicCover" />
+
+    <TextView
+        android:id="@+id/textViewMusicBand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Music Artist"
+        android:textColor="@color/Commands"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMusicName" />
+
+    <SeekBar
+        android:id="@+id/seekMusicProgress"
+        style="@android:style/Widget.Material.SeekBar"
+        android:layout_width="230dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="16dp"
+        android:enabled="false"
+        android:max="10"
+        android:progress="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewMusicBand" />
+
+    <FrameLayout
+        android:layout_width="40dp"
+        android:layout_height="100dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="64dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <SeekBar
+            android:id="@+id/seekVolume"
+            style="@android:style/Widget.Material.SeekBar"
+            android:layout_width="110dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:max="100"
+            android:progress="50"
+            android:rotation="270" />
+
+    </FrameLayout>
+
 
 </android.support.constraint.ConstraintLayout>
