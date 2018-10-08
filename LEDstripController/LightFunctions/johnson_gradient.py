@@ -1,4 +1,5 @@
-from LightFunctions.gradient import gen_hue_gradient
+from .gradient import gen_hue_gradient
+
 
 def gen_johnson_gradient(start_hue: int, end_hue: int, intensity: int, n_leds, gradient_backwards: bool = False,
                          full_ring: bool = True):
@@ -35,3 +36,15 @@ def gen_johnson_gradient(start_hue: int, end_hue: int, intensity: int, n_leds, g
         johnson_gradient.extend(johnson_gradient[-2::-1])
 
     return johnson_gradient
+
+
+def johnson_gradient_update_all(values_sequence, step, __):
+    """
+    Updater used by the controller to get the next step in a johnson_gradient value sequence.
+    Ignores the regular n_leds parameter, since it the gen_johnson_gradient already uses it
+    :param values_sequence: a johnson_gradient value sequence.
+    :param step: Which of the values to return in the sequence.
+    :param __: Normally the number of LEDs. Not used, for compatibility purposes only.
+    :return:
+    """
+    return values_sequence[step]
