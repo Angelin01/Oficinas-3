@@ -34,17 +34,13 @@ class TimedLightShow(threading.Thread):
         self.spi.open(0, 0)
 
     def run(self):
-
         step = 0
 
         while True:
-
             result = self.ref_function(self.sequence, step, self.n_led)
-
             ws2812.write2812(self.spi, result)
 
             time.sleep(self.interval)
-
             step = (step + 1) % self.sequence_len
 
             if self.stop_event.is_set():

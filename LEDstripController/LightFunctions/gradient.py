@@ -44,7 +44,7 @@ def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int,
     return gradient_colors
 
 
-def handler_update_all(values_sequence, step, n_led):
+def hue_gradient_update_all(values_sequence, step, n_led):
     return values_sequence[step] * n_led
 
 
