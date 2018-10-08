@@ -1,7 +1,7 @@
 from color import Color, ColorMode
 
 
-def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, gradient_dir: int, intensity: int):
+def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int, gradient_backwards: bool = False):
     """
     Generates an iterator to make the transition from start_hue to end_hue with certain speed for n_leds.
     The color wheel is a cycle, so if end_hue is less than start_hue, it will loop.
@@ -9,14 +9,14 @@ def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, gradient_dir: i
     :param start_hue: A value between 0 and 360 representing the color wheel.
     :param end_hue: A value between 0 and 360 representing the color wheel.
     :param speed: The speed of the gradient change.
-    :param gradient_dir: An int to say if the gradient goes from start to end or the contrary.
-    :param intensity: The intensity value in which the gradient occurs.
+    :param gradient_backwards: A bool to say if the gradient goes forward (from start to end if False) or the contrary.
+    :param intensity: The intensity value from 0 to 1 in which the gradient occurs.
     """
 
     if end_hue - start_hue < 0:
         end_hue += 360
 
-    if gradient_dir == 0:
+    if not gradient_backwards:
         gradient_inc = speed
     else:
         gradient_inc = -speed
@@ -26,7 +26,7 @@ def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, gradient_dir: i
 
     hue_steps = []
 
-    if gradient_dir == 0:
+    if not gradient_backwards:
         while current_hue <= end_hue:
             hue_steps.append(current_hue % 360)
             current_hue += gradient_inc

@@ -1,19 +1,17 @@
 import colorsys
-
+from enum import Enum
 
 # Methods for color processing.
 # Offers methods to transform between RGB and HSL color spaces.
 
 # All channels in both RGB and HSL are represented between 0 and 1.
 
-class ColorMode:
-    
+class ColorMode(Enum):
     RGB = 0
     HSL = 1
 
 
 class Color:
-
     def __init__(self, c1, c2, c3, color_mode=ColorMode.RGB):
         """
         :param c1: Color channel 1 - R when color_mode == RGB; H when color_mode == HSL
