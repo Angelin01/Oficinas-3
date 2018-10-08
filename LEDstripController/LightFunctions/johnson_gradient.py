@@ -1,4 +1,4 @@
-from .gradient import gen_hue_gradient
+from LightFunctions.gradient import gen_hue_gradient
 
 def gen_johnson_gradient(start_hue: int, end_hue: int, intensity: int, n_leds, gradient_backwards: bool = False,
                          full_ring: bool = True):
@@ -14,4 +14,24 @@ def gen_johnson_gradient(start_hue: int, end_hue: int, intensity: int, n_leds, g
                       it will stop when all LEDs are on
     :return:
     """
-    pass
+
+    start_hue %= 360
+    end_hue %= 360
+    if gradient_backwards:
+        start_hue, end_hue = end_hue, start_hue
+
+    gradient_colors = gen_hue_gradient(start_hue, end_hue, (end_hue-start_hue)/(n_leds-1), intensity)
+
+    johnson_gradient = []
+    for i in range(n_leds):
+        step = []
+        counter = 0
+        for gc in gradient_colors:
+            step.append(gc) if counter < i else step.append((0, 0, 0))
+            counter += 1
+        johnson_gradient.append(step)
+
+    if full_ring:
+        johnson_gradient.extend(johnson_gradient[-2::-1])
+
+    return johnson_gradient
