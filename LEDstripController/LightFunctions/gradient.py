@@ -16,6 +16,9 @@ def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int,
     if end_hue - start_hue < 0:
         end_hue += 360
 
+    elif start_hue == end_hue:
+        end_hue += 360
+
     if not gradient_backwards:
         gradient_inc = speed
     else:

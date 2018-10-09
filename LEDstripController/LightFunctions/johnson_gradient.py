@@ -8,7 +8,7 @@ class JohnsonType(Enum):
     REACH = 2
 
 
-def gen_johnson_gradient(start_hue: int, end_hue: int, intensity: int, n_leds, gradient_backwards: bool = False,
+def gen_johnson_gradient(start_hue: int, end_hue: int, intensity: int, n_leds: int, gradient_backwards: bool = False,
                          johnson_type: JohnsonType = JohnsonType.FULL_RING):
     """
     Generates a hue gradient but using a johnson counter, so that instead of changing colors the LEDs turn on/off
