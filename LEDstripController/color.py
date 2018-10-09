@@ -1,6 +1,7 @@
 import colorsys
 from enum import Enum
 
+
 # Methods for color processing.
 # Offers methods to transform between RGB and HSL color spaces.
 
@@ -75,15 +76,15 @@ class Color:
         """
         self.h, self.s, self.l = value
 
-	def get_ws2812_rgb(self, intensity):
-		"""
-		:return: A tuple of GRB values, the order used by the ws2812 strip, in a range between 0 and intensity.
-		"""
-		r = int(self.r * intensity)
-		g = int(self.g * intensity)
-		b = int(self.b * intensity)
+    def get_ws2812_rgb(self, intensity):
+        """
+        :return: A tuple of GRB values, the order used by the ws2812 strip, in a range between 0 and intensity.
+        """
+        r = int(self.r * intensity)
+        g = int(self.g * intensity)
+        b = int(self.b * intensity)
 
-		return g, r, b
+        return g, r, b
 
     def hsl_to_rgb(self):
         """

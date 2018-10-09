@@ -11,7 +11,7 @@ class TimedLightShow(threading.Thread):
     def __init__(self, ref_function, sequence, n_led, interval, duration):
         """
         :param ref_function: A reference to the function to be called.
-        :param args: The arguments to be passed to the function as a tuple.
+        :param sequence: The arguments to be passed to the function as a tuple.
         :param interval: The interval in seconds between function calls.
         :param duration: For how long the function will remain active.
         """
