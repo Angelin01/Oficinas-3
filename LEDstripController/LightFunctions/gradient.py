@@ -9,7 +9,7 @@ def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int,
     :param start_hue: A value between 0 and 360 representing the color wheel.
     :param end_hue: A value between 0 and 360 representing the color wheel.
     :param speed: The speed of the gradient change.
-    :param intensity: The intensity value in which the gradient occurs.
+    :param intensity: The intensity value in which the gradient occurs. Between 0 and 255.
     :param gradient_backwards: A bool to say if the gradient goes forward (from start to end if False) or the contrary.
     """
 
