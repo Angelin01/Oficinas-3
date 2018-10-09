@@ -23,7 +23,7 @@ def gen_johnson_gradient(start_hue: int, end_hue: int, intensity: int, n_leds: i
                          If JohnsonType.BEAT, the sequence will first go to the end lighting up the LEDs
                             and then go back to the start turning them off.
                          If JohnsonType.REACH, will light the LEDs until the end and then restart the sequence.
-    :return:
+    :return: an array of arrays of RGB color tuples for making a light show
     """
 
     start_hue %= 361
