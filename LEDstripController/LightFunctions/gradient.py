@@ -1,5 +1,9 @@
 from color import Color, ColorMode
+from math import ceil, floor
 
+
+_wave_values = [0.0, 0.3455, 0.6545, 0.9045, 1.0, 1.0, 1.0, 0.9045, 0.6545, 0.3455, 0.0]
+_wave_values_len = 11
 
 def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int, gradient_backwards: bool = False):
     """
@@ -11,6 +15,7 @@ def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int,
     :param speed: The speed of the gradient change.
     :param intensity: The intensity value in which the gradient occurs. Between 0 and 255.
     :param gradient_backwards: A bool to say if the gradient goes forward (from start to end if False) or the contrary.
+    :return: TODO
     """
 
     if end_hue - start_hue < 0:
@@ -48,4 +53,33 @@ def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int,
 
 
 def hue_gradient_update_all(values_sequence, step, n_led):
+    """
+    TODO
+    :param values_sequence: TODO
+    :param step: TODO
+    :param n_led: TODO
+    :return: TODO
+    """
     return values_sequence[step] * n_led
+
+
+def wave_gradient_update_all(values_sequence, step, n_led):
+    """
+    TODO
+    :param values_sequence: TODO
+    :param step: TODO
+    :param n_led: TODO
+    :return: TODO
+    """
+    if n_led < _wave_values_len:
+        raise ValueError("Number of LEDs is too small for wave, minimum is {}".format(_wave_values_len))
+
+    # Pads the available pre calculated sin values with 0s, to keep extra LEDs off
+    padded_wave = [0]*ceil((n_led - _wave_values_len)/2) + _wave_values + [0]*floor(ceil((n_led - _wave_values_len)/2))
+    # Shifts the padded wave according to the number of LEDs and what step we are on at the moment
+    padded_wave = padded_wave[-floor(n_led/values_sequence):] + padded_wave[:-floor(n_led/values_sequence)]
+
+    # TODO EXPLAIN THIS CRAZYNESS
+    return [(g*value, r*value, b*value)
+            for grb, value in zip(values_sequence[step] * n_led, padded_wave)
+            for g, r, b in grb]
