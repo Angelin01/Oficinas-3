@@ -11,7 +11,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
 
-class BluetoothService(private var mHandler: Handler) {
+class BluetoothService() {
 
     private var mNewState: Int = 0
     private val mAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
@@ -49,7 +49,7 @@ class BluetoothService(private var mHandler: Handler) {
         mNewState = mState
 
 //         Give the new mState to the Handler so the UI Activity can update
-//        mHandler.obtainMessage(Companion.MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget()
+//        mHandler.obtainMessage(MESSAGE_STATE_CHANGE, mNewState, -1).sendToTarget()
     }
 
     /**
@@ -127,11 +127,11 @@ class BluetoothService(private var mHandler: Handler) {
         mConnectedThread!!.start()
 
         // Send the name of the connected device back to the UI Activity
-        val msg = mHandler.obtainMessage(Companion.MESSAGE_DEVICE_NAME)
-        val bundle = Bundle()
-        bundle.putString(Companion.DEVICE_NAME, device.name)
-        msg.setData(bundle)
-        mHandler.sendMessage(msg)
+//        val msg = mHandler.obtainMessage(MESSAGE_DEVICE_NAME)
+//        val bundle = Bundle()
+//        bundle.putString(DEVICE_NAME, device.name)
+//        msg.data = bundle
+//        mHandler.sendMessage(msg)
         // Update UI title
         updateUserInterfaceTitle()
     }
@@ -182,11 +182,11 @@ class BluetoothService(private var mHandler: Handler) {
      */
     private fun connectionFailed() {
         // Send a failure message back to the Activity
-        val msg = mHandler.obtainMessage(MESSAGE_TOAST)
-        val bundle = Bundle()
-        bundle.putString(TOAST, "Unable to connect device")
-        msg.setData(bundle)
-        mHandler.sendMessage(msg)
+//        val msg = mHandler.obtainMessage(MESSAGE_TOAST)
+//        val bundle = Bundle()
+//        bundle.putString(TOAST, "Unable to connect device")
+//        msg.setData(bundle)
+//        mHandler.sendMessage(msg)
 
         mState = STATE_NONE
         // Update UI title
@@ -201,11 +201,11 @@ class BluetoothService(private var mHandler: Handler) {
      */
     private fun connectionLost() {
         // Send a failure message back to the Activity
-        val msg = mHandler.obtainMessage(MESSAGE_TOAST)
-        val bundle = Bundle()
-        bundle.putString(TOAST, "Device connection was lost")
-        msg.setData(bundle)
-        mHandler.sendMessage(msg)
+//        val msg = mHandler.obtainMessage(MESSAGE_TOAST)
+//        val bundle = Bundle()
+//        bundle.putString(TOAST, "Device connection was lost")
+//        msg.data = bundle
+//        mHandler.sendMessage(msg)
 
         mState = STATE_NONE
         // Update UI title
@@ -231,11 +231,11 @@ class BluetoothService(private var mHandler: Handler) {
             // Get a BluetoothSocket for a connection with the
             // given BluetoothDevice
             try {
-                if (secure) {
-                    tmp = mmDevice.createRfcommSocketToServiceRecord(
+                tmp = if (secure) {
+                    mmDevice.createRfcommSocketToServiceRecord(
                             MY_UUID_SECURE)
                 } else {
-                    tmp = mmDevice.createInsecureRfcommSocketToServiceRecord(
+                    mmDevice.createInsecureRfcommSocketToServiceRecord(
                             MY_UUID_INSECURE)
                 }
             } catch (e: IOException) {
@@ -328,8 +328,8 @@ class BluetoothService(private var mHandler: Handler) {
                     bytes = mmInStream!!.read(buffer)
 
                     // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
-                            .sendToTarget()
+//                    mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
+//                            .sendToTarget()
                 } catch (e: IOException) {
                     Log.e(TAG, "disconnected", e)
                     connectionLost()
@@ -349,8 +349,8 @@ class BluetoothService(private var mHandler: Handler) {
                 mmOutStream!!.write(buffer)
 
                 // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(MESSAGE_WRITE, -1, -1, buffer)
-                        .sendToTarget()
+//                mHandler.obtainMessage(MESSAGE_WRITE, -1, -1, buffer)
+//                        .sendToTarget()
             } catch (e: IOException) {
                 Log.e(TAG, "Exception during write", e)
             }
@@ -369,7 +369,7 @@ class BluetoothService(private var mHandler: Handler) {
 
     companion object {
 
-        private val TAG = "BluetoothService"
+        private const val TAG = "BluetoothService"
 
         // Unique UUID for this application
         private val MY_UUID_SECURE: UUID = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee")

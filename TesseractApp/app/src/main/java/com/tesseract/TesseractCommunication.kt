@@ -4,6 +4,8 @@ import com.google.gson.Gson
 
 object TesseractCommunication {
 
+    var bluetoothService: BluetoothService? = null
+
     val sampleMusics: String = "[\n" +
             "    {\n" +
             "      \"name\": \"'music 1'\",\n" +

@@ -13,8 +13,6 @@ class MusicController: ViewModel() {
     private val tesseralCommunication: TesseractCommunication = TesseractCommunication
     var music: Music? = null
 
-
-
     var musicIndex: Int = 0 // para testes
 
     init {
