@@ -2,7 +2,7 @@ from color import Color, ColorMode
 from math import ceil, floor
 
 
-_wave_values = [0.0, 0.3455, 0.6545, 0.9045, 1.0, 1.0, 1.0, 0.9045, 0.6545, 0.3455, 0.0]
+_wave_values = [0.0955, 0.3455, 0.6545, 0.9045, 1.0, 0.9045, 0.6545, 0.3455, 0.0955]
 _wave_values_len = 11
 
 def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int, gradient_backwards: bool = False):
