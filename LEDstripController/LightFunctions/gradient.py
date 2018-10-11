@@ -80,6 +80,4 @@ def wave_gradient_update_all(values_sequence, step, n_led):
     padded_wave = padded_wave[-floor(n_led/values_sequence):] + padded_wave[:-floor(n_led/values_sequence)]
 
     # TODO EXPLAIN THIS CRAZYNESS
-    return [(g*value, r*value, b*value)
-            for grb, value in zip(values_sequence[step] * n_led, padded_wave)
-            for g, r, b in grb]
+    return [(g*value, r*value, b*value) for grb, value in padded_wave for g, r, b in values_sequence[step]]
