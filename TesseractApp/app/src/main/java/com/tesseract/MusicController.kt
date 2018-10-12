@@ -40,8 +40,6 @@ class MusicController: ViewModel() {
         this.play()
     }
 
-
-
     fun next() {
         musicIndex++
         if (musicIndex > 2)
@@ -49,15 +47,12 @@ class MusicController: ViewModel() {
         tesseralCommunication.next()
     }
 
-
-
     fun previous() {
         musicIndex--
         if (musicIndex < 0)
             musicIndex = 2
         tesseralCommunication.previous()
     }
-
 
     fun shuffleToggle() {
         if (this.shuffle) {

@@ -18,25 +18,22 @@ import android.widget.Toast
 class BluetoothDeviceList : Fragment() {
 
     private lateinit var mPairedDevices: Set<BluetoothDevice>
-    var bluetoothController: BluetoothController? = null
 
     override fun onStart() {
         super.onStart()
-        if (bluetoothController!!.bluetoothAdapter!!.isEnabled) {
+        if (!BluetoothController.bluetoothAdapter!!.isEnabled) {
             val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             this.activity!!.startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH)
         }
-
-
     }
 
     override fun onResume() {
         super.onResume()
-        if (bluetoothController!!.bluetoothService != null) {
+        if (BluetoothController.bluetoothService != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (bluetoothController!!.bluetoothService!!.getState() == BluetoothService.STATE_NONE) {
+            if (BluetoothController.bluetoothService!!.getState() == BluetoothService.STATE_NONE) {
                 // Start the Bluetooth chat services
-                bluetoothController!!.bluetoothService!!.start()
+                BluetoothController.bluetoothService!!.start()
             }
         }
     }
@@ -46,10 +43,8 @@ class BluetoothDeviceList : Fragment() {
         setHasOptionsMenu(true)
         // Get local Bluetooth adapter
 
-        bluetoothController = activity?.run { ViewModelProviders.of(this).get(BluetoothController::class.java) }
-
         // If the adapter is null, then Bluetooth is not supported
-        if (bluetoothController!!.bluetoothAdapter == null) {
+        if (BluetoothController.bluetoothAdapter == null) {
             val activity = activity
             Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show()
             activity!!.finish()
@@ -60,17 +55,10 @@ class BluetoothDeviceList : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_bluetooth_device_list, container, false)
 
-        if (bluetoothController!!.bluetoothAdapter == null) {
+        if (BluetoothController.bluetoothAdapter == null) {
             Toast.makeText(this.context, "This device does not support bluetooth", Toast.LENGTH_SHORT).show()
             return view
         }
-
-
-
-//        if (!this.bluetoothAdapter!!.isEnabled) {
-//            val enableBluetoothIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-//            startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH)
-//        }
 
         val scanButton: Button = view.findViewById(R.id.bluetooth_button_refresh)
         scanButton.setOnClickListener {
@@ -81,61 +69,8 @@ class BluetoothDeviceList : Fragment() {
         return view
     }
 
-//    private val mHandler: Handler = object : Handler() {
-//        override fun handleMessage(msg: Message) {
-//            val activity = activity
-//            when (msg.what) {
-//                MESSAGE_STATE_CHANGE -> when (msg.arg1) {
-//                    BluetoothService.STATE_CONNECTED -> {
-////                        setStatus(getString(R.string.title_connected_to, mConnectedDeviceName))
-////                        mConversationArrayAdapter!!.clear()
-//                        Log.i(TAG, "MESSAGE_STATE_CHANGE, bluetooth state connected")
-//                    }
-//                    BluetoothService.STATE_CONNECTING -> {
-//                        Log.i(TAG, "Bluetooth state connecting")
-//                    }
-//                    BluetoothService.STATE_LISTEN -> {
-//                        Log.i(TAG, "BLuetooth state Listen or None")
-//                    }
-//                    BluetoothService.STATE_NONE -> {
-//                        Log.i(TAG, "STATE NONE")
-//                    }
-//
-//                }
-//                MESSAGE_WRITE -> {
-////                    val writeBuf = msg.obj as ByteArray
-//                    // construct a string from the buffer
-////                    val writeMessage = String(writeBuf)
-////                    mConversationArrayAdapter!!.add("Me:  $writeMessage")
-//                    Log.i(TAG, "MESSAGE WRITE")
-//                }
-//                MESSAGE_READ -> {
-//                    Log.i(TAG, "MESSAGE_READ")
-////                    val readBuf = msg.obj as ByteArray
-//                    // construct a string from the valid bytes in the buffer
-////                    val readMessage = String(readBuf, 0, msg.arg1)
-////                    mConversationArrayAdapter!!.add("$mConnectedDeviceName:  $readMessage")
-//                }
-//                MESSAGE_DEVICE_NAME -> {
-//                    // save the connected device's name
-////                    mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME)
-////                    if (null != activity) {
-////                        Toast.makeText(activity, "Connected to " + mConnectedDeviceName!!, Toast.LENGTH_SHORT).show()
-////                    }
-//                    Log.i(TAG, "MESSAGE_DEVICE_NAME")
-//                }
-//                MESSAGE_TOAST -> if (null != activity) {
-//                    Toast.makeText(activity, msg.data.getString(TOAST),
-//                            Toast.LENGTH_SHORT).show()
-//                    Log.i(TAG, "MESSAGE_TOAST")
-//
-//                }
-//            }
-//        }
-//    }
-
     private fun pairedDevicesList() {
-        this.mPairedDevices = bluetoothController!!.bluetoothAdapter!!.bondedDevices
+        this.mPairedDevices = BluetoothController.bluetoothAdapter!!.bondedDevices
         val list: ArrayList<BluetoothDevice> = ArrayList()
 
         if (!this.mPairedDevices.isEmpty()) {
@@ -147,13 +82,13 @@ class BluetoothDeviceList : Fragment() {
             Toast.makeText(this.context, "No paired device", Toast.LENGTH_SHORT).show()
         }
 
-        val adapter: ArrayAdapter<BluetoothDevice> = ArrayAdapter(this.context!!, android.R.layout.simple_list_item_1, list)
+        val adapter = ArrayAdapter(this.context!!, android.R.layout.simple_list_item_1, list)
         val deviceList: ListView = view!!.findViewById(R.id.bluetooth_device_list)
         deviceList.adapter = adapter
         deviceList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             val device: BluetoothDevice = list[position]
             val address: String = device.address
-            bluetoothController!!.bluetoothAdapter!!.cancelDiscovery()
+            BluetoothController.bluetoothAdapter!!.cancelDiscovery()
             connectDevice(address, true)
         }
     }
@@ -163,7 +98,7 @@ class BluetoothDeviceList : Fragment() {
         when (requestCode) {
             REQUEST_ENABLE_BLUETOOTH -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    if (bluetoothController!!.bluetoothAdapter!!.isEnabled) {
+                    if (BluetoothController.bluetoothAdapter!!.isEnabled) {
                         Toast.makeText(this.context, "Bluetooth has been enabled", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(this.context, "Bluetooth has been disabled", Toast.LENGTH_SHORT).show()
@@ -181,16 +116,16 @@ class BluetoothDeviceList : Fragment() {
      * @param secure Socket Security type - Secure (true) , Insecure (false)
      */
     private fun connectDevice(address: String, secure: Boolean) {
-        val device: BluetoothDevice = bluetoothController!!.bluetoothAdapter!!.getRemoteDevice(address)
-        bluetoothController!!.bluetoothService!!.connect(device, secure)
+        val device: BluetoothDevice = BluetoothController.bluetoothAdapter!!.getRemoteDevice(address)
+        BluetoothController.bluetoothService!!.connect(device, secure)
     }
 
     private fun doDiscovery() {
-        if (bluetoothController!!.bluetoothAdapter!!.isDiscovering) {
-            bluetoothController!!.bluetoothAdapter!!.cancelDiscovery()
+        if (BluetoothController.bluetoothAdapter!!.isDiscovering) {
+            BluetoothController.bluetoothAdapter!!.cancelDiscovery()
         }
 
-        bluetoothController!!.bluetoothAdapter!!.startDiscovery()
+        BluetoothController.bluetoothAdapter!!.startDiscovery()
     }
 
     companion object {
