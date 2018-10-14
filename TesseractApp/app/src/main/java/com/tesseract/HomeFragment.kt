@@ -1,6 +1,6 @@
 package com.tesseract
 
-
+import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -8,15 +8,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.SeekBar
-import android.widget.TextView
+import android.widget.*
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_home.*
 
+class HomeFragment : Fragment(), MainActivity.StatusChanged {
 
-class HomeFragment : Fragment() {
-
+    private lateinit var musicController: MusicController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -24,8 +22,8 @@ class HomeFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_home, container, false)
 
 
-        val musicController: MusicController? = activity?.run { ViewModelProviders.of(this).get(MusicController::class.java) }
-        updateMusicInformation(musicController?.music!!, view, musicController)
+        musicController = activity?.run { ViewModelProviders.of(this).get(MusicController::class.java) }!!
+        updateMusicInformation(musicController.music!!, view, musicController)
 
         val buttonNext: ImageButton = view.findViewById(R.id.buttonPlayNext)
         buttonNext.setOnClickListener {
@@ -75,6 +73,21 @@ class HomeFragment : Fragment() {
         return view
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        this.updateMusicInformation(musicController.music!!, this.view!!, musicController)
+        this.updateBluetoothStatus()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        this.updateMusicInformation(musicController.music!!, this.view!!, musicController)
+        this.updateBluetoothStatus()
+    }
+
+
     private fun updateMusicInformation(music: Music, view: View, musicController: MusicController) {
         val musicCoverView: ImageView = view.findViewById(R.id.imageViewMusicCover)
         Log.i("TAG", music.album_cover_url)
@@ -118,6 +131,22 @@ class HomeFragment : Fragment() {
         } else {
             buttonPlay.setImageResource(R.drawable.ic_play)
         }
+    }
+
+    private fun updateBluetoothStatus() {
+
+        if (home_bluetooth_status == null){
+            return
+        }
+        if (BluetoothController.bluetoothService!!.mState.equals(BluetoothService.STATE_CONNECTED)) {
+            home_bluetooth_status.setBackgroundColor(context!!.getColor(R.color.secondaryColor))
+        } else {
+            home_bluetooth_status.setBackgroundColor(context!!.getColor(R.color.colorAccent))
+        }
+    }
+
+    override fun onStatusChange(connected: Boolean) {
+        updateBluetoothStatus()
     }
 
 }

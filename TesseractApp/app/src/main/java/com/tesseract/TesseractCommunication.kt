@@ -29,26 +29,32 @@ object TesseractCommunication {
             "]"
 
     fun play() {
+        sendCommand("play")
         return
     }
 
     fun pause() {
+        sendCommand("pause")
         return
     }
 
     fun next() {
+        sendCommand("next")
         return
     }
 
     fun previous() {
+        sendCommand("previous")
         return
     }
 
     fun shuffle(enabled: Boolean) {
+        sendCommand("shuffle")
         return
     }
 
     fun volume(volume: Int) {
+        sendCommand("volume: " + volume.toString())
         return
     }
 
@@ -57,6 +63,11 @@ object TesseractCommunication {
         val gson = Gson()
         val music: List<Music>? = gson.fromJson(sampleMusics, Array<Music>::class.java).toList()
         return music!![index]
+    }
+
+    private fun sendCommand(command: String) {
+        val play: ByteArray = command.toByteArray()
+        BluetoothController.bluetoothService!!.write(play)
     }
 
 }

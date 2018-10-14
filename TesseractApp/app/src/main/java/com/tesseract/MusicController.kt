@@ -13,8 +13,6 @@ class MusicController: ViewModel() {
     private val tesseralCommunication: TesseractCommunication = TesseractCommunication
     var music: Music? = null
 
-
-
     var musicIndex: Int = 0 // para testes
 
     init {
@@ -42,8 +40,6 @@ class MusicController: ViewModel() {
         this.play()
     }
 
-
-
     fun next() {
         musicIndex++
         if (musicIndex > 2)
@@ -51,15 +47,12 @@ class MusicController: ViewModel() {
         tesseralCommunication.next()
     }
 
-
-
     fun previous() {
         musicIndex--
         if (musicIndex < 0)
             musicIndex = 2
         tesseralCommunication.previous()
     }
-
 
     fun shuffleToggle() {
         if (this.shuffle) {

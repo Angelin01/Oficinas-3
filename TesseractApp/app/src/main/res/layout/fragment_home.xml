@@ -1,230 +1,237 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     tools:context=".HomeFragment">
 
-    <ImageView
-        android:id="@+id/imageViewMusicCover"
-        android:layout_width="0dp"
-        android:layout_height="299dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="39dp"
-        android:contentDescription="TODO"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/guideline7"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeBluetoothStatus"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:src="@tools:sample/avatars" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.114583336" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.89" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="39dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toStartOf="@+id/imageViewMusicCover"
-        app:layout_constraintGuide_percent="0.24"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <RelativeLayout
-        android:id="@+id/homeBluetoothStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="33dp"
-        android:background="@color/secondaryColor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/imageVIewBluetoothConnection"
+            android:id="@+id/imageViewMusicCover"
+            android:layout_width="0dp"
+            android:layout_height="299dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="39dp"
+            android:contentDescription="TODO"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/guideline7"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/home_bluetooth_status"
+            app:srcCompat="@mipmap/ic_launcher"
+            tools:src="@tools:sample/avatars" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline3"
             android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            android:src="@drawable/ic_bluetooth" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.114583336" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.89" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="39dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewMusicCover"
+            app:layout_constraintGuide_percent="0.24"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <RelativeLayout
+            android:id="@+id/home_bluetooth_status"
+            android:layout_width="wrap_content"
+            android:layout_height="33dp"
+            android:background="@color/colorAccent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageVIewBluetoothConnection"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/ic_bluetooth" />
+
+            <TextView
+                android:id="@+id/textViewBluetoothConnection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@+id/imageVIewBluetoothConnection"
+                android:contentDescription="TOdo"
+                android:text="@string/home_tesseract_status_connection"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:orientation="horizontal"
+            android:padding="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageButton
+                android:id="@+id/buttonPlayShuffle"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="51dp"
+                android:layout_height="51dp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="23dp"
+                android:layout_toStartOf="@+id/buttonPlayPrevious"
+                android:contentDescription="TODO"
+                android:padding="0dp"
+                android:scaleType="centerCrop"
+                android:scrollbarAlwaysDrawHorizontalTrack="false"
+                android:src="@drawable/ic_play_shuffle" />
+
+            <ImageButton
+                android:id="@+id/buttonPlayPrevious"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="51dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="23dp"
+                android:layout_toStartOf="@+id/buttonPlay"
+                android:contentDescription="TODO"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                android:scrollbarAlwaysDrawHorizontalTrack="false"
+                android:src="@drawable/ic_play_previous" />
+
+            <ImageButton
+                android:id="@+id/buttonPlay"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="TODO"
+                android:padding="0dp"
+                android:scaleType="centerCrop"
+                android:scrollbarAlwaysDrawHorizontalTrack="false"
+                android:src="@drawable/ic_play" />
+
+            <ImageButton
+                android:id="@+id/buttonPlayNext"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignBottom="@+id/buttonPlayShuffle"
+                android:layout_marginStart="24dp"
+                android:layout_toEndOf="@+id/buttonPlay"
+                android:contentDescription="TODO"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                android:scrollbarAlwaysDrawHorizontalTrack="false"
+                android:src="@drawable/ic_play_next" />
+
+            <ImageButton
+                android:id="@+id/buttonVolume"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="22dp"
+                android:layout_toEndOf="@+id/buttonPlayNext"
+                android:contentDescription="TODO"
+                android:padding="0dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_play_volume" />
+
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/textViewBluetoothConnection"
-            android:layout_width="match_parent"
+            android:id="@+id/textViewMusicName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="5dp"
-            android:layout_toStartOf="@+id/imageVIewBluetoothConnection"
-            android:contentDescription="TOdo"
-            android:text="@string/home_tesseract_status_connection"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimary" />
-    </RelativeLayout>
+            android:layout_marginTop="8dp"
+            android:text="Music Name"
+            android:textColor="@color/Commands"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewMusicCover" />
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="0dp"
-        android:layout_height="72dp"
-        android:orientation="horizontal"
-        android:padding="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageButton
-            android:id="@+id/buttonPlayShuffle"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="51dp"
-            android:layout_height="51dp"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="23dp"
-            android:layout_toStartOf="@+id/buttonPlayPrevious"
-            android:contentDescription="TODO"
-            android:padding="0dp"
-            android:scaleType="centerCrop"
-            android:scrollbarAlwaysDrawHorizontalTrack="false"
-            android:src="@drawable/ic_play_shuffle" />
-
-        <ImageButton
-            android:id="@+id/buttonPlayPrevious"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="51dp"
+        <TextView
+            android:id="@+id/textViewMusicBand"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="23dp"
-            android:layout_toStartOf="@+id/buttonPlay"
-            android:contentDescription="TODO"
-            android:padding="0dp"
-            android:scaleType="fitCenter"
-            android:scrollbarAlwaysDrawHorizontalTrack="false"
-            android:src="@drawable/ic_play_previous" />
-
-        <ImageButton
-            android:id="@+id/buttonPlay"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="TODO"
-            android:padding="0dp"
-            android:scaleType="centerCrop"
-            android:scrollbarAlwaysDrawHorizontalTrack="false"
-            android:src="@drawable/ic_play" />
-
-        <ImageButton
-            android:id="@+id/buttonPlayNext"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignBottom="@+id/buttonPlayShuffle"
-            android:layout_marginStart="24dp"
-            android:layout_toEndOf="@+id/buttonPlay"
-            android:contentDescription="TODO"
-            android:padding="0dp"
-            android:scaleType="fitCenter"
-            android:scrollbarAlwaysDrawHorizontalTrack="false"
-            android:src="@drawable/ic_play_next" />
-
-        <ImageButton
-            android:id="@+id/buttonVolume"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="22dp"
-            android:layout_toEndOf="@+id/buttonPlayNext"
-            android:contentDescription="TODO"
-            android:padding="0dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_play_volume" />
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/textViewMusicName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Music Name"
-        android:textColor="@color/Commands"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewMusicCover" />
-
-    <TextView
-        android:id="@+id/textViewMusicBand"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Music Artist"
-        android:textColor="@color/Commands"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMusicName" />
-
-    <SeekBar
-        android:id="@+id/seekMusicProgress"
-        style="@android:style/Widget.Material.SeekBar"
-        android:layout_width="230dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="16dp"
-        android:enabled="false"
-        android:max="10"
-        android:progress="3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewMusicBand" />
-
-    <FrameLayout
-        android:layout_width="40dp"
-        android:layout_height="100dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="64dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+            android:layout_marginTop="8dp"
+            android:text="Music Artist"
+            android:textColor="@color/Commands"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewMusicName" />
 
         <SeekBar
-            android:id="@+id/seekVolume"
+            android:id="@+id/seekMusicProgress"
             style="@android:style/Widget.Material.SeekBar"
-            android:layout_width="110dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:max="100"
-            android:progress="50"
-            android:rotation="270" />
+            android:layout_width="230dp"
+            android:layout_height="19dp"
+            android:layout_marginTop="16dp"
+            android:enabled="false"
+            android:max="10"
+            android:progress="3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewMusicBand" />
 
-    </FrameLayout>
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="64dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <SeekBar
+                android:id="@+id/seekVolume"
+                style="@android:style/Widget.Material.SeekBar"
+                android:layout_width="110dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:max="100"
+                android:progress="50"
+                android:rotation="270" />
+
+        </FrameLayout>
+    </android.support.constraint.ConstraintLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+
+</FrameLayout>
