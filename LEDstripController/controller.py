@@ -8,7 +8,7 @@ import time
 
 class TimedLightShow(threading.Thread):
 
-    def __init__(self, ref_function, sequence, n_led, interval, duration):
+    def __init__(self, ref_function, sequence, interval, duration):
         """
         :param ref_function: A reference to the function to be called.
         :param sequence: The arguments to be passed to the function as a tuple.
@@ -21,7 +21,6 @@ class TimedLightShow(threading.Thread):
         self.ref_function = ref_function
         self.sequence_len = len(sequence)
         self.sequence = sequence
-        self.n_led = n_led
         self.interval = interval
         self.duration = duration
 
@@ -38,7 +37,7 @@ class TimedLightShow(threading.Thread):
         step = 0
 
         while True:
-            result = self.ref_function(self.sequence, step, self.n_led)
+            result = self.ref_function(self.sequence, step)
             ws2812.write2812(self.spi, result)
 
             time.sleep(self.interval)

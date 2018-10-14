@@ -1,5 +1,7 @@
-from LightFunctions.gradient import gen_hue_gradient, hue_gradient_update_all
-from LightFunctions.johnson_gradient import gen_johnson_gradient, johnson_gradient_update_all
+from LightFunctions.gradient import gen_hue_gradient
+from LightFunctions.johnson_gradient import gen_johnson_gradient
+from LightFunctions.random import gen_random
+from LightFunctions.handlers import standard_handler, wave_handler
 from controller import TimedLightShow
 
 
