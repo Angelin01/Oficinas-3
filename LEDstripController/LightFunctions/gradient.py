@@ -5,7 +5,8 @@ from math import ceil, floor
 _wave_values = [0.0955, 0.3455, 0.6545, 0.9045, 1.0, 0.9045, 0.6545, 0.3455, 0.0955]
 _wave_values_len = 11
 
-def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int, gradient_backwards: bool = False):
+
+def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int, n_leds: int, gradient_backwards: bool = False):
     """
     Generates an iterator to make the transition from start_hue to end_hue with certain speed for n_leds.
     The color wheel is a cycle, so if end_hue is less than start_hue, it will loop.
@@ -49,7 +50,7 @@ def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int,
 
     gradient_colors = [gc.get_ws2812_rgb(intensity) for gc in gradient_colors]
 
-    return gradient_colors
+    return [[color]*n_leds for color in gradient_colors]
 
 
 def hue_gradient_update_all(values_sequence, step, n_led):

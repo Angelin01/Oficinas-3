@@ -32,7 +32,7 @@ def gen_johnson_gradient(start_hue: int, end_hue: int, intensity: int, n_leds: i
     if gradient_backwards:
         start_hue, end_hue = end_hue, start_hue
 
-    gradient_colors = gen_hue_gradient(start_hue, end_hue, (end_hue - start_hue) / (n_leds - 1), intensity)
+    gradient_colors = [color[0] for color in gen_hue_gradient(start_hue, end_hue, (end_hue - start_hue) / (n_leds - 1), intensity, n_leds)]
 
     johnson_gradient = []
     for i in range(n_leds):
