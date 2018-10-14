@@ -75,7 +75,7 @@ def wave_gradient_update_all(values_sequence, step, n_led):
         raise ValueError("Number of LEDs is too small for wave, minimum is {}".format(_wave_values_len))
 
     # Pads the available pre calculated sin values with 0s, to keep extra LEDs off
-    padded_wave = [0]*ceil((n_led - _wave_values_len)/2) + _wave_values + [0]*floor(ceil((n_led - _wave_values_len)/2))
+    padded_wave = [0.0]*ceil((n_led - _wave_values_len)/2) + _wave_values + [0.0]*floor(ceil((n_led - _wave_values_len)/2))
     # Shifts the padded wave according to the number of LEDs and what step we are on at the moment
     padded_wave = padded_wave[-floor(n_led/values_sequence):] + padded_wave[:-floor(n_led/values_sequence)]
 
