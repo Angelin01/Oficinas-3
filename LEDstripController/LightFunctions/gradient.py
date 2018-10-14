@@ -15,7 +15,7 @@ def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int,
     :param speed: The speed of the gradient change.
     :param intensity: The intensity value in which the gradient occurs. Between 0 and 255.
     :param gradient_backwards: A bool to say if the gradient goes forward (from start to end if False) or the contrary.
-    :return: TODO
+    :return: An array of GRB tuples.
     """
 
     if end_hue - start_hue < 0:
@@ -54,22 +54,22 @@ def gen_hue_gradient(start_hue: int, end_hue: int, speed: float, intensity: int,
 
 def hue_gradient_update_all(values_sequence, step, n_led):
     """
-    TODO
-    :param values_sequence: TODO
-    :param step: TODO
-    :param n_led: TODO
-    :return: TODO
+    Simple updater for a simple gradient of colors, equal to all LEDs.
+    :param values_sequence: The sequence of colors to update.
+    :param step: The current step in the sequence.
+    :param n_led: The number of LEDs to turn on.
+    :return: The sequence to use for the LEDs.
     """
     return values_sequence[step] * n_led
 
 
 def wave_gradient_update_all(values_sequence, step, n_led):
     """
-    TODO
-    :param values_sequence: TODO
-    :param step: TODO
-    :param n_led: TODO
-    :return: TODO
+    Updater that makes a "wave" like pattern with various colors.
+    :param values_sequence: The sequence of colors to update.
+    :param step: The current step in the sequence.
+    :param n_led: The number of LEDs to turn on.
+    :return: The sequence to use for the LEDs.
     """
     if n_led < _wave_values_len:
         raise ValueError("Number of LEDs is too small for wave, minimum is {}".format(_wave_values_len))
@@ -79,5 +79,5 @@ def wave_gradient_update_all(values_sequence, step, n_led):
     # Shifts the padded wave according to the number of LEDs and what step we are on at the moment
     padded_wave = padded_wave[-floor(n_led/values_sequence):] + padded_wave[:-floor(n_led/values_sequence)]
 
-    # TODO EXPLAIN THIS CRAZYNESS
-    return [(g*value, r*value, b*value) for grb, value in padded_wave for g, r, b in values_sequence[step]]
+    # Multiplies each color value in the sequence for the intensity of the wave and returns the array of tuples
+    return [(g*value, r*value, b*value) for value in padded_wave for g, r, b in values_sequence[step]]

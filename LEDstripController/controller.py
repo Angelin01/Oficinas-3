@@ -14,7 +14,7 @@ class TimedLightShow(threading.Thread):
         :param sequence: The arguments to be passed to the function as a tuple.
         :param n_led: The number of LEDs the sequence should be applied to.
         :param interval: The interval in seconds between function calls.
-        :param duration: For how long the function will remain active.
+        :param duration: For how long the function will remain active. If 0 or negative, is infinite.
         """
         super().__init__()
 
@@ -27,7 +27,7 @@ class TimedLightShow(threading.Thread):
 
         self.stop_event = threading.Event()
 
-        self.is_inf = True if duration == -1 else False
+        self.is_inf = True if duration <= 0 else False
 
         self.end_of_show = time.time() + duration
 
