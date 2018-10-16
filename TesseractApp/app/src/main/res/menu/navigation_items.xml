@@ -9,12 +9,12 @@
 
     <item
         android:id="@+id/nav_light"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/ic_light"
         android:title="@string/LEDS" />
 
     <item
         android:id="@+id/nav_spotify"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/ic_spotify"
         android:title="@string/Spotify" />
 
     <item

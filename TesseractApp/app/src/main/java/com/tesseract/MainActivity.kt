@@ -12,6 +12,7 @@ import android.content.Context
 import android.content.IntentFilter
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
+import android.widget.Toast
 
 
 class MainActivity : AppCompatActivity() {
@@ -86,16 +87,18 @@ class MainActivity : AppCompatActivity() {
     private val bluetoothBradcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
-            Log.d("TAG", "Receive Broadcast")
             if (action == BluetoothService.STATE_CHANGED) {
-                Log.d("TAG", "Broadcast STATE CHANGED")
-
                 val state = intent.getIntExtra("state", 0)
-                Log.d("TAG", "Broadcast STATE: $state")
 
                 when (state) {
-                    BluetoothService.STATE_CONNECTED -> updateStatusBluetoothView(true)
-                    BluetoothService.STATE_NONE -> updateStatusBluetoothView(false)
+                    BluetoothService.BluetoothStates.STATE_CONNECTED.ordinal -> {
+                        updateStatusBluetoothView(true)
+                        Toast.makeText(context, "Bluetooth Connected", Toast.LENGTH_SHORT).show()
+                    }
+                    BluetoothService.BluetoothStates.STATE_NONE.ordinal, BluetoothService.BluetoothStates.STATE_CONNECTION_LOST.ordinal -> {
+                        updateStatusBluetoothView(false)
+                        Toast.makeText(context, "Bluetooth Disconnected", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -109,8 +112,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateStatusBluetoothView(connected: Boolean) {
-        Log.d("TAG", lifecycle.currentState.toString())
-
         val homeFragment = this.supportFragmentManager.findFragmentByTag("home_fragment") ?: return
 
         mCallback = homeFragment as StatusChanged

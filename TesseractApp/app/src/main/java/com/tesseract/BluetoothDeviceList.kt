@@ -2,7 +2,6 @@ package com.tesseract
 
 
 import android.app.Activity
-import android.arch.lifecycle.ViewModelProviders
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
@@ -31,7 +30,7 @@ class BluetoothDeviceList : Fragment() {
         super.onResume()
         if (BluetoothController.bluetoothService != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (BluetoothController.bluetoothService!!.getState() == BluetoothService.STATE_NONE) {
+            if (BluetoothController.bluetoothService!!.getState() == BluetoothService.BluetoothStates.STATE_NONE) {
                 // Start the Bluetooth chat services
                 BluetoothController.bluetoothService!!.start()
             }
@@ -129,19 +128,10 @@ class BluetoothDeviceList : Fragment() {
     }
 
     companion object {
-        private val TAG = "BluetoothFragment"
-
 //        private const val REQUEST_CONNECT_DEVICE_SECURE = 1
 //        private const val REQUEST_CONNECT_DEVICE_INSECURE = 2
         private const val REQUEST_ENABLE_BLUETOOTH = 3
 //        private const val EXTRA_DEVICE_ADDRESS = "device_address"
-
-        const val MESSAGE_STATE_CHANGE = 1
-        const val MESSAGE_READ = 2
-        const val MESSAGE_WRITE = 3
-        const val MESSAGE_DEVICE_NAME = 4
-        const val MESSAGE_TOAST = 5
-        const val TOAST = "toast"
 
     }
 

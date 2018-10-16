@@ -52,7 +52,7 @@ class BluetoothService: Service() {
 
         val intent = Intent()
         intent.action = STATE_CHANGED
-        intent.putExtra("state", mState)
+        intent.putExtra("state", mState.ordinal)
 
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
 
@@ -336,7 +336,7 @@ class BluetoothService: Service() {
     }
 
     enum class BluetoothStates {
-        STATE_NONE,
+        STATE_NONE ,
         STATE_CONNECTING,
         STATE_CONNECTED,
         STATE_CONNECTION_FAILED,

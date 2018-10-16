@@ -35,7 +35,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/usr/src/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/notification/ic_wifi_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/usr/src/android-studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_lightbulb_outline_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -46,7 +46,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="paddingPercent" value="50" />
+                                                <entry key="paddingPercent" value="15" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -68,9 +68,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/baseline-play_arrow-black-48/2x/baseline_play_arrow_black_48dp.png" />
-                                      <entry key="outputName" value="ic_wifi_light" />
-                                      <entry key="theme" value="CUSTOM" />
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/Spotify_icon-icons.com_66783.png" />
+                                      <entry key="outputName" value="ic_spotify" />
                                       <entry key="themeColor" value="e6e6e6" />
                                     </map>
                                   </option>
