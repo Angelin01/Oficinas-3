@@ -50,43 +50,17 @@
 
         </RelativeLayout>
 
-        <com.skydoves.colorpickerview.ColorPickerView
-            android:id="@+id/colorPickerView"
-            android:layout_width="210dp"
-            android:layout_height="198dp"
-            android:layout_marginTop="36dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.086"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout4"
-            app:palette="@drawable/palette"
-            app:selector="@drawable/wheel" />
-
-        <RelativeLayout
-            android:id="@+id/colorSelected1"
-            android:layout_width="55dp"
-            android:layout_height="33dp"
-            android:layout_marginStart="56dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="48dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/colorPickerView"
-            app:layout_constraintTop_toBottomOf="@+id/textView3">
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="54dp"
-            android:layout_marginTop="36dp"
-            android:layout_marginEnd="47dp"
-            android:text="Selected Colors"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/colorPickerView"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout4" />
+        <ImageButton
+            android:id="@+id/imageButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorPrimaryDark"
+            android:src="@drawable/ic_create"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>
