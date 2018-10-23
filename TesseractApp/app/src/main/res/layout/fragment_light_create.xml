@@ -11,17 +11,54 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:id="@+id/relativeLayout4"
+            android:layout_width="353dp"
+            android:layout_height="103dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.516"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout5">
+
+            <Spinner
+                android:id="@+id/spinner_leds_edit_patterns"
+                android:layout_width="320dp"
+                android:layout_height="36dp"
+                android:layout_below="@+id/textView6"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="13dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="291dp" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="173dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="99dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="81dp"
+                android:text="Select Pattern"
+                android:textAlignment="center" />
+
+        </RelativeLayout>
+
         <com.skydoves.colorpickerview.ColorPickerView
             android:id="@+id/colorPickerView"
             android:layout_width="210dp"
             android:layout_height="198dp"
-            android:layout_marginStart="38dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="8dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="156dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout4"
             app:palette="@drawable/palette"
             app:selector="@drawable/wheel" />
 
@@ -58,5 +95,39 @@
             android:text="Selected Colors"
             app:layout_constraintStart_toEndOf="@+id/colorPickerView"
             app:layout_constraintTop_toTopOf="@+id/colorPickerView" />
+
+        <Button
+            android:id="@+id/button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="Finish"
+            android:textColor="@color/Commands"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout5"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="Customize"
+                android:textAlignment="textStart"
+                android:textColor="@color/Commands"
+                android:textSize="24sp" />
+        </RelativeLayout>
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

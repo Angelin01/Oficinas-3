@@ -25,7 +25,6 @@ class ConnectionsFragment : Fragment() {
             transaction.replace(R.id.home_view_frame, BluetoothDeviceList()) // give your fragment container id in first parameter
             transaction.addToBackStack(null)  // if written, this transaction will be added to backstack
             transaction.commit()
-
         }
 
         val buttonConnectWifi: RelativeLayout = view.findViewById(R.id.buttonConnectTesseractWifi)

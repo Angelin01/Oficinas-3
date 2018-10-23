@@ -11,5 +11,16 @@
     <string name="home_tesseract_status_connection">Tesseract Connected</string>
     <string name="not_connected">Not Connected</string>
     <string name="connected">Connected</string>
+    <string name="album_cover">Album_cover</string>
+    <string name="bluetooth_icon">Bluetooth Icon</string>
+    <string name="status_bluetooth_connection">Status Bluetooth Connection</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="play_previous">Play previous</string>
+    <string name="play_or_pause">Play or pause</string>
+    <string name="playe_next">Playe next</string>
+    <string name="volume">Volume</string>
+    <string name="music_name">Music Name</string>
+    <string name="music_artist">Music Artist</string>
+    <string name="tesseract_icon">Tesseract icon</string>
 
 </resources>

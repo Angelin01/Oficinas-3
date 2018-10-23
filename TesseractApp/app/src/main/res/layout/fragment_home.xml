@@ -12,6 +12,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:id="@+id/relativeLayout5"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="77dp"
+                android:layout_toEndOf="@+id/imageView3"
+                android:text="@string/app_name"
+                android:textAlignment="textStart"
+                android:textColor="@color/Commands"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="0dp"
+                android:src="@mipmap/ic_launcher_foreground"
+                android:contentDescription="@string/tesseract_icon" />
+        </RelativeLayout>
+
         <ImageView
             android:id="@+id/imageViewMusicCover"
             android:layout_width="0dp"
@@ -19,7 +51,7 @@
             android:layout_marginStart="40dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="39dp"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/album_cover"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideline7"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,9 +89,9 @@
             android:layout_height="33dp"
             android:background="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout5">
 
             <ImageView
                 android:id="@+id/imageVIewBluetoothConnection"
@@ -73,7 +105,8 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginBottom="5dp"
-                android:src="@drawable/ic_bluetooth" />
+                android:src="@drawable/ic_bluetooth"
+                android:contentDescription="@string/bluetooth_icon" />
 
             <TextView
                 android:id="@+id/textViewBluetoothConnection"
@@ -84,7 +117,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="5dp"
                 android:layout_toStartOf="@+id/imageVIewBluetoothConnection"
-                android:contentDescription="TOdo"
+                android:contentDescription="@string/status_bluetooth_connection"
                 android:text="@string/home_tesseract_status_connection"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary" />
@@ -109,7 +142,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="23dp"
                 android:layout_toStartOf="@+id/buttonPlayPrevious"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/shuffle"
                 android:padding="0dp"
                 android:scaleType="centerCrop"
                 android:scrollbarAlwaysDrawHorizontalTrack="false"
@@ -123,7 +156,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="23dp"
                 android:layout_toStartOf="@+id/buttonPlay"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/play_previous"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
                 android:scrollbarAlwaysDrawHorizontalTrack="false"
@@ -136,7 +169,7 @@
                 android:layout_height="70dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/play_or_pause"
                 android:padding="0dp"
                 android:scaleType="centerCrop"
                 android:scrollbarAlwaysDrawHorizontalTrack="false"
@@ -150,7 +183,7 @@
                 android:layout_alignBottom="@+id/buttonPlayShuffle"
                 android:layout_marginStart="24dp"
                 android:layout_toEndOf="@+id/buttonPlay"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/playe_next"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
                 android:scrollbarAlwaysDrawHorizontalTrack="false"
@@ -164,7 +197,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="22dp"
                 android:layout_toEndOf="@+id/buttonPlayNext"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/volume"
                 android:padding="0dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_play_volume" />
@@ -176,7 +209,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Music Name"
+            android:text="@string/music_name"
             android:textColor="@color/Commands"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -189,7 +222,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Music Artist"
+            android:text="@string/music_artist"
             android:textColor="@color/Commands"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
