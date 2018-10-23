@@ -13,7 +13,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.support.v4.content.LocalBroadcastManager
 
-class BluetoothService: Service() {
+class BluetoothService() : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -23,6 +23,7 @@ class BluetoothService: Service() {
 
     private var mConnectThread: ConnectThread? = null
     private var mConnectedThread: ConnectedThread? = null
+
 
     /**
      * Return the current connection mState.
@@ -289,6 +290,10 @@ class BluetoothService: Service() {
                 try {
                     // Read from the InputStream
                     bytes = mmInStream!!.read(buffer)
+                    var input: String = String(buffer)
+                    input = input.substring(0, bytes)
+                    Log.d(TAG, input)
+                    messageCallback!!.callbackMessageReceiver(input)
 
                 } catch (e: IOException) {
                     Log.e(TAG, "disconnected", e)
@@ -323,7 +328,6 @@ class BluetoothService: Service() {
 
         }
     }
-
     companion object {
 
         private const val TAG = "BluetoothService"
@@ -333,7 +337,15 @@ class BluetoothService: Service() {
         private val MY_UUID_INSECURE: UUID = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66")
 
         const val STATE_CHANGED = "com.you.tesseract.BLUETOOTH_CONNECTION_CHANGED"
+
+        private var messageCallback: BluetoothMessageCallback? = null
+
+        fun setListener(listener: BluetoothMessageCallback) {
+            this.messageCallback = listener
+        }
+
     }
+
 
     enum class BluetoothStates {
         STATE_NONE ,
@@ -342,4 +354,6 @@ class BluetoothService: Service() {
         STATE_CONNECTION_FAILED,
         STATE_CONNECTION_LOST
     }
+
+
 }

@@ -1,6 +1,5 @@
 package com.tesseract
 
-import android.arch.lifecycle.Lifecycle
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -11,7 +10,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
 import android.support.v4.content.LocalBroadcastManager
-import android.util.Log
 import android.widget.Toast
 
 
@@ -24,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        registerReceiver(bluetoothBradcastReceiver, bluetoothBroadcastFilter)
+        registerReceiver(bluetoothBroadcastReceiver, bluetoothBroadcastFilter)
 
         val mMainNav: BottomNavigationView = findViewById(R.id.home_nav_bar)
 
@@ -63,18 +61,18 @@ class MainActivity : AppCompatActivity() {
 
     public override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(applicationContext).registerReceiver(this.bluetoothBradcastReceiver, bluetoothBroadcastFilter)
+        LocalBroadcastManager.getInstance(applicationContext).registerReceiver(this.bluetoothBroadcastReceiver, bluetoothBroadcastFilter)
     }
 
     public override fun onPause() {
         super.onPause()
-        LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(this.bluetoothBradcastReceiver)
+        LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(this.bluetoothBroadcastReceiver)
 
     }
 
     public override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(bluetoothBradcastReceiver)
+        unregisterReceiver(bluetoothBroadcastReceiver)
     }
 
     private fun setFragment(fragment: Fragment, tag: String?) {
@@ -84,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    private val bluetoothBradcastReceiver = object : BroadcastReceiver() {
+    private val bluetoothBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             if (action == BluetoothService.STATE_CHANGED) {

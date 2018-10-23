@@ -14,7 +14,7 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(), MainActivity.StatusChanged {
+class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCallback {
 
     private lateinit var musicController: MusicController
 
@@ -26,6 +26,8 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged {
 
         musicController = activity?.run { ViewModelProviders.of(this).get(MusicController::class.java) }!!
         updateMusicInformation(musicController.music!!, view, musicController)
+
+        BluetoothService.setListener(this as BluetoothMessageCallback)
 
         val buttonNext: ImageButton = view.findViewById(R.id.buttonPlayNext)
         buttonNext.setOnClickListener {
@@ -153,4 +155,10 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged {
         updateBluetoothStatus()
     }
 
+    override fun callbackMessageReceiver(message: String) {
+        if (message == "batata") {
+            return
+        }
+        return
+    }
 }
