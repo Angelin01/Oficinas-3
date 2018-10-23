@@ -1,16 +1,16 @@
-from LightFunctions.gradient import gen_hue_gradient
-from LightFunctions.johnson_gradient import gen_johnson_gradient
-from LightFunctions.random import gen_random
-from LightFunctions.modifiers import wave_modifier
+from LightFunctions.color_gen import gen_rainbow_gradient
 from LightFunctions.handlers import standard_handler
+from LightFunctions.modifiers import wave_modifier
 from controller import TimedLightShow
 
 
 def main():
 
-    gradient = gen_johnson_gradient(0, 360, 100, 10)
+    gradient = gen_rainbow_gradient(0, 360, 1, 100)
 
-    light_show = TimedLightShow(standard_handler, gradient, 10, 0.1, -1)
+    wave = wave_modifier(gradient, 5, 0.5, 2, 20)
+
+    light_show = TimedLightShow(standard_handler, wave, 0.1, -1)
 
     light_show.start()
 

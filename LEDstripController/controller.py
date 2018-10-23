@@ -12,7 +12,6 @@ class TimedLightShow(threading.Thread):
         """
         :param ref_function: A reference to the function to be called.
         :param sequence: The arguments to be passed to the function as a tuple.
-        :param n_led: The number of LEDs the sequence should be applied to.
         :param interval: The interval in seconds between function calls.
         :param duration: For how long the function will remain active. If 0 or negative, is infinite.
         """
