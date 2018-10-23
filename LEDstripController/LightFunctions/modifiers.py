@@ -55,7 +55,7 @@ def wave_modifier(color_sequence: list, color_delay: int, wave_speed: float, wav
     return return_sequence
 
 
-def gen_wave(wave_speed: float, wave_count: float, n_leds: int):
+def gen_sine_wave(wave_speed: float, wave_count: float, n_leds: int):
     """
     :param wave_speed: The speed in which the wave moves along the LED strip.
     :param wave_count: The number of waves to be present in the strip containing n_leds.
@@ -69,10 +69,10 @@ def gen_wave(wave_speed: float, wave_count: float, n_leds: int):
         raise ValueError("Wave speed cannot be zero.")
 
     wave_limit = math.pi * 2
-    wave_speed = math.pi * 2 / (n_leds * 1 / wave_speed / wave_count)
+    wave_speed = math.pi * 2 / (n_leds * 1 / wave_speed)
 
     # Generating wave.
-    while t <= wave_limit:
+    while -wave_limit <= t <= wave_limit:
         wave.append(0.5 + 0.5 * math.sin(t * wave_count))
         t += wave_speed
 
