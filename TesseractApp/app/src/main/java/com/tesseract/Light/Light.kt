@@ -1,4 +1,4 @@
-package com.tesseract
+package com.tesseract.Light
 
 class Light(var name: String, val description: String, var colors: ArrayList<String>, val colors_parameters: ArrayList<String>) {
 

@@ -1,4 +1,4 @@
-package com.tesseract
+package com.tesseract.bluetooth
 
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
@@ -197,11 +197,9 @@ class BluetoothService() : Service() {
             // given BluetoothDevice
             try {
                 tmp = if (secure) {
-                    mmDevice.createRfcommSocketToServiceRecord(
-                            MY_UUID_SECURE)
+                    mmDevice.createRfcommSocketToServiceRecord(MY_UUID_SECURE)
                 } else {
-                    mmDevice.createInsecureRfcommSocketToServiceRecord(
-                            MY_UUID_INSECURE)
+                    mmDevice.createInsecureRfcommSocketToServiceRecord(MY_UUID_INSECURE)
                 }
             } catch (e: IOException) {
                 Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e)
@@ -342,7 +340,7 @@ class BluetoothService() : Service() {
         private var messageCallback: BluetoothMessageCallback? = null
 
         fun setListener(listener: BluetoothMessageCallback) {
-            this.messageCallback = listener
+            messageCallback = listener
         }
 
     }

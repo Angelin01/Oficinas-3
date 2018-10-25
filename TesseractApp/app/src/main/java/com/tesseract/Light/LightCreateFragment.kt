@@ -1,4 +1,4 @@
-package com.tesseract
+package com.tesseract.Light
 
 
 import android.graphics.Color
@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.*
 import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorListener
+import com.tesseract.R
+import com.tesseract.communication.TesseractCommunication
 
 class LightCreateFragment : Fragment() {
 
