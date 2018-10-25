@@ -1,7 +1,10 @@
-package com.tesseract
+package com.tesseract.communication
 
 import android.util.Log
 import com.google.gson.Gson
+import com.tesseract.Light.Light
+import com.tesseract.Music.Music
+import com.tesseract.bluetooth.BluetoothController
 
 object TesseractCommunication {
 

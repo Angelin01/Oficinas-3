@@ -1,4 +1,4 @@
-package com.tesseract
+package com.tesseract.Light
 
 import android.graphics.Color
 import android.os.Bundle
@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.tesseract.R
+import com.tesseract.communication.TesseractCommunication
 
 class LightFragment : Fragment() {
 

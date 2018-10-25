@@ -1,4 +1,4 @@
-package com.tesseract
+package com.tesseract.bluetooth
 
 interface BluetoothMessageCallback {
 

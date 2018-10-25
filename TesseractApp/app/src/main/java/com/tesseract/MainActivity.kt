@@ -11,6 +11,9 @@ import android.content.Context
 import android.content.IntentFilter
 import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
+import com.tesseract.Light.LightFragment
+import com.tesseract.bluetooth.BluetoothService
+import com.tesseract.communication.ConnectionsFragment
 
 
 class MainActivity : AppCompatActivity() {

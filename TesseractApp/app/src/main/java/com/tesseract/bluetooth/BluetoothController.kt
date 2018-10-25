@@ -1,10 +1,10 @@
-package com.tesseract
+package com.tesseract.bluetooth
 
 import android.bluetooth.BluetoothAdapter
 
 class BluetoothController {
 
-    public val messageCallback: com.tesseract.BluetoothMessageCallback? = null
+    public val messageCallback: BluetoothMessageCallback? = null
 
     companion object {
         var bluetoothAdapter: BluetoothAdapter? = null

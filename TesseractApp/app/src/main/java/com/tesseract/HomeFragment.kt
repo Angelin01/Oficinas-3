@@ -12,6 +12,11 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.squareup.picasso.Picasso
+import com.tesseract.Music.Music
+import com.tesseract.Music.MusicController
+import com.tesseract.bluetooth.BluetoothController
+import com.tesseract.bluetooth.BluetoothMessageCallback
+import com.tesseract.bluetooth.BluetoothService
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCallback {
