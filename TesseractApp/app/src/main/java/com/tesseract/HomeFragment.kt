@@ -138,7 +138,7 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
     }
 
     private fun updateBluetoothStatus() {
-        if (home_bluetooth_status == null){
+        if (home_bluetooth_status == null) {
             return
         }
 

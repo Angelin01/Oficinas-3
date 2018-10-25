@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                     setFragment(AboutFragment() as Fragment, null)
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.nav_connections-> {
+                R.id.nav_connections -> {
                     setFragment(ConnectionsFragment() as Fragment, null)
                     return@setOnNavigationItemSelectedListener true
                 }

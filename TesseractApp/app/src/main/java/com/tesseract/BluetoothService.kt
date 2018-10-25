@@ -328,6 +328,7 @@ class BluetoothService() : Service() {
 
         }
     }
+
     companion object {
 
         private const val TAG = "BluetoothService"
@@ -348,7 +349,7 @@ class BluetoothService() : Service() {
 
 
     enum class BluetoothStates {
-        STATE_NONE ,
+        STATE_NONE,
         STATE_CONNECTING,
         STATE_CONNECTED,
         STATE_CONNECTION_FAILED,

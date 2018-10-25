@@ -3,7 +3,6 @@ package com.tesseract
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +14,8 @@ class LightFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view: View = inflater.inflate(R.layout.fragment_light, container, false)
+
+        this.initializeColorViews(view)
 
         val lights: ArrayList<Light> = this.getLights()
         val spinner: Spinner = view.findViewById(R.id.spinner_leds_patterns)
@@ -36,7 +37,7 @@ class LightFragment : Fragment() {
         val imageViewEditPatters: ImageButton = view.findViewById(R.id.imageButtonEditPatterns)
         imageViewEditPatters.setOnClickListener {
             val transaction = fragmentManager!!.beginTransaction()
-            transaction.replace(R.id.home_view_frame, LightCreate())
+            transaction.replace(R.id.home_view_frame, LightCreateFragment())
             transaction.addToBackStack(null)
             transaction.commit()
         }
@@ -44,13 +45,42 @@ class LightFragment : Fragment() {
         return view
     }
 
+    // TODO: replace for RecyclerView
+    private lateinit var colorImageViews: ArrayList<ImageView>
+    private lateinit var colorTextViews: ArrayList<TextView>
+    private fun initializeColorViews(view: View) {
+        colorImageViews = ArrayList()
+        colorImageViews.add(view.findViewById(R.id.imageViewFirstColor))
+        colorImageViews.add(view.findViewById(R.id.imageViewSecondColor))
+        colorImageViews.add(view.findViewById(R.id.imageViewThirdColor))
+        colorTextViews = ArrayList()
+        colorTextViews.add(view.findViewById(R.id.textViewFirstColor))
+        colorTextViews.add(view.findViewById(R.id.textViewSecondColor))
+        colorTextViews.add(view.findViewById(R.id.textViewThirdColor))
+    }
+
+
     private fun updateLightParameters(light: Light) {
+        for (colorImageView: ImageView in this.colorImageViews) {
+            colorImageView.visibility = View.INVISIBLE
+        }
+
+        for (colorTextView: TextView in this.colorTextViews) {
+            colorTextView.visibility = View.INVISIBLE
+        }
+
         val textViewDescription: TextView = view!!.findViewById(R.id.textViewDescription)
         textViewDescription.text = light.description
-        val imageViewFirstColor: ImageView = view!!.findViewById(R.id.imageViewFirstColor)
-        imageViewFirstColor.setBackgroundColor(Color.parseColor(light.colors[0]))
-        val textViewFirstColor: TextView = view!!.findViewById(R.id.textViewFirstColor)
-        textViewFirstColor.text = light.colors_parameters[0]
+
+        light.colors_parameters.forEachIndexed { index, element ->
+            this.colorTextViews[index].visibility = View.VISIBLE
+            this.colorTextViews[index].text = element
+        }
+
+        light.colors.forEachIndexed { index, element ->
+            this.colorImageViews[index].visibility = View.VISIBLE
+            this.colorImageViews[index].setBackgroundColor(Color.parseColor(element))
+        }
     }
 
     private fun getLights(): ArrayList<Light> {

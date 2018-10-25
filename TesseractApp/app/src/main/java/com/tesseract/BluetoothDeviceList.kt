@@ -29,9 +29,7 @@ class BluetoothDeviceList : Fragment() {
     override fun onResume() {
         super.onResume()
         if (BluetoothController.bluetoothService != null) {
-            // Only if the state is STATE_NONE, do we know that we haven't started already
             if (BluetoothController.bluetoothService!!.getState() == BluetoothService.BluetoothStates.STATE_NONE) {
-                // Start the Bluetooth chat services
                 BluetoothController.bluetoothService!!.start()
             }
         }
@@ -40,9 +38,7 @@ class BluetoothDeviceList : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        // Get local Bluetooth adapter
 
-        // If the adapter is null, then Bluetooth is not supported
         if (BluetoothController.bluetoothAdapter == null) {
             val activity = activity
             Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show()
@@ -75,7 +71,7 @@ class BluetoothDeviceList : Fragment() {
         if (!this.mPairedDevices.isEmpty()) {
             for (device: BluetoothDevice in mPairedDevices) {
                 list.add(device)
-                Log.i("device", ""+device)
+                Log.i("device", "" + device)
             }
         } else {
             Toast.makeText(this.context, "No paired device", Toast.LENGTH_SHORT).show()
@@ -128,7 +124,7 @@ class BluetoothDeviceList : Fragment() {
     }
 
     companion object {
-//        private const val REQUEST_CONNECT_DEVICE_SECURE = 1
+        //        private const val REQUEST_CONNECT_DEVICE_SECURE = 1
 //        private const val REQUEST_CONNECT_DEVICE_INSECURE = 2
         private const val REQUEST_ENABLE_BLUETOOTH = 3
 //        private const val EXTRA_DEVICE_ADDRESS = "device_address"
