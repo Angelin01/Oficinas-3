@@ -1,6 +1,5 @@
 package com.tesseract
 
-import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -8,11 +7,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.SeekBar
+import android.widget.TextView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(), MainActivity.StatusChanged {
+class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCallback {
 
     private lateinit var musicController: MusicController
 
@@ -24,6 +26,8 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged {
 
         musicController = activity?.run { ViewModelProviders.of(this).get(MusicController::class.java) }!!
         updateMusicInformation(musicController.music!!, view, musicController)
+
+        BluetoothService.setListener(this as BluetoothMessageCallback)
 
         val buttonNext: ImageButton = view.findViewById(R.id.buttonPlayNext)
         buttonNext.setOnClickListener {
@@ -134,14 +138,16 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged {
     }
 
     private fun updateBluetoothStatus() {
-
-        if (home_bluetooth_status == null){
+        if (home_bluetooth_status == null) {
             return
         }
-        if (BluetoothController.bluetoothService!!.mState.equals(BluetoothService.STATE_CONNECTED)) {
+
+        if (BluetoothController.bluetoothService!!.mState == BluetoothService.BluetoothStates.STATE_CONNECTED) {
             home_bluetooth_status.setBackgroundColor(context!!.getColor(R.color.secondaryColor))
+            textViewBluetoothConnection.text = "Tesseract Connected"
         } else {
             home_bluetooth_status.setBackgroundColor(context!!.getColor(R.color.colorAccent))
+            textViewBluetoothConnection.text = "Tesseract Disconnected"
         }
     }
 
@@ -149,4 +155,10 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged {
         updateBluetoothStatus()
     }
 
+    override fun callbackMessageReceiver(message: String) {
+        if (message == "batata") {
+            return
+        }
+        return
+    }
 }

@@ -5,7 +5,7 @@ import android.util.Log
 import com.google.gson.Gson
 
 
-class MusicController: ViewModel() {
+class MusicController : ViewModel() {
     private var volume: Int = 0
     var shuffle: Boolean = false
     var playing: Boolean = false
@@ -93,7 +93,7 @@ class MusicController: ViewModel() {
                 "}"
 
         val gson = Gson()
-        this.music =  gson.fromJson(lastMusic, Music::class.java)
+        this.music = gson.fromJson(lastMusic, Music::class.java)
     }
 
 }

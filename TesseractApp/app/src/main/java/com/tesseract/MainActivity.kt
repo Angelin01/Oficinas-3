@@ -1,6 +1,5 @@
 package com.tesseract
 
-import android.arch.lifecycle.Lifecycle
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -11,7 +10,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
 import android.support.v4.content.LocalBroadcastManager
-import android.util.Log
+import android.widget.Toast
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        registerReceiver(bluetoothBradcastReceiver, bluetoothBroadcastFilter)
+        registerReceiver(bluetoothBroadcastReceiver, bluetoothBroadcastFilter)
 
         val mMainNav: BottomNavigationView = findViewById(R.id.home_nav_bar)
 
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                     setFragment(AboutFragment() as Fragment, null)
                     return@setOnNavigationItemSelectedListener true
                 }
-                R.id.nav_connections-> {
+                R.id.nav_connections -> {
                     setFragment(ConnectionsFragment() as Fragment, null)
                     return@setOnNavigationItemSelectedListener true
                 }
@@ -62,18 +61,18 @@ class MainActivity : AppCompatActivity() {
 
     public override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(applicationContext).registerReceiver(this.bluetoothBradcastReceiver, bluetoothBroadcastFilter)
+        LocalBroadcastManager.getInstance(applicationContext).registerReceiver(this.bluetoothBroadcastReceiver, bluetoothBroadcastFilter)
     }
 
     public override fun onPause() {
         super.onPause()
-        LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(this.bluetoothBradcastReceiver)
+        LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(this.bluetoothBroadcastReceiver)
 
     }
 
     public override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(bluetoothBradcastReceiver)
+        unregisterReceiver(bluetoothBroadcastReceiver)
     }
 
     private fun setFragment(fragment: Fragment, tag: String?) {
@@ -83,19 +82,21 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-    private val bluetoothBradcastReceiver = object : BroadcastReceiver() {
+    private val bluetoothBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
-            Log.d("TAG", "Receive Broadcast")
             if (action == BluetoothService.STATE_CHANGED) {
-                Log.d("TAG", "Broadcast STATE CHANGED")
-
                 val state = intent.getIntExtra("state", 0)
-                Log.d("TAG", "Broadcast STATE: $state")
 
                 when (state) {
-                    BluetoothService.STATE_CONNECTED -> updateStatusBluetoothView(true)
-                    BluetoothService.STATE_NONE -> updateStatusBluetoothView(false)
+                    BluetoothService.BluetoothStates.STATE_CONNECTED.ordinal -> {
+                        updateStatusBluetoothView(true)
+                        Toast.makeText(context, "Bluetooth Connected", Toast.LENGTH_SHORT).show()
+                    }
+                    BluetoothService.BluetoothStates.STATE_NONE.ordinal, BluetoothService.BluetoothStates.STATE_CONNECTION_LOST.ordinal -> {
+                        updateStatusBluetoothView(false)
+                        Toast.makeText(context, "Bluetooth Disconnected", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -109,8 +110,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateStatusBluetoothView(connected: Boolean) {
-        Log.d("TAG", lifecycle.currentState.toString())
-
         val homeFragment = this.supportFragmentManager.findFragmentByTag("home_fragment") ?: return
 
         mCallback = homeFragment as StatusChanged

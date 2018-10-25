@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/nav_home"
-        android:icon="@drawable/ic_action_name"
+        android:icon="@drawable/ic_home_light"
         android:title="@string/Home" />
 
     <item
         android:id="@+id/nav_light"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/ic_bulb_light"
         android:title="@string/LEDS" />
 
     <item
         android:id="@+id/nav_spotify"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/ic_spotify_light"
         android:title="@string/Spotify" />
 
     <item
         android:id="@+id/nav_connections"
-        android:icon="@drawable/ic_bluetooth"
+        android:icon="@drawable/ic_bluetooth_light"
         android:title="Connections" />
 
     <item
