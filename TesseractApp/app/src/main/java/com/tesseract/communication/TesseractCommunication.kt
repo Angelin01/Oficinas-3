@@ -81,4 +81,8 @@ object TesseractCommunication {
 		sendCommand(lightJson)
 	}
 
+	fun send(value: String) {
+		BluetoothController.bluetoothService!!.write(value.toByteArray())
+	}
+
 }

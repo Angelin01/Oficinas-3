@@ -3,35 +3,62 @@ package com.tesseract.communication
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentTransaction
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.tesseract.R
+import com.tesseract.WifiFragment
 import com.tesseract.bluetooth.BluetoothDeviceList
 
 
 class ConnectionsFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.fragment_connections, container, false)
+	private val sampleWifiConnect: String = """
+		{
+   "type":"wifi",
+   "subtype":"connect",
+   "value":{
+      "ssid":"Boberg",
+      "psk":"minhapskfeliz"
+   }
+}
+"""
 
-        val buttonConnectBluetooth: RelativeLayout = view.findViewById(R.id.buttonConnectTesseract)
-        buttonConnectBluetooth.setOnClickListener {
-            val transaction = fragmentManager!!.beginTransaction()
-            transaction.replace(R.id.home_view_frame, BluetoothDeviceList()) // give your fragment container id in first parameter
-            transaction.addToBackStack(null)  // if written, this transaction will be added to backstack
-            transaction.commit()
-        }
+	private val sampleWifiList: String = """
+		{
+   "type":"wifi",
+   "subtype":"request-list",
+   "value":null
+}
+"""
 
-        val buttonConnectWifi: RelativeLayout = view.findViewById(R.id.buttonConnectTesseractWifi)
-        buttonConnectWifi.setOnClickListener {
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		// Inflate the layout for this fragment
+		val view: View = inflater.inflate(R.layout.fragment_connections, container, false)
 
-        }
+		val buttonConnectBluetooth: RelativeLayout = view.findViewById(R.id.buttonConnectTesseract)
+		buttonConnectBluetooth.setOnClickListener {
+			changeToFragment(R.id.home_view_frame, BluetoothDeviceList())
+		}
 
-        return view
-    }
+		val buttonConnectWifi: RelativeLayout = view.findViewById(R.id.buttonConnectTesseractWifi)
+		buttonConnectWifi.setOnClickListener {
+			// test
+			TesseractCommunication.send(sampleWifiConnect)
+
+			changeToFragment(R.id.home_view_frame, WifiFragment())
+		}
+
+		return view
+	}
+
+	private fun changeToFragment(frame_layout_id: Int, fragment: Fragment) {
+		val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
+		transaction.replace(frame_layout_id, fragment)
+		transaction.addToBackStack(null)
+		transaction.commit()
+	}
 
 }
