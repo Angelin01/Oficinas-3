@@ -12,8 +12,8 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.squareup.picasso.Picasso
-import com.tesseract.Music.Music
-import com.tesseract.Music.MusicController
+import com.tesseract.music.Music
+import com.tesseract.music.MusicController
 import com.tesseract.bluetooth.BluetoothController
 import com.tesseract.bluetooth.BluetoothMessageCallback
 import com.tesseract.bluetooth.BluetoothService

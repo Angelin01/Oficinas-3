@@ -15,25 +15,6 @@ import com.tesseract.bluetooth.BluetoothDeviceList
 
 class ConnectionsFragment : Fragment() {
 
-	private val sampleWifiConnect: String = """
-		{
-   "type":"wifi",
-   "subtype":"connect",
-   "value":{
-      "ssid":"Boberg",
-      "psk":"minhapskfeliz"
-   }
-}
-"""
-
-	private val sampleWifiList: String = """
-		{
-   "type":"wifi",
-   "subtype":"request-list",
-   "value":null
-}
-"""
-
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
 		val view: View = inflater.inflate(R.layout.fragment_connections, container, false)
@@ -45,9 +26,6 @@ class ConnectionsFragment : Fragment() {
 
 		val buttonConnectWifi: RelativeLayout = view.findViewById(R.id.buttonConnectTesseractWifi)
 		buttonConnectWifi.setOnClickListener {
-			// test
-			TesseractCommunication.send(sampleWifiConnect)
-
 			changeToFragment(R.id.home_view_frame, WifiFragment())
 		}
 

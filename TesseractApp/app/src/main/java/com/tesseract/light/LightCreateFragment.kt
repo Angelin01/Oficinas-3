@@ -1,4 +1,4 @@
-package com.tesseract.Light
+package com.tesseract.light
 
 
 import android.graphics.Color
@@ -12,7 +12,7 @@ import android.widget.*
 import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorListener
 import com.tesseract.R
-import com.tesseract.communication.TesseractCommunication
+import com.tesseract.communication.LightCommunication
 
 class LightCreateFragment : Fragment() {
 
@@ -31,7 +31,7 @@ class LightCreateFragment : Fragment() {
 		defineSelectColorListeners(view)
 		val finishButton: Button = view.findViewById(R.id.buttonFinishLightEdit)
 		finishButton.setOnClickListener {
-			TesseractCommunication.sendLightConfigurations(editingLight)
+			LightCommunication.sendLightConfigurations(editingLight)
 			val transaction = fragmentManager!!.beginTransaction()
 			transaction.replace(R.id.home_view_frame, LightFragment())
 			transaction.addToBackStack(null)
@@ -144,8 +144,8 @@ class LightCreateFragment : Fragment() {
 
 	private fun getLights(): ArrayList<Light> {
 		val lights: ArrayList<Light> = ArrayList()
-		lights.add(TesseractCommunication.getLight(0))
-		lights.add(TesseractCommunication.getLight(1))
+		lights.add(LightCommunication.getLight(0))
+		lights.add(LightCommunication.getLight(1))
 		return lights
 	}
 
