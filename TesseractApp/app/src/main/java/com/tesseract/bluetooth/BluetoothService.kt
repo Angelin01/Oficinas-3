@@ -291,7 +291,7 @@ class BluetoothService() : Service() {
                     var input: String = String(buffer)
                     input = input.substring(0, bytes)
                     Log.d(TAG, input)
-                    messageCallback!!.callbackMessageReceiver(input)
+                    messageCallback!!.callbackMessageReceiver(input, null)
 
                 } catch (e: IOException) {
                     Log.e(TAG, "disconnected", e)

@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.tesseract.R
 
-class WifiListAdapter(private val wifiList: ArrayList<Wifi>, var listener: OnItemClickListener) : RecyclerView.Adapter<WifiListAdapter.WifiListHolder>() {
+class WifiListAdapter(private var wifiList: ArrayList<Wifi>, var listener: OnItemClickListener) : RecyclerView.Adapter<WifiListAdapter.WifiListHolder>() {
 
 	interface OnItemClickListener {
 		fun onItemClick(item: Wifi)
@@ -27,8 +27,11 @@ class WifiListAdapter(private val wifiList: ArrayList<Wifi>, var listener: OnIte
 		holder.bind(wifiList[position], listener)
 	}
 
-	fun updateList(wifi: Wifi) {
-		insertItem(wifi)
+	fun updateList(newWifiLIst: ArrayList<Wifi>) {
+		removeAll()
+		for (wifi: Wifi in newWifiLIst) {
+			insertItem(wifi)
+		}
 	}
 
 	private fun insertItem(wifi: Wifi) {
@@ -36,10 +39,9 @@ class WifiListAdapter(private val wifiList: ArrayList<Wifi>, var listener: OnIte
 		notifyItemInserted(itemCount)
 	}
 
-	private fun removeItem(position: Int) {
-		wifiList.removeAt(position)
-		notifyItemRemoved(position)
-		notifyItemRangeChanged(position, wifiList.size)
+	private fun removeAll() {
+		wifiList.clear()
+		notifyDataSetChanged()
 	}
 
 	class WifiListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

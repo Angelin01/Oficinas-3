@@ -17,6 +17,7 @@ import com.tesseract.music.MusicController
 import com.tesseract.bluetooth.BluetoothController
 import com.tesseract.bluetooth.BluetoothMessageCallback
 import com.tesseract.bluetooth.BluetoothService
+import com.tesseract.communication.TesseractCommunication
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCallback {
@@ -32,7 +33,7 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
         musicController = activity?.run { ViewModelProviders.of(this).get(MusicController::class.java) }!!
         updateMusicInformation(musicController.music!!, view, musicController)
 
-        BluetoothService.setListener(this as BluetoothMessageCallback)
+        TesseractCommunication.musicListener = this
 
         val buttonNext: ImageButton = view.findViewById(R.id.buttonPlayNext)
         buttonNext.setOnClickListener {
@@ -160,8 +161,9 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
         updateBluetoothStatus()
     }
 
-    override fun callbackMessageReceiver(message: String) {
-        if (message == "batata") {
+    override fun callbackMessageReceiver(values: Any, subtype: String?) {
+        Log.d("TAG", "message received $values")
+        if (values == "batata") {
             return
         }
         return

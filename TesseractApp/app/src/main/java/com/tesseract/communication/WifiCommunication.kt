@@ -31,7 +31,7 @@ object WifiCommunication {
     }
 ]"""
 
-	fun getAvailableWifi(): List<Wifi> {
+	fun requestAvailableWifi(): List<Wifi> {
 		this.requestWifiList()
 		val gson = Gson()
 		val wifiList: List<Wifi> = gson.fromJson(sampleWifiList, Array<Wifi>::class.java).toList()
@@ -48,6 +48,15 @@ object WifiCommunication {
 
 		Log.d("TAG", wifiJson)
 		TesseractCommunication.sendRequest("wifi", "connect", wifiJson)
+	}
+
+	fun getAvailableWifi(values: ArrayList<String>): List<Wifi> {
+		val gson = Gson()
+		val wifiList: ArrayList<Wifi> = ArrayList()
+		for (wifi_available: Any in values) {
+			wifiList.add(gson.fromJson(gson.toJson(wifi_available), Wifi::class.java))
+		}
+		return wifiList
 	}
 
 }
