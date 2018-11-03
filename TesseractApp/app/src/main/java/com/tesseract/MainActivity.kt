@@ -11,9 +11,11 @@ import android.content.Context
 import android.content.IntentFilter
 import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
-import com.tesseract.Light.LightFragment
+import com.tesseract.bluetooth.BluetoothMessageCallback
+import com.tesseract.light.LightFragment
 import com.tesseract.bluetooth.BluetoothService
 import com.tesseract.communication.ConnectionsFragment
+import com.tesseract.communication.TesseractCommunication
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         registerReceiver(bluetoothBroadcastReceiver, bluetoothBroadcastFilter)
+        BluetoothService.setListener(TesseractCommunication as BluetoothMessageCallback)
 
         val mMainNav: BottomNavigationView = findViewById(R.id.home_nav_bar)
 
