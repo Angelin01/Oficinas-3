@@ -1,5 +1,6 @@
 package com.tesseract
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,34 +13,34 @@ import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import com.squareup.picasso.Picasso
+import com.tesseract.bluetooth.BluetoothController
+import com.tesseract.bluetooth.BluetoothService
 import com.tesseract.music.Music
 import com.tesseract.music.MusicController
-import com.tesseract.bluetooth.BluetoothController
-import com.tesseract.bluetooth.BluetoothMessageCallback
-import com.tesseract.bluetooth.BluetoothService
-import com.tesseract.communication.TesseractCommunication
+import com.tesseract.music.Player
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCallback {
+class HomeFragment : Fragment(), MainActivity.StatusChanged {
 
     private lateinit var musicController: MusicController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_home, container, false)
 
 
         musicController = activity?.run { ViewModelProviders.of(this).get(MusicController::class.java) }!!
-        updateMusicInformation(musicController.music!!, view, musicController)
-
-        TesseractCommunication.musicListener = this
+	    musicController.music.observe(activity!!, Observer<Music> { music ->
+		    updateMusicInformation(music!!, view)
+	    })
+	    musicController.player.observe(activity!!, Observer<Player> { player ->
+		    updatePlayerInformation(player!!, view, musicController)
+	    })
 
         val buttonNext: ImageButton = view.findViewById(R.id.buttonPlayNext)
         buttonNext.setOnClickListener {
             musicController.next()
             musicController.play()
-            this.updateMusicInformation(musicController.music!!, this.view!!, musicController)
             Log.d("TAG", "button next pressed")
 
         }
@@ -47,7 +48,6 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
         val buttonPlay: ImageButton = view.findViewById(R.id.buttonPlay)
         buttonPlay.setOnClickListener {
             musicController.playToggle()
-            this.updateMusicInformation(musicController.music!!, this.view!!, musicController)
             Log.d("TAG", "button play pressed")
 
         }
@@ -56,7 +56,6 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
         buttonPrevious.setOnClickListener {
             musicController.previous()
             musicController.play()
-            this.updateMusicInformation(musicController.music!!, this.view!!, musicController)
             Log.d("TAG", "button previous pressed")
 
         }
@@ -64,7 +63,6 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
         val buttonShuffle: ImageButton = view.findViewById(R.id.buttonPlayShuffle)
         buttonShuffle.setOnClickListener {
             musicController.shuffleToggle()
-            this.updateMusicInformation(musicController.music!!, this.view!!, musicController)
             Log.d("TAG", "button shuffle pressed")
         }
 
@@ -72,7 +70,6 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
         val seekVolume: SeekBar = view.findViewById(R.id.seekVolume)
         seekVolume.visibility = View.INVISIBLE
         buttonVolume.setOnClickListener {
-            this.updateMusicInformation(musicController.music!!, this.view!!, musicController)
             this.showVolumeSlider(this.view!!)
             Log.d("TAG", "button volume pressed")
         }
@@ -86,21 +83,24 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
     override fun onStart() {
         super.onStart()
 
-        this.updateMusicInformation(musicController.music!!, this.view!!, musicController)
-        this.updateBluetoothStatus()
+        this.updateMusicInformation(musicController.music.value!!, this.view!!)
+	    updatePlayerInformation(musicController.player.value!!, this.view!!, musicController)
+	    this.updateBluetoothStatus()
     }
 
     override fun onResume() {
         super.onResume()
 
-        this.updateMusicInformation(musicController.music!!, this.view!!, musicController)
-        this.updateBluetoothStatus()
+        this.updateMusicInformation(musicController.music.value!!, this.view!!)
+	    updatePlayerInformation(musicController.player.value!!, this.view!!, musicController)
+	    this.updateBluetoothStatus()
     }
 
 
-    private fun updateMusicInformation(music: Music, view: View, musicController: MusicController) {
-        val musicCoverView: ImageView = view.findViewById(R.id.imageViewMusicCover)
-        Log.i("TAG", music.album_cover_url)
+    private fun updateMusicInformation(music: Music, view: View) {
+	    Log.d("TAG", "Updatin Music informations")
+
+	    val musicCoverView: ImageView = view.findViewById(R.id.imageViewMusicCover)
         Picasso.get().load(music.album_cover_url).into(musicCoverView)
 
         val musicNameView: TextView = view.findViewById(R.id.textViewMusicName)
@@ -109,12 +109,17 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
         val bandNameView: TextView = view.findViewById(R.id.textViewMusicBand)
         bandNameView.text = music.band_name
 
-        val seekVolume: SeekBar = view.findViewById(R.id.seekVolume)
-        seekVolume.progress = music.volume
+    }
+
+	private fun updatePlayerInformation(player: Player, view: View, musicController: MusicController) {
+		Log.d("TAG", "Updatin player informations")
+		val seekVolume: SeekBar = view.findViewById(R.id.seekVolume)
+		seekVolume.progress = player.volume
 
         updateButtonShuffle(view, musicController)
         updateButtonPlay(view, musicController)
-    }
+
+	}
 
     private fun showVolumeSlider(view: View) {
         val seekVolume: SeekBar = view.findViewById(R.id.seekVolume)
@@ -127,7 +132,7 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
 
     private fun updateButtonShuffle(view: View, musicController: MusicController) {
         val buttonShuffle: ImageButton = view.findViewById(R.id.buttonPlayShuffle)
-        if (musicController.shuffle) {
+        if (musicController.player.value!!.shuffle) {
             buttonShuffle.setImageResource(R.drawable.ic_play_shuffle_on)
         } else {
             buttonShuffle.setImageResource(R.drawable.ic_play_shuffle)
@@ -136,7 +141,7 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
 
     private fun updateButtonPlay(view: View, musicController: MusicController) {
         val buttonPlay: ImageButton = view.findViewById(R.id.buttonPlay)
-        if (musicController.playing) {
+        if (musicController.player.value!!.playing) {
             buttonPlay.setImageResource(R.drawable.ic_pause)
         } else {
             buttonPlay.setImageResource(R.drawable.ic_play)
@@ -159,13 +164,5 @@ class HomeFragment : Fragment(), MainActivity.StatusChanged, BluetoothMessageCal
 
     override fun onStatusChange(connected: Boolean) {
         updateBluetoothStatus()
-    }
-
-    override fun callbackMessageReceiver(values: Any, subtype: String?) {
-        Log.d("TAG", "message received $values")
-        if (values == "batata") {
-            return
-        }
-        return
     }
 }

@@ -13,7 +13,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.support.v4.content.LocalBroadcastManager
 
-class BluetoothService() : Service() {
+class BluetoothService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -288,9 +288,13 @@ class BluetoothService() : Service() {
                 try {
                     // Read from the InputStream
                     bytes = mmInStream!!.read(buffer)
-                    var input: String = String(buffer)
+                    var input = String(buffer)
                     input = input.substring(0, bytes)
                     Log.d(TAG, input)
+	                if (input.equals("music")) {
+		                input = mockMusicResponse()
+//		                Log.d("TAG", "Imprimindo musica: $input")
+	                }
                     messageCallback!!.callbackMessageReceiver(input, null)
 
                 } catch (e: IOException) {
@@ -300,6 +304,56 @@ class BluetoothService() : Service() {
                 }
 
             }
+        }
+
+	    var mockerMusicIndex = 0
+        private fun mockMusicResponse(): String {
+	        val sampleMusic1: String = """
+{
+	"type": "music",
+	"subtype": "music",
+	"value":
+    {
+      "name": "music 1",
+      "band_name": "band 1",
+      "album_cover_url": "http://animallemundopet.com.br/wp-content/uploads/2014/10/Los-gatos-nos-ignoran-1-777x518.jpg",
+      "duration": "1.0"
+    }
+}"""
+	        val sampleMusic2: String = """
+{
+	"type": "music",
+	"subtype": "music",
+	"value":
+    {
+      "name": "music 2",
+      "band_name": "band 2",
+      "album_cover_url": "https://i.ytimg.com/vi/_43lSXa1yDs/maxresdefault.jpg",
+      "duration": "2.0"
+    }
+}"""
+	        val sampleMusic3: String = """
+{
+	"type": "music",
+	"subtype": "music",
+	"value":
+    {
+      "name": "music 3",
+      "band_name": "band 3",
+      "album_cover_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiEzGp5Ww0avJTR2SiwaXEmE7vJQ__e-vaq-D4Yz4p1mN96_7SXQ",
+      "duration": "3.0"
+    }
+}"""
+	        if (mockerMusicIndex == 0) {
+		        mockerMusicIndex = 1
+		        return sampleMusic1
+	        } else if (mockerMusicIndex == 1) {
+		        mockerMusicIndex = 2
+		        return sampleMusic2
+	        } else {
+		        mockerMusicIndex = 0
+		        return sampleMusic3
+	        }
         }
 
         /**

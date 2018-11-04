@@ -1,6 +1,7 @@
-package com.tesseract
+package com.tesseract.wifi
 
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -10,14 +11,17 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import com.tesseract.communication.WifiCommunication
-import com.tesseract.wifi.Wifi
+import com.tesseract.R
 
 
 class WifiConnect : Fragment() {
 
+	private lateinit var wifiController: WifiController
+
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val view: View = inflater.inflate(R.layout.fragment_wifi_connect, container, false)
+
+		wifiController = activity?.run { ViewModelProviders.of(this).get(WifiController::class.java) }!!
 
 		val arguments = arguments
 		val wifi: Wifi = arguments!!.getSerializable("wifi") as Wifi
@@ -31,7 +35,7 @@ class WifiConnect : Fragment() {
 		buttonWifiConnect.setOnClickListener {
 			Log.d("TAG", "Password: ${editTextWifiPassword.text}")
 			val wifiConnect: Wifi = Wifi(wifi.ssid, null, null, editTextWifiPassword.text.toString())
-			WifiCommunication.connectToWifi(wifiConnect)
+			wifiController.connectToWifi(wifiConnect)
 		}
 		return view
 	}

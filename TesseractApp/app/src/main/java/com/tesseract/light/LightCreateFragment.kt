@@ -1,6 +1,7 @@
 package com.tesseract.light
 
 
+import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,15 +13,18 @@ import android.widget.*
 import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorListener
 import com.tesseract.R
-import com.tesseract.communication.LightCommunication
 
 class LightCreateFragment : Fragment() {
 
 	private lateinit var selectingColor: ImageView
 	private lateinit var editingLight: Light
 
+	private lateinit var lightController: LightController
+
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val view: View = inflater.inflate(R.layout.fragment_light_create, container, false)
+
+		lightController = activity?.run { ViewModelProviders.of(this).get(LightController::class.java) }!!
 
 		this.initializeColorViews(view)
 
@@ -31,7 +35,7 @@ class LightCreateFragment : Fragment() {
 		defineSelectColorListeners(view)
 		val finishButton: Button = view.findViewById(R.id.buttonFinishLightEdit)
 		finishButton.setOnClickListener {
-			LightCommunication.sendLightConfigurations(editingLight)
+			lightController.sendLightConfigurations(editingLight)
 			val transaction = fragmentManager!!.beginTransaction()
 			transaction.replace(R.id.home_view_frame, LightFragment())
 			transaction.addToBackStack(null)
@@ -144,8 +148,8 @@ class LightCreateFragment : Fragment() {
 
 	private fun getLights(): ArrayList<Light> {
 		val lights: ArrayList<Light> = ArrayList()
-		lights.add(LightCommunication.getLight(0))
-		lights.add(LightCommunication.getLight(1))
+		lights.add(lightController.getLight(0))
+		lights.add(lightController.getLight(1))
 		return lights
 	}
 
