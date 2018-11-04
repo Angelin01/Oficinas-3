@@ -6,8 +6,10 @@ import com.tesseract.bluetooth.BluetoothController
 import com.tesseract.bluetooth.BluetoothMessageCallback
 
 object TesseractCommunication: BluetoothMessageCallback {
+
 	override fun callbackMessageReceiver(values: Any, subtype: String?) {
 		val gson = Gson()
+		Log.d("TAG", values.toString())
 		val request: Request? = gson.fromJson(values as String, Request::class.java)
 		if (request?.type.toString() == "music") {
 			musicListener.callbackMessageReceiver(request!!.value, request.subtype)

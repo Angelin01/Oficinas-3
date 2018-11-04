@@ -1,38 +1,79 @@
 package com.tesseract.music
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.util.Log
 import com.google.gson.Gson
-import com.tesseract.communication.MusicCommunication
+import com.tesseract.bluetooth.BluetoothMessageCallback
+import com.tesseract.communication.TesseractCommunication
 
 
-class MusicController : ViewModel() {
-	private var volume: Int = 0
-	var shuffle: Boolean = false
-	var playing: Boolean = false
+class MusicController : ViewModel(), BluetoothMessageCallback {
 
-	var music: Music? = null
+	val sampleMusic: String = """[
+    {
+      "name": "music 1",
+      "band_name": "band 1",
+      "album_cover_url": "http://animallemundopet.com.br/wp-content/uploads/2014/10/Los-gatos-nos-ignoran-1-777x518.jpg",
+      "duration": "1.0",
+      "volume": "30"
+    },
+    {
+      "name": "music 2",
+      "band_name": "band 2",
+      "album_cover_url": "https://i.ytimg.com/vi/_43lSXa1yDs/maxresdefault.jpg",
+      "duration": "2.0",
+      "volume": "80"
+    },
+    {
+      "name": "music 3",
+      "band_name": "band 3",
+      "album_cover_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiEzGp5Ww0avJTR2SiwaXEmE7vJQ__e-vaq-D4Yz4p1mN96_7SXQ",
+      "duration": "3.0",
+      "volume": "50"
+    }
+]"""
+
+	override fun callbackMessageReceiver(values: Any, subtype: String?) {
+//		music.value = values as Music
+		val gson = Gson()
+		Log.d("Tag", gson.toJson(values))
+		when (subtype) {
+			"music" -> {
+				music.postValue(gson.fromJson(gson.toJson(values), Music::class.java))
+				player.postValue(player.value!!.copy(position = 0))
+			}
+
+		}
+
+	}
+
+	var player: MutableLiveData<Player> = MutableLiveData()
+	var music: MutableLiveData<Music> = MutableLiveData()
 
 	var musicIndex: Int = 0 // para testes
 
 	init {
+		player.value = Player()
 		this.loadLastMusic()
+
+		TesseractCommunication.musicListener = this
+
 	}
 
 	fun play() {
-		this.playing = true
-		MusicCommunication.play()
-		this.music = MusicCommunication.getMusic(musicIndex)
+		player.value = player.value!!.copy(playing = true)
+		TesseractCommunication.sendCommand("play")
+		this.music.value = getMusic(musicIndex)
 	}
 
 	private fun pause() {
-		this.playing = false
-		MusicCommunication.pause()
-		// sendo command to pause
+		player.value = player.value!!.copy(playing = false)
+		TesseractCommunication.sendCommand("pause")
 	}
 
 	fun playToggle() {
-		if (this.playing) {
+		if (player.value!!.playing) {
 			this.pause()
 			return
 		}
@@ -43,41 +84,41 @@ class MusicController : ViewModel() {
 	fun next() {
 		musicIndex++
 		if (musicIndex > 2) musicIndex = 0
-		MusicCommunication.next()
+		TesseractCommunication.sendCommand("next")
 	}
 
 	fun previous() {
 		musicIndex--
 		if (musicIndex < 0) musicIndex = 2
-		MusicCommunication.previous()
+		TesseractCommunication.sendCommand("previous")
 	}
 
 	fun shuffleToggle() {
-		if (this.shuffle) {
-			this.shuffle = false
-			MusicCommunication.shuffle(false)
+		if (player.value!!.shuffle) {
+			player.value = player.value!!.copy(shuffle = false)
+			TesseractCommunication.sendCommand("shuffle")
 			return
 		}
 
-		MusicCommunication.shuffle(true)
-		this.shuffle = true
+		TesseractCommunication.sendCommand("shuffle")
+		player.value = player.value!!.copy(shuffle = true)
 	}
 
 	fun volume(volume: Int) {
-		this.volume = volume
+		player.value!!.volume = volume
 
 		if (volume < 0) {
-			this.volume = 0
+			player.value!!.volume = 0
 		} else if (volume > 100) {
-			this.volume = 100
+			player.value!!.volume = 100
 		}
 
-		MusicCommunication.volume(this.volume)
+		TesseractCommunication.sendCommand("volume: " + player.value!!.volume.toString())
 
 	}
 
 	private fun loadLastMusic() {
-		if (this.music != null) {
+		if (this.music.value != null) {
 			Log.d("TAG", "Music already loaded")
 			return
 		}
@@ -91,7 +132,13 @@ class MusicController : ViewModel() {
 }"""
 
 		val gson = Gson()
-		this.music = gson.fromJson(lastMusic, Music::class.java)
+		this.music.value = gson.fromJson(lastMusic, Music::class.java)
+	}
+
+	private fun getMusic(index: Int): Music {
+		val gson = Gson()
+		val music: List<Music>? = gson.fromJson(sampleMusic, Array<Music>::class.java).toList()
+		return music!![index]
 	}
 
 }
