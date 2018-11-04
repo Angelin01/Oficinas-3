@@ -291,11 +291,13 @@ class BluetoothService : Service() {
                     var input = String(buffer)
                     input = input.substring(0, bytes)
                     Log.d(TAG, input)
+
+	                // mock
 	                if (input.equals("music")) {
 		                input = mockMusicResponse()
-//		                Log.d("TAG", "Imprimindo musica: $input")
 	                }
-                    messageCallback!!.callbackMessageReceiver(input, null)
+
+	                messageCallback!!.callbackMessageReceiver(input, null)
 
                 } catch (e: IOException) {
                     Log.e(TAG, "disconnected", e)

@@ -8,9 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.tesseract.R
 
-class WifiListAdapter(private var wifiList: ArrayList<Wifi>, var listener: OnItemClickListener) : RecyclerView.Adapter<WifiListAdapter.WifiListHolder>() {
+class WifiListAdapter(private var wifiList: ArrayList<Wifi>, var listener: OnWifiItemClickListener) : RecyclerView.Adapter<WifiListAdapter.WifiListHolder>() {
 
-	interface OnItemClickListener {
+	interface OnWifiItemClickListener {
 		fun onItemClick(item: Wifi)
 	}
 
@@ -46,7 +46,7 @@ class WifiListAdapter(private var wifiList: ArrayList<Wifi>, var listener: OnIte
 
 	class WifiListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-		fun bind(item: Wifi, listener: OnItemClickListener) = with(itemView) {
+		fun bind(item: Wifi, listener: OnWifiItemClickListener) = with(itemView) {
 			with(itemView.findViewById<TextView>(R.id.textViewWifiSSID)) {
 				text = item.ssid
 			}
