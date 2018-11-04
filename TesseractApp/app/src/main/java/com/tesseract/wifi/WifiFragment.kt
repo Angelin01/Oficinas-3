@@ -12,9 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.tesseract.R
-import com.tesseract.wifi.WifiListAdapter.OnItemClickListener
+import com.tesseract.wifi.WifiListAdapter.OnWifiItemClickListener
 
-class WifiFragment : Fragment(), OnItemClickListener {
+class WifiFragment : Fragment(), OnWifiItemClickListener {
 
 	private fun updateWifiList(wifiList: ArrayList<Wifi>) {
 		activity!!.runOnUiThread {
@@ -33,7 +33,7 @@ class WifiFragment : Fragment(), OnItemClickListener {
 		transaction.commit()
 	}
 
-	private val clickListener: OnItemClickListener = this
+	private val clickListener: OnWifiItemClickListener = this
 	private lateinit var wifiListAdapter: WifiListAdapter
 
 	private lateinit var wifiController: WifiController

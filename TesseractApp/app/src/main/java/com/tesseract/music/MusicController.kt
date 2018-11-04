@@ -35,9 +35,7 @@ class MusicController : ViewModel(), BluetoothMessageCallback {
 ]"""
 
 	override fun callbackMessageReceiver(values: Any, subtype: String?) {
-//		music.value = values as Music
 		val gson = Gson()
-		Log.d("Tag", gson.toJson(values))
 		when (subtype) {
 			"music" -> {
 				music.postValue(gson.fromJson(gson.toJson(values), Music::class.java))
