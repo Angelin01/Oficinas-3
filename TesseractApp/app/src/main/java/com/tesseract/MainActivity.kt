@@ -16,6 +16,7 @@ import com.tesseract.light.LightFragment
 import com.tesseract.bluetooth.BluetoothService
 import com.tesseract.communication.ConnectionsFragment
 import com.tesseract.communication.TesseractCommunication
+import com.tesseract.spotify.SpotifyFragment
 
 
 class MainActivity : AppCompatActivity() {
