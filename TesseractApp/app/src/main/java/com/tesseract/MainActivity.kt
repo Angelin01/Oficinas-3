@@ -11,18 +11,17 @@ import android.content.Context
 import android.content.IntentFilter
 import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
+import com.spotify.sdk.android.authentication.AuthenticationClient
+import com.spotify.sdk.android.authentication.AuthenticationResponse
 import com.tesseract.bluetooth.BluetoothMessageCallback
 import com.tesseract.light.LightFragment
 import com.tesseract.bluetooth.BluetoothService
 import com.tesseract.communication.ConnectionsFragment
 import com.tesseract.communication.TesseractCommunication
-import com.tesseract.spotify.SpotifyFragment
-
 
 class MainActivity : AppCompatActivity() {
 
     private var bluetoothBroadcastFilter: IntentFilter = IntentFilter(BluetoothService.STATE_CHANGED)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +62,23 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        if (requestCode == 29384)
+            return
+
+        super.onActivityResult(requestCode, resultCode, intent)
+
+        if (requestCode == 1337)
+        {
+            val response = AuthenticationClient.getResponse(resultCode, intent)
+            if (response.type == AuthenticationResponse.Type.TOKEN)
+            {
+                var token = response.accessToken
+                //TODO: Enviar token por bluetooth para o Raspberry
+            }
+        }
     }
 
     public override fun onResume() {
