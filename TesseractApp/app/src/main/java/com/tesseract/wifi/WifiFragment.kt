@@ -17,8 +17,10 @@ import com.tesseract.wifi.WifiListAdapter.OnWifiItemClickListener
 class WifiFragment : Fragment(), OnWifiItemClickListener {
 
 	private fun updateWifiList(wifiList: ArrayList<Wifi>) {
-		activity!!.runOnUiThread {
-			wifiListAdapter.updateList(wifiList)
+		if (activity != null) {
+			activity!!.runOnUiThread {
+				wifiListAdapter.updateList(wifiList)
+			}
 		}
 	}
 
@@ -29,7 +31,6 @@ class WifiFragment : Fragment(), OnWifiItemClickListener {
 		val transaction: FragmentTransaction = fragmentManager!!.beginTransaction()
 		fragment.arguments = wifiSelected
 		transaction.replace(R.id.home_view_frame, fragment)
-		transaction.addToBackStack(null)
 		transaction.commit()
 	}
 
@@ -37,13 +38,14 @@ class WifiFragment : Fragment(), OnWifiItemClickListener {
 	private lateinit var wifiListAdapter: WifiListAdapter
 
 	private lateinit var wifiController: WifiController
+	private lateinit var recyclerViewWifi: RecyclerView
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val view: View = inflater.inflate(R.layout.fragment_wifi, container, false)
 
 		wifiController = activity?.run { ViewModelProviders.of(this).get(WifiController::class.java) }!!
 
-		val recyclerViewWifi = view.findViewById<RecyclerView>(R.id.recyclerViewListWifi)
+		recyclerViewWifi = view.findViewById(R.id.recyclerViewListWifi)
 
 		wifiListAdapter = WifiListAdapter(wifiController.wifiList.value as ArrayList<Wifi>, clickListener)
 		recyclerViewWifi.adapter = wifiListAdapter
@@ -60,6 +62,5 @@ class WifiFragment : Fragment(), OnWifiItemClickListener {
 
 		return view
 	}
-
 
 }
