@@ -6,11 +6,27 @@ import android.view.LayoutInflater
 import android.widget.Button
 import android.view.View
 import android.view.ViewGroup
+import com.google.gson.Gson
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
+import com.tesseract.communication.TesseractCommunication
 
 class SpotifyFragment : Fragment() {
+
+    companion object {
+        fun sendSpotifyConnectionRequest()
+        {
+            val spotifyConnectJSON = Gson().toJson("""
+                                    {
+                                      "type": "spotify",
+                                      "subtype": "connect",
+                                      "token": "${MainActivity.spotifyToken}"
+                                    } """)
+            TesseractCommunication.sendRequest("spotify", "connect", spotifyConnectJSON)
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
         // Inflate the layout for this fragment

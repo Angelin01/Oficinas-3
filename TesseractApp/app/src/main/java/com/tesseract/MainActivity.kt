@@ -21,6 +21,12 @@ import com.tesseract.communication.TesseractCommunication
 
 class MainActivity : AppCompatActivity() {
 
+    //region [Static variables]
+    companion object {
+        var spotifyToken: String = ""
+    }
+    //endregion
+
     private var bluetoothBroadcastFilter: IntentFilter = IntentFilter(BluetoothService.STATE_CHANGED)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,8 +77,8 @@ class MainActivity : AppCompatActivity() {
             val response = AuthenticationClient.getResponse(resultCode, intent)
             if (response.type == AuthenticationResponse.Type.TOKEN)
             {
-                var token = response.accessToken
-                //TODO: Enviar token por bluetooth para o Raspberry
+                spotifyToken = response.accessToken
+                SpotifyFragment.sendSpotifyConnectionRequest()
             }
         }
     }
