@@ -32,32 +32,28 @@ class MainActivity : AppCompatActivity() {
 
         val mMainNav: BottomNavigationView = findViewById(R.id.home_nav_bar)
 
-        setFragment(HomeFragment() as Fragment, null)
+        setFragment(R.id.home_view_frame, HomeFragment() as Fragment, tag = null, addToBackStack = false)
 
         mMainNav.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_home -> {
-                    setFragment(HomeFragment() as Fragment, "home_fragment")
-                    return@setOnNavigationItemSelectedListener true
-                }
                 R.id.nav_light -> {
-                    setFragment(LightFragment() as Fragment, null)
+                    setFragment(R.id.home_view_frame, LightFragment() as Fragment, "light")
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.nav_spotify -> {
-                    setFragment(SpotifyFragment() as Fragment, null)
+                    setFragment(R.id.home_view_frame, SpotifyFragment() as Fragment, "spotify")
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.nav_about -> {
-                    setFragment(AboutFragment() as Fragment, null)
+                    setFragment(R.id.home_view_frame, AboutFragment() as Fragment, "about")
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.nav_connections -> {
-                    setFragment(ConnectionsFragment() as Fragment, null)
+                    setFragment(R.id.home_view_frame, ConnectionsFragment() as Fragment, "connection")
                     return@setOnNavigationItemSelectedListener true
                 }
                 else -> {
-                    setFragment(HomeFragment() as Fragment, null)
+                    setFragment(R.id.home_view_frame, HomeFragment() as Fragment, "home")
                     return@setOnNavigationItemSelectedListener true
                 }
             }
@@ -97,14 +93,52 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(bluetoothBroadcastReceiver)
     }
 
-    private fun setFragment(fragment: Fragment, tag: String?) {
+	override fun onBackPressed() {
+		if (supportFragmentManager.backStackEntryCount > 0) {
+			supportFragmentManager.popBackStack()
+		} else {
+			super.onBackPressed()
+		}
+
+		val bottomNavigationView = this.findViewById(R.id.home_nav_bar) as BottomNavigationView
+		if (bottomNavigationView.selectedItemId == R.id.nav_home) {
+			super.onBackPressed()
+		} else {
+			bottomNavigationView.selectedItemId = R.id.nav_home
+		}
+	}
+
+    private fun setFragment(frameId: Int, fragment: Fragment, tag: String?, addToBackStack: Boolean = true) {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.home_view_frame, fragment, tag)
-        transaction.addToBackStack(null)
+        transaction.replace(frameId, fragment, tag)
+
+	    val stackedFragment = this.supportFragmentManager.findFragmentByTag(tag)
+	    if (addToBackStack && stackedFragment == null) {
+		    transaction.addToBackStack(tag)
+	    }
+
+	    val currentFragment: Fragment? = getCurrentFragment()
+	    if (stackedFragment == null) {
+		    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+	    }
+	    else if (currentFragment != null) {
+		    if (currentFragment.tag != stackedFragment.tag) {
+			    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+		    }
+	    }
         transaction.commit()
     }
 
-    private val bluetoothBroadcastReceiver = object : BroadcastReceiver() {
+	private fun getCurrentFragment(): Fragment? {
+		val fragments = supportFragmentManager.fragments
+		if (supportFragmentManager.backStackEntryCount == 0) {
+			return null
+		}
+
+		return fragments[fragments.size - 1]
+	}
+
+	private val bluetoothBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             if (action == BluetoothService.STATE_CHANGED) {
@@ -132,7 +166,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateStatusBluetoothView(connected: Boolean) {
-        val homeFragment = this.supportFragmentManager.findFragmentByTag("home_fragment") ?: return
+        val homeFragment = this.supportFragmentManager.findFragmentByTag("home") ?: return
 
         mCallback = homeFragment as StatusChanged
         (mCallback as HomeFragment).onStatusChange(connected)

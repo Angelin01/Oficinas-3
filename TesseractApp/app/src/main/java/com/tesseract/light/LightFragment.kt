@@ -44,7 +44,9 @@ class LightFragment : Fragment() {
 		imageViewEditPatters.setOnClickListener {
 			val transaction = fragmentManager!!.beginTransaction()
 			transaction.replace(R.id.home_view_frame, LightCreateFragment())
-			transaction.addToBackStack(null)
+			if (savedInstanceState == null) {
+				transaction.addToBackStack(null)
+			}
 			transaction.commit()
 		}
 
