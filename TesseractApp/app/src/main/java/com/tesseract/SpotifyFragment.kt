@@ -24,7 +24,7 @@ class SpotifyFragment : Fragment() {
     {
         val requestCode = 1337
         val clientID = "fbd9312c3e1e4942ac05ef1012776736"
-        val redirectURI = "http://localhost:8888/callback/"
+        val redirectURI = "com.tesseract.app://callback"
         val builder = AuthenticationRequest.Builder(clientID, AuthenticationResponse.Type.TOKEN, redirectURI)
         builder.setScopes(Array(1) {"streaming"})
         val request = builder.build()
