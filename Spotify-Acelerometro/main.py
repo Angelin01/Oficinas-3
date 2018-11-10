@@ -1,24 +1,21 @@
 #!/usr/bin/python
 
-from Acelerometro import *
-import spotipy
-import spotipy.util as util
+from Accelerometer import *
+from SpotifyClient import *
 
 def main():
-    username = 'lucaskfreitas'
-    client_id = 'fbd9312c3e1e4942ac05ef1012776736'
-    client_secret = '9cbd2569c9654861a72883a8fe678aad'
-    redirect_uri = 'http://localhost:8888/callback/'
-    scope = 'user-modify-playback-state'
-    token = util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
-    sp = spotipy.Spotify(auth=token)
+    # Token must be informed by the Android App
+    token = 'BQBS4q_TrLnOT-PYYGIpeYRAEECsIhZsqEvalGpdZkznww3zM4rk6iAfggYTfPAthsVeTQsjJnJjjy_QTvb9oE3j_FuZjej_EE6WfhK40KOVZnC1HNaJENHyMwVBtOfISkdnK94PRD4JaBkzx7PLgfzEYoBWD4gQzWDm4bpCzA'
+    spotify = SpotifyClient(token)
 
-    acelerometro = Acelerometro()
-    leitura = acelerometro.aguarda_comando()
-    if leitura == LeituraAcelerometro.INC_RIGHT:
-        sp.next_track()
-    elif leitura == LeituraAcelerometro.INC_LEFT:
-    	sp.previous_track()
+    accelerometer = Accelerometer()
+
+    while True:
+        reading = accelerometer.wait_for_movement()
+        if reading == AccReading.INC_RIGHT:
+            spotify.next_track()
+        elif reading == AccReading.INC_LEFT:
+    	    spotify.previous_track()
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,7 @@ from enum import Enum
 import smbus
 import math
 
-class LeituraAcelerometro(Enum):
+class AccReading(Enum):
     NONE = 0,
     INC_RIGHT = 1, 
     INC_LEFT = 2,
@@ -11,7 +11,7 @@ class LeituraAcelerometro(Enum):
     INC_BACK = 4,
     AGITATION = 5
 
-class Acelerometro():
+class Accelerometer():
     #Implementation
     def __init__(self):
         self.bus = smbus.SMBus(1) # or bus = smbus.SMBus(1) for Revision 2 boards
@@ -49,7 +49,7 @@ class Acelerometro():
         return math.degrees(radians)
 
     #Interface
-    def aguarda_comando(self):
+    def wait_for_movement(self):
         inclinado_direita = False
         inclinado_esquerda = False
 
@@ -66,11 +66,11 @@ class Acelerometro():
             if inclinado_direita or inclinado_esquerda:
                 if x_rotation < 10 and x_rotation > -10:
                     if inclinado_direita:
-                        return LeituraAcelerometro.INC_RIGHT
+                        return AccReading.INC_RIGHT
                     elif inclinado_esquerda:
-                        return LeituraAcelerometro.INC_LEFT
+                        return AccReading.INC_LEFT
                     else:
-                        return LeituraAcelerometro.NONE
+                        return AccReading.NONE
             elif x_rotation > 70:
                 inclinado_direita = True
                 print('Direita!')
