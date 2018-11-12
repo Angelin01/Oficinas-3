@@ -3,10 +3,11 @@ import requests
 
 class SpotifyClient():
 
-	def __init__(self):
+	def __init__(self, tesseract):
 		print('Spotify init')
 		# TODO: Token must be received from Bluetooth
 		self.token = 'BQCYevuKiMyi_iDe9odDdcYqQYvMy5gKroN4bQm2UVSXE-rqXRR-xhhIx-EJVS7skVKMp7EjcRRRw_f10sP39XKMRFbgcCRRJ4Hgms39jYMgRDIXRELWmGG5HN9mteOWaQDKx8XpasYhs_EwS8nITqTFYx0o7Mc'
+		self.tesseract = tesseract
 
 
 	def make_header(self):

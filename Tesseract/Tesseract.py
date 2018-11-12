@@ -5,10 +5,16 @@ from Accelerometer.AccThread import AccThread
 
 class Tesseract:
 
-	def run(self):
+	def __init__(self):
 		# TODO: Create bluetooth thread
 		# TODO: Create LED control thread
-		acc_thread = AccThread()
+		self.spotify = SpotifyClient(self)
+		self.acc_thread = AccThread(self)
+
+		self.is_spotify = True
+
+
+	def run(self):
 		acc_thread.run()
 
 

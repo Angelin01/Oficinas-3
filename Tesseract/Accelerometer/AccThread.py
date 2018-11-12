@@ -6,13 +6,12 @@ from Accelerometer.AccReading import AccReading
 
 class AccThread(Thread):
 
-	def __init__(self):
+	def __init__(self, tesseract):
 		Thread.__init__(self)
-		self.spotify = SpotifyClient()
+		self.tesseract = tesseract
 		self.accelerometer = Accelerometer()
-		self.is_spotify = True
 
-
+		
 	def run(self):
 		while True:
 			reading = self.accelerometer.wait_for_movement()
@@ -31,13 +30,13 @@ class AccThread(Thread):
 
 
 	def inclined_right(self):
-		if self.is_spotify:
-			self.spotify.next_track()
+		if self.tesseract.is_spotify:
+			self.tesseract.spotify.next_track()
 
 
 	def inclined_left(self):
-		if self.is_spotify:
-			self.spotify.previous_track()
+		if self.tesseract.is_spotify:
+			self.tesseract.spotify.previous_track()
 
 
 	def inclined_front(self):
