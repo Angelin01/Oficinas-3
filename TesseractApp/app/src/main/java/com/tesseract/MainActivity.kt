@@ -1,5 +1,6 @@
 package com.tesseract
 
+import android.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -78,6 +79,18 @@ class MainActivity : AppCompatActivity() {
             if (response.type == AuthenticationResponse.Type.TOKEN)
             {
                 spotifyToken = response.accessToken
+
+                //Cria o gerador do AlertDialog
+                val builder = AlertDialog.Builder(this)
+                //define o titulo
+                builder.setTitle("Deu boa!")
+                //define a mensagem
+                builder.setMessage("Spotify conectado!")
+                //cria o AlertDialog
+                val alerta = builder.create()
+                //Exibe
+                alerta.show()
+
                 SpotifyFragment.sendSpotifyConnectionRequest()
             }
         }
