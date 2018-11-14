@@ -15,19 +15,28 @@ class BluetoothService(threading.Thread):
 		super(BluetoothService, self).__init__()
 		self.tesseract = tesseract
 
-		# Cria o socket para o celular
+		# Creates socket to listen for bluetooth connections
 		self.blue_sck = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 		self.blue_sck.bind(("", bluetooth.PORT_ANY))
-		self.blue_sck.listen(1)
-		server_port = self.blue_sck.getsockname()[1]
-
-		# Anuncia o servico
-		bluetooth.advertise_service(self.blue_sck, "Tesseract Server", service_id=self.UUID,
-	                            service_classes=[self.UUID, bluetooth.SERIAL_PORT_CLASS], profiles=[bluetooth.SERIAL_PORT_PROFILE])
-
+		
 		self._stop = False
 
+	def stop(self):
+		print("Shutting down Bluetooth Server")
+		try:
+			self.blue_sck.shutdown(2)  # Shutdown both listen and send
+			self.blue_sck.close()
+		except Exception:
+			import traceback
+			print("An exception happened while closing the bluetooth socket, don't care, here's the traceback:")
+			traceback.print_exc()
+
 	def run(self):
+		self.blue_sck.listen(1)
+		# Announces the service
+		bluetooth.advertise_service(self.blue_sck, "Tesseract Server", service_id=self.UUID,
+		                            service_classes=[self.UUID, bluetooth.SERIAL_PORT_CLASS], profiles=[bluetooth.SERIAL_PORT_PROFILE])
+
 		try:
 			while not self._stop:
 				print('Waiting for bluetooth connection')
