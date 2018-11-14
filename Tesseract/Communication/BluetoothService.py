@@ -71,7 +71,8 @@ class BluetoothService(multiprocessing.Process):
 			elif msg["subtype"] == "disconnect":
 				self.tesseract.is_spotify = False
 
-	def json_all_wifis(self):
+	@staticmethod
+	def json_all_wifis():
 		json_list = {"type": "wifi", "subtype": "list", "value": []}
 		for cell in list(Cell.all('wlan0')):
 			json_list.get("value").append({"ssid": cell.ssid, "signal": cell.signal, "encryption_type": cell.encryption_type})
@@ -83,7 +84,8 @@ class BluetoothService(multiprocessing.Process):
 		print('teste: ' + self.tesseract.spotify.token)
 		self.tesseract.is_spotify = True
 
-	def connect_wifi(self, value):
+	@staticmethod
+	def connect_wifi(value):
 		json_list = {"type": "wifi", "subtype": "return", "value": {"success": False, "addr": None}}
 
 		scheme = None
@@ -112,7 +114,8 @@ class BluetoothService(multiprocessing.Process):
 
 		return json.dumps(json_list, separators=(',', ':')).encode('utf-8')
 
-	def wifi_status(self):
+	@staticmethod
+	def wifi_status():
 		json_list = {"type": "wifi", "subtype": "status", "value": {"connected": False, "ssid": None, "addr": None}}
 
 		match = re.search('^wlan0\s*ESSID:"(.+)"$', popen("iwgetid").read(), re.MULTILINE)
