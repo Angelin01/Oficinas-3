@@ -19,7 +19,7 @@ class BluetoothService(threading.Thread):
 		self.blue_sck = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 		self.blue_sck.bind(("", bluetooth.PORT_ANY))
 		
-		self._stop = False
+		self._stop_service = False
 
 	def stop(self):
 		print("Shutting down Bluetooth Server")
@@ -38,7 +38,7 @@ class BluetoothService(threading.Thread):
 		                            service_classes=[self.UUID, bluetooth.SERIAL_PORT_CLASS], profiles=[bluetooth.SERIAL_PORT_PROFILE])
 
 		try:
-			while not self._stop:
+			while not self._stop_service:
 				print('Waiting for bluetooth connection')
 				client_phone_sock, client_phone_info = self.blue_sck.accept()
 				print('Device paired!')

@@ -109,11 +109,11 @@ class SchemeWPA(Scheme):
 		# subprocess.call(['service', 'wpa_supplicant', 'restart'])
 		# subprocess.call(['/sbin/ifconfig', self.interface, 'up'])
 		# subprocess.call(['/sbin/ifconfig', self.interface])
+		output = subprocess.check_output(['/sbin/wpa_cli', '-i', self.interface, 'reconfigure'])
 
+		if output.strip() != b'OK':
+			raise ConnectionError("Error reconfiguring wpa_supplicant. This is really bad! Check the {} file.".format(SchemeWPA.interfaces))
 
-		return self.is_interface_up()
-
-	def is_interface_up(self):
 		tries = 0
 		while netifaces.AF_INET not in netifaces.ifaddresses(self.interface):
 			tries += 1
@@ -122,6 +122,7 @@ class SchemeWPA(Scheme):
 			sleep(0.5)
 
 		return netifaces.ifaddresses(self.interface)[netifaces.AF_INET][0]['addr']
+
 
 	def delete(self):
 		"""
