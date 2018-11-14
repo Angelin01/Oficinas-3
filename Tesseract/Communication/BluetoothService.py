@@ -13,7 +13,7 @@ class BluetoothService(multiprocessing.Process):
 	UUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
 	def __init__(self, tesseract):
-		super(BluetoothService, self).__init__()
+		super().__init__()
 		self.tesseract = tesseract
 
 		# Creates socket to listen for bluetooth connections

@@ -10,8 +10,13 @@ class AccService(multiprocessing.Process):
 		self.tesseract = tesseract
 		self.accelerometer = Accelerometer()
 
+		self._stop_service = False
+
+	def stop_self(self):
+		self._stop_service = True
+
 	def run(self):
-		while True:
+		while not self._stop_service:
 			reading = self.accelerometer.wait_for_movement()
 			if reading == AccReading.INC_RIGHT:
 				self.inclined_right()
