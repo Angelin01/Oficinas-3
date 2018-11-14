@@ -12,7 +12,7 @@ class AccService(multiprocessing.Process):
 
 		self._stop_service = False
 
-	def stop_self(self):
+	def stop_service(self):
 		self._stop_service = True
 
 	def run(self):

@@ -22,7 +22,7 @@ class BluetoothService(multiprocessing.Process):
 		
 		self._stop_service = False
 
-	def stop(self):
+	def stop_service(self):
 		print("Shutting down Bluetooth Server")
 		try:
 			self.blue_sck.shutdown(2)  # Shutdown both listen and send
