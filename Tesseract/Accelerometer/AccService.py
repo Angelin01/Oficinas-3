@@ -1,17 +1,15 @@
-from threading import Thread
-
+import multiprocessing
 from Spotify.SpotifyClient import SpotifyClient
 from Accelerometer.Accelerometer import Accelerometer
 from Accelerometer.AccReading import AccReading
 
-class AccThread(Thread):
 
+class AccService(multiprocessing.Process):
 	def __init__(self, tesseract):
-		Thread.__init__(self)
+		super().__init__(self)
 		self.tesseract = tesseract
 		self.accelerometer = Accelerometer()
 
-		
 	def run(self):
 		while True:
 			reading = self.accelerometer.wait_for_movement()
@@ -28,28 +26,22 @@ class AccThread(Thread):
 			elif reading == AccReading.AGITATION:
 				self.agitated()
 
-
 	def inclined_right(self):
 		if self.tesseract.is_spotify:
 			self.tesseract.spotify.next_track()
-
 
 	def inclined_left(self):
 		if self.tesseract.is_spotify:
 			self.tesseract.spotify.previous_track()
 
-
 	def inclined_front(self):
 		pass
-
 
 	def inclined_back(self):
 		pass
 
-
 	def up_and_down(self):
 		pass
-
 
 	def agitated(self):
 		pass

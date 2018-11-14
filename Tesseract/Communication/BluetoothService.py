@@ -1,14 +1,15 @@
 import bluetooth
 import json
 import threading
-import signal
+import multiprocessing
 import re
 import netifaces as ni
 from os import popen
 from wifi import Cell
 from Communication.scheme_wpa import SchemeWPA
 
-class BluetoothService(threading.Thread):
+
+class BluetoothService(multiprocessing.Process):
 	UUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
 	def __init__(self, tesseract):
@@ -48,7 +49,6 @@ class BluetoothService(threading.Thread):
 			print('Bluetooth service error.')
 			pass
 
-
 	def answer_client(self, conn):
 		msg = json.loads(conn.recv(4096).decode('utf-8'))
 
@@ -71,20 +71,17 @@ class BluetoothService(threading.Thread):
 			elif msg["subtype"] == "disconnect":
 				self.tesseract.is_spotify = False
 
-
 	def json_all_wifis(self):
 		json_list = {"type": "wifi", "subtype": "list", "value": []}
 		for cell in list(Cell.all('wlan0')):
 			json_list.get("value").append({"ssid": cell.ssid, "signal": cell.signal, "encryption_type": cell.encryption_type})
 		return json.dumps(json_list, separators=(',', ':')).encode('utf-8')
 
-
 	def connect_spotify(self, value):
 		json_value = json.loads(json.loads(value))
 		self.tesseract.spotify.token = json_value["token"]
 		print('teste: ' + self.tesseract.spotify.token)
 		self.tesseract.is_spotify = True
-
 
 	def connect_wifi(self, value):
 		json_list = {"type": "wifi", "subtype": "return", "value": {"success": False, "addr": None}}
@@ -114,7 +111,6 @@ class BluetoothService(threading.Thread):
 				break
 
 		return json.dumps(json_list, separators=(',', ':')).encode('utf-8')
-
 
 	def wifi_status(self):
 		json_list = {"type": "wifi", "subtype": "status", "value": {"connected": False, "ssid": None, "addr": None}}
