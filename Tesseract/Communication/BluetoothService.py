@@ -9,35 +9,36 @@ from wifi import Cell
 from Communication.scheme_wpa import SchemeWPA
 
 class BluetoothService(threading.Thread):
-
 	UUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
 	def __init__(self, tesseract):
 		super(BluetoothService, self).__init__()
 		self.tesseract = tesseract
 
-		# Cria o socket para o celular
+		# Creates socket to listen for bluetooth connections
 		self.blue_sck = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 		self.blue_sck.bind(("", bluetooth.PORT_ANY))
-		self.blue_sck.listen(1)
-		server_port = self.blue_sck.getsockname()[1]
+		
+		self._stop_service = False
 
-		# Anuncia o servico
-		bluetooth.advertise_service(self.blue_sck, "Tesseract Server", service_id=self.UUID,
-	                            service_classes=[self.UUID, bluetooth.SERIAL_PORT_CLASS], profiles=[bluetooth.SERIAL_PORT_PROFILE])
-
-		self.stop = False
-		def stop_service(s, f):
-			self.stop = True
+	def stop(self):
+		print("Shutting down Bluetooth Server")
+		try:
+			self.blue_sck.shutdown(2)  # Shutdown both listen and send
 			self.blue_sck.close()
-
-		signal.signal(signal.SIGINT, stop_service)
-		signal.signal(signal.SIGTERM, stop_service)
-
+		except Exception:
+			import traceback
+			print("An exception happened while closing the bluetooth socket, don't care, here's the traceback:")
+			traceback.print_exc()
 
 	def run(self):
+		self.blue_sck.listen(1)
+		# Announces the service
+		bluetooth.advertise_service(self.blue_sck, "Tesseract Server", service_id=self.UUID,
+		                            service_classes=[self.UUID, bluetooth.SERIAL_PORT_CLASS], profiles=[bluetooth.SERIAL_PORT_PROFILE])
+
 		try:
-			while not self.stop:
+			while not self._stop_service:
 				print('Waiting for bluetooth connection')
 				client_phone_sock, client_phone_info = self.blue_sck.accept()
 				print('Device paired!')
@@ -50,8 +51,8 @@ class BluetoothService(threading.Thread):
 
 	def answer_client(self, conn):
 		msg = json.loads(conn.recv(4096).decode('utf-8'))
-		print(msg)
 
+		# ============ Processing wifi messages ============= #
 		if msg["type"] == "wifi":
 			if msg["subtype"] == "request-list":
 				conn.send(self.json_all_wifis())
@@ -61,10 +62,12 @@ class BluetoothService(threading.Thread):
 
 			elif msg["subtype"] == "request-status":
 				conn.send(self.wifi_status())
+
+		# ============ Processing spotify messages ============= #
 		elif msg["type"] == "spotify":
-			print('spotify!')
 			if msg["subtype"] == "connect":
 				self.connect_spotify(msg["value"])
+
 			elif msg["subtype"] == "disconnect":
 				self.tesseract.is_spotify = False
 
