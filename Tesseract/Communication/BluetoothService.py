@@ -9,7 +9,6 @@ from wifi import Cell
 from Communication.scheme_wpa import SchemeWPA
 
 class BluetoothService(threading.Thread):
-
 	UUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
 	def __init__(self, tesseract):
@@ -26,18 +25,11 @@ class BluetoothService(threading.Thread):
 		bluetooth.advertise_service(self.blue_sck, "Tesseract Server", service_id=self.UUID,
 	                            service_classes=[self.UUID, bluetooth.SERIAL_PORT_CLASS], profiles=[bluetooth.SERIAL_PORT_PROFILE])
 
-		self.stop = False
-		def stop_service(s, f):
-			self.stop = True
-			self.blue_sck.close()
-
-		signal.signal(signal.SIGINT, stop_service)
-		signal.signal(signal.SIGTERM, stop_service)
-
+		self._stop = False
 
 	def run(self):
 		try:
-			while not self.stop:
+			while not self._stop:
 				print('Waiting for bluetooth connection')
 				client_phone_sock, client_phone_info = self.blue_sck.accept()
 				print('Device paired!')
@@ -50,8 +42,8 @@ class BluetoothService(threading.Thread):
 
 	def answer_client(self, conn):
 		msg = json.loads(conn.recv(4096).decode('utf-8'))
-		print(msg)
 
+		# ============ Processing wifi messages ============= #
 		if msg["type"] == "wifi":
 			if msg["subtype"] == "request-list":
 				conn.send(self.json_all_wifis())
@@ -61,10 +53,12 @@ class BluetoothService(threading.Thread):
 
 			elif msg["subtype"] == "request-status":
 				conn.send(self.wifi_status())
+
+		# ============ Processing spotify messages ============= #
 		elif msg["type"] == "spotify":
-			print('spotify!')
 			if msg["subtype"] == "connect":
 				self.connect_spotify(msg["value"])
+
 			elif msg["subtype"] == "disconnect":
 				self.tesseract.is_spotify = False
 
