@@ -1,4 +1,6 @@
-from controllerUtils import rotate_list_left
+from Tesseract.Light.controllerUtils import rotate_list_left
+
+from Tesseract.Light.LightFunctions.color_gen import color_lerp
 
 
 def standard_handler(args_dict: dict):
@@ -113,3 +115,43 @@ def breathe_handler(args_dict: dict):
     args_dict['color_itr'] = color_itr
 
     return step_sequence
+
+
+def fft_freq_color_handler(args_dict: dict):
+    """
+    Divides the frequency space between 20 LEDs.
+    Depending on the strength of the signal, changes the LED colors.
+    :param args_dict: Created by the 'create_fft_freq_color_handler_args' function.
+    :return: A 'step' to be used by the controller.
+    """
+
+    min_intensity_color = args_dict['min_color']
+    max_intensity_color = args_dict['max_color']
+    resolution = args_dict['resolution']
+    max_sample = args_dict['max_fft_sample']
+
+    fft_result = []  # Call here.
+
+    updated_led_sequence = []
+
+    for i in range(0, len(fft_result), resolution):
+
+        norm_sample = 0
+        for sample in range(i, i + resolution):
+            norm_sample += fft_result[sample]
+
+        norm_sample /= resolution
+
+        if norm_sample > max_sample:
+            max_sample = norm_sample
+
+        norm_sample /= max_sample
+
+        led_color = color_lerp(min_intensity_color, max_intensity_color, norm_sample)
+
+        for sample in range(resolution):
+            updated_led_sequence.append(led_color)
+
+    args_dict['max_fft_sample'] = max_sample
+
+    return updated_led_sequence

@@ -5,7 +5,7 @@ import multiprocessing
 
 import time
 
-from LightFunctions.convert_strip import rising_ring
+from Tesseract.Light.LightFunctions.convert_strip import rising_ring
 
 
 class TimedLightShow(multiprocessing.Process):

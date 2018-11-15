@@ -75,3 +75,22 @@ def create_stream_handler_args(color_sequence, n_leds):
     }
 
     return handler_args
+
+
+def create_fft_freq_color_handler_args(min_color: tuple, max_color: tuple, resolution: int):
+    """
+    :param min_color: A tuple representing a color in the format RGB or HSL.
+    :param max_color: A tuple representing a color in the format RGB or HSL.
+    :param resolution: The number of LEDs each frequency will be represented by.
+    :return: The arguments to be used by the controller.
+    min_color and max_color must be from the same color space, or unexpected effects will occur.
+    """
+
+    handler_args = {
+        'min_color': min_color,
+        'max_color': max_color,
+        'resolution': 20 // resolution,
+        'max_fft_sample': 1
+    }
+
+    return handler_args
