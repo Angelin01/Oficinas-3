@@ -11,19 +11,14 @@ import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
 import com.tesseract.communication.TesseractCommunication
+import com.tesseract.spotify.SpotifyConnectionValues
 
 class SpotifyFragment : Fragment() {
 
     companion object {
         fun sendSpotifyConnectionRequest()
         {
-            val spotifyConnectJSON = Gson().toJson("""
-                                    {
-                                      "type": "spotify",
-                                      "subtype": "connect",
-                                      "token": "${MainActivity.spotifyToken}"
-                                    } """)
-            TesseractCommunication.sendRequest("spotify", "connect", spotifyConnectJSON)
+            TesseractCommunication.sendRequest("spotify", "connect", Gson().toJsonTree(SpotifyConnectionValues(MainActivity.spotifyToken)))
         }
     }
 
