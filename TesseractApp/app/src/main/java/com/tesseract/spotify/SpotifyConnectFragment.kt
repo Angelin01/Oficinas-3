@@ -19,15 +19,7 @@ import com.tesseract.communication.TesseractCommunication
 
 class SpotifyConnectFragment : Fragment() {
 
-	// TODO: extract some of this things to SpotifyController
-	companion object {
-		fun sendSpotifyConnectionRequest() {
-			TesseractCommunication.sendRequest("spotify", "connect", Gson().toJsonTree(SpotifyConnectionValues(MainActivity.spotifyToken)))
-		}
-	}
-
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		// Inflate the layout for this fragment
 		val view: View = inflater.inflate(R.layout.fragment_spotify_connect, container, false)
 
 		val buttonSpotifyConnect: RelativeLayout = view.findViewById(R.id.buttonSpotifyConnect)

@@ -2,7 +2,6 @@ package com.tesseract.spotify
 
 import android.os.AsyncTask
 import com.google.gson.JsonParser
-import com.tesseract.SpotifyController
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.OutputStreamWriter
