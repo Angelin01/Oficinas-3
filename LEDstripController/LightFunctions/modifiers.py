@@ -1,59 +1,6 @@
 import math
 from enum import Enum
 
-from controllerUtils import rotate_list_left
-
-
-def wave_modifier(color_sequence: list, color_delay: int, wave_speed: float, wave_count: float, n_leds: int):
-    """
-    :param color_sequence: The color sequence to be updated in a wave manner.
-    :param color_delay: The delay between color_changes.
-    :param wave_speed: The speed in which the wave moves along the LED strip.
-    :param wave_count: The number of waves to be present in the strip containing n_leds.
-    :param n_leds: The number of LEDs being controlled.
-    :return: A sequence of color stages ready to be run by the controller.
-    """
-
-    wave = gen_wave(wave_speed, wave_count, n_leds)
-
-    return_sequence = []
-
-    len_color_seq = len(color_sequence)
-    delay_itr = 0
-    color_itr = 0
-
-    color_looped = False
-
-    while color_looped is False:
-
-        # number of wave steps (the wave movement)
-        for w in range(len(wave)):
-            modified_sequence = []
-
-            # Iterating through the values in the wave list and updating the input sequence.
-            for w_i in range(len(wave)):
-
-                if w_i >= n_leds:
-                    break
-
-                modified_sequence.append(
-                    [int(color_sequence[color_itr % len_color_seq][channel] * wave[w_i]) for channel in range(3)])
-
-                delay_itr += 1
-
-                if delay_itr % color_delay == 0:
-
-                    delay_itr = 0
-                    color_itr += 1
-
-                    if color_itr == len_color_seq:
-                        color_looped = True
-
-            rotate_list_left(wave)
-            return_sequence.append(modified_sequence[:n_leds])
-
-    return return_sequence
-
 
 def gen_sine_wave(wave_speed: float, wave_count: float, n_leds: int):
     """

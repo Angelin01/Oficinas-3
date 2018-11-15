@@ -75,3 +75,15 @@ def create_stream_handler_args(color_sequence, n_leds):
     }
 
     return handler_args
+
+
+def create_fft_freq_color_handler_args(min_color: tuple, max_color: tuple, resolution: int):
+
+    handler_args = {
+        'min_color': min_color,
+        'max_color': max_color,
+        'resolution': 20 // resolution,
+        'max_fft_sample': 1
+    }
+
+    return handler_args
