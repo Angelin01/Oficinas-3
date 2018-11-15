@@ -1,18 +1,19 @@
 import bluetooth
 import json
 import threading
-import signal
+import multiprocessing
 import re
 import netifaces as ni
 from os import popen
 from wifi import Cell
 from Communication.scheme_wpa import SchemeWPA
 
-class BluetoothService(threading.Thread):
+
+class BluetoothService(multiprocessing.Process):
 	UUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
 	def __init__(self, tesseract):
-		super(BluetoothService, self).__init__()
+		super().__init__()
 		self.tesseract = tesseract
 
 		# Creates socket to listen for bluetooth connections
@@ -21,7 +22,7 @@ class BluetoothService(threading.Thread):
 
 		self._stop_service = False
 
-	def stop(self):
+	def stop_service(self):
 		print("Shutting down Bluetooth Server")
 		try:
 			self.blue_sck.shutdown(2)  # Shutdown both listen and send
@@ -48,7 +49,6 @@ class BluetoothService(threading.Thread):
 			print('Bluetooth service error.')
 			pass
 
-
 	def answer_client(self, conn):
 		while True:
 			msg = json.loads(conn.recv(4096).decode('utf-8'))
@@ -74,24 +74,21 @@ class BluetoothService(threading.Thread):
 				elif msg["subtype"] == "disconnect":
 					self.tesseract.is_spotify = False
 
-
-	def json_all_wifis(self):
+	@staticmethod
+	def json_all_wifis():
 		json_list = {"type": "wifi", "subtype": "list", "value": []}
 		for cell in list(Cell.all('wlan0')):
 			json_list.get("value").append({"ssid": cell.ssid, "signal": cell.signal, "encryption_type": cell.encryption_type})
 		return json.dumps(json_list, separators=(',', ':')).encode('utf-8')
-
 
 	def connect_spotify(self, value):
 		self.tesseract.spotify.token = value["token"]
 		print('spotify token: ' + self.tesseract.spotify.token)
 		self.tesseract.is_spotify = True
 
-
-	def connect_wifi(self, value):
+	@staticmethod
+	def connect_wifi(value):
 		json_list = {"type": "wifi", "subtype": "return", "value": {"success": False, "addr": None}}
-
-		scheme = None
 
 		for cell in list(Cell.all('wlan0')):
 			if cell.ssid == value['ssid']:
@@ -112,14 +109,13 @@ class BluetoothService(threading.Thread):
 					json_list.get("value").update({"success": True, "addr": addr})
 				except ConnectionError:
 					scheme.delete()
-					scheme = None
 
 				break
 
 		return json.dumps(json_list, separators=(',', ':')).encode('utf-8')
 
-
-	def wifi_status(self):
+	@staticmethod
+	def wifi_status():
 		json_list = {"type": "wifi", "subtype": "status", "value": {"connected": False, "ssid": None, "addr": None}}
 
 		match = re.search('^wlan0\s*ESSID:"(.+)"$', popen("iwgetid").read(), re.MULTILINE)
