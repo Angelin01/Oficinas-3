@@ -1,6 +1,5 @@
-from Tesseract.Light.controllerUtils import rotate_list_left
-
-from Tesseract.Light.LightFunctions.color_gen import color_lerp
+from Light.controllerUtils import rotate_list_left
+from Light.LightFunctions.color_gen import color_lerp
 
 
 def standard_handler(args_dict: dict):
