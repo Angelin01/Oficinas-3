@@ -19,6 +19,7 @@ import com.tesseract.light.LightFragment
 import com.tesseract.bluetooth.BluetoothService
 import com.tesseract.communication.ConnectionsFragment
 import com.tesseract.communication.TesseractCommunication
+import com.tesseract.spotify.SpotifyController
 
 class MainActivity : AppCompatActivity() {
 
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                 alerta.show()
                 //endregion
 
-                SpotifyController.setSpotifyConnection(this, response.accessToken)
+                SpotifyController.setSpotifyConnection(response.accessToken)
             }
         }
     }
