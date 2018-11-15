@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     //region [Static variables]
     companion object {
-        var spotifyToken: String = ""
+        val spotifyRequestCode = 1337
     }
     //endregion
 
@@ -68,18 +68,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        if (requestCode == 29384)
-            return
-
         super.onActivityResult(requestCode, resultCode, intent)
 
-        if (requestCode == 1337)
+        if (requestCode == spotifyRequestCode)
         {
             val response = AuthenticationClient.getResponse(resultCode, intent)
             if (response.type == AuthenticationResponse.Type.TOKEN)
             {
-                spotifyToken = response.accessToken
-
                 //region Message box
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("Deu boa!")
@@ -88,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                 alerta.show()
                 //endregion
 
-                SpotifyFragment.sendSpotifyConnectionRequest()
+                SpotifyController.setSpotifyConnection(this, response.accessToken)
             }
         }
     }
