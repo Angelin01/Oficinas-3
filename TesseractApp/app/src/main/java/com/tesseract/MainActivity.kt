@@ -80,16 +80,13 @@ class MainActivity : AppCompatActivity() {
             {
                 spotifyToken = response.accessToken
 
-                //Cria o gerador do AlertDialog
+                //region Message box
                 val builder = AlertDialog.Builder(this)
-                //define o titulo
                 builder.setTitle("Deu boa!")
-                //define a mensagem
                 builder.setMessage("Spotify conectado!")
-                //cria o AlertDialog
                 val alerta = builder.create()
-                //Exibe
                 alerta.show()
+                //endregion
 
                 SpotifyFragment.sendSpotifyConnectionRequest()
             }

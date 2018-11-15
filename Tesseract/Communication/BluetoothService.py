@@ -18,7 +18,7 @@ class BluetoothService(threading.Thread):
 		# Creates socket to listen for bluetooth connections
 		self.blue_sck = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 		self.blue_sck.bind(("", bluetooth.PORT_ANY))
-		
+
 		self._stop_service = False
 
 	def stop(self):
@@ -50,26 +50,29 @@ class BluetoothService(threading.Thread):
 
 
 	def answer_client(self, conn):
-		msg = json.loads(conn.recv(4096).decode('utf-8'))
+		while True:
+			msg = json.loads(conn.recv(4096).decode('utf-8'))
 
-		# ============ Processing wifi messages ============= #
-		if msg["type"] == "wifi":
-			if msg["subtype"] == "request-list":
-				conn.send(self.json_all_wifis())
+			# ============ Processing wifi messages ============= #
+			if msg["type"] == "wifi":
+				print('wifi command')
+				if msg["subtype"] == "request-list":
+					conn.send(self.json_all_wifis())
 
-			elif msg["subtype"] == "connect":
-				conn.send(self.connect_wifi(msg["value"]))
+				elif msg["subtype"] == "connect":
+					conn.send(self.connect_wifi(msg["value"]))
 
-			elif msg["subtype"] == "request-status":
-				conn.send(self.wifi_status())
+				elif msg["subtype"] == "request-status":
+					conn.send(self.wifi_status())
 
-		# ============ Processing spotify messages ============= #
-		elif msg["type"] == "spotify":
-			if msg["subtype"] == "connect":
-				self.connect_spotify(msg["value"])
+			# ============ Processing spotify messages ============= #
+			elif msg["type"] == "spotify":
+				print('spotify command')
+				if msg["subtype"] == "connect":
+					self.connect_spotify(msg["value"])
 
-			elif msg["subtype"] == "disconnect":
-				self.tesseract.is_spotify = False
+				elif msg["subtype"] == "disconnect":
+					self.tesseract.is_spotify = False
 
 
 	def json_all_wifis(self):
@@ -80,9 +83,8 @@ class BluetoothService(threading.Thread):
 
 
 	def connect_spotify(self, value):
-		json_value = json.loads(json.loads(value))
-		self.tesseract.spotify.token = json_value["token"]
-		print('teste: ' + self.tesseract.spotify.token)
+		self.tesseract.spotify.token = value["token"]
+		print('spotify token: ' + self.tesseract.spotify.token)
 		self.tesseract.is_spotify = True
 
 
@@ -93,6 +95,7 @@ class BluetoothService(threading.Thread):
 
 		for cell in list(Cell.all('wlan0')):
 			if cell.ssid == value['ssid']:
+				print('found ssid ' + value['ssid'])
 
 				# Check if there is already a scheme saved with that ssid
 				# If there is, delete it to make sure we update the password

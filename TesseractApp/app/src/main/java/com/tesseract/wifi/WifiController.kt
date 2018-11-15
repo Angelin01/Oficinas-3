@@ -28,9 +28,10 @@ class WifiController : ViewModel(), BluetoothMessageCallback {
 
 	fun connectToWifi(wifi: Wifi) {
 		val gson = Gson()
-		val wifiJson: String = gson.toJson(wifi)
+		val wifiJsonLog: String = gson.toJson(wifi)
+		Log.d("TAG", wifiJsonLog)
 
-		Log.d("TAG", wifiJson)
+		val wifiJson = gson.toJsonTree(wifi)
 		TesseractCommunication.sendRequest("wifi", "connect", wifiJson)
 	}
 
