@@ -1,11 +1,11 @@
 import spidev
-import ws2812
+import Light.ws2812 as ws2812
 
 import multiprocessing
 
 import time
 
-from Tesseract.Light.LightFunctions.convert_strip import rising_ring
+from Light.LightFunctions.convert_strip import rising_ring
 
 
 class TimedLightShow(multiprocessing.Process):

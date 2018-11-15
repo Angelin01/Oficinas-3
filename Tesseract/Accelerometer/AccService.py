@@ -6,7 +6,7 @@ from Accelerometer.AccReading import AccReading
 
 class AccService(multiprocessing.Process):
 	def __init__(self, tesseract):
-		super().__init__(self)
+		super().__init__()
 		self.tesseract = tesseract
 		self.accelerometer = Accelerometer()
 

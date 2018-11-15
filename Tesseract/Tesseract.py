@@ -3,8 +3,6 @@ import signal
 from Accelerometer.AccService import AccService
 from Communication.BluetoothService import BluetoothService
 from Spotify.SpotifyClient import SpotifyClient
-from Light import LightExecute
-
 
 # Temp import
 from Light.LightFunctions.color_gen import gen_rainbow_gradient
