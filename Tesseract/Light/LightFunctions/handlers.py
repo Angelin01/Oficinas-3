@@ -1,6 +1,13 @@
+from Audio import Audio
+from Audio.Audio import getLoopbackAudioData
+from FrequencyAnalyzer.SoundAnalyzer import SoundAnalyzer
 from Light.controllerUtils import rotate_list_left
 from Light.LightFunctions.color_gen import color_lerp
 
+
+from Audio.Audio import getLoopbackAudioData
+
+sound_analyzer = SoundAnalyzer(Audio.chunk_size)
 
 def standard_handler(args_dict: dict):
     """
@@ -129,7 +136,8 @@ def fft_freq_color_handler(args_dict: dict):
     resolution = args_dict['resolution']
     max_sample = args_dict['max_fft_sample']
 
-    fft_result = []  # Call here.
+    data = getLoopbackAudioData()
+    fft_result = sound_analyzer.getAmplitudes(data)
 
     updated_led_sequence = []
 
@@ -147,10 +155,11 @@ def fft_freq_color_handler(args_dict: dict):
         norm_sample /= max_sample
 
         led_color = color_lerp(min_intensity_color, max_intensity_color, norm_sample)
+        led_color = [int(color) for color in led_color]
 
         for sample in range(resolution):
             updated_led_sequence.append(led_color)
 
     args_dict['max_fft_sample'] = max_sample
 
-    return updated_led_sequence
+    return updated_led_sequence * 4

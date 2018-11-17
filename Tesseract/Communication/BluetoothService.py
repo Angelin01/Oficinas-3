@@ -77,8 +77,12 @@ class BluetoothService(multiprocessing.Process):
 	@staticmethod
 	def json_all_wifis():
 		json_list = {"type": "wifi", "subtype": "list", "value": []}
+		i = 0
 		for cell in list(Cell.all('wlan0')):
 			json_list.get("value").append({"ssid": cell.ssid, "signal": cell.signal, "encryption_type": cell.encryption_type})
+			if i > 3:
+				break
+			i += 1
 		return json.dumps(json_list, separators=(',', ':')).encode('utf-8')
 
 	def connect_spotify(self, value):
