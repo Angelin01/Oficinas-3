@@ -53,6 +53,8 @@ class BluetoothDeviceList : Fragment(), BluetoothListAdapter.OnBluetoothItemClic
 			Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show()
 			activity!!.finish()
 		}
+
+//		ensureDiscoverable()
 	}
 
 	private lateinit var bluetoothController: BluetoothController
@@ -141,4 +143,11 @@ class BluetoothDeviceList : Fragment(), BluetoothListAdapter.OnBluetoothItemClic
 
 	}
 
+	private fun ensureDiscoverable() {
+		if (BluetoothController.bluetoothAdapter!!.scanMode != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+			val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+			discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 15)
+			startActivity(discoverableIntent)
+		}
+	}
 }
