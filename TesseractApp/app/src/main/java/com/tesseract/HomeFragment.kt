@@ -15,12 +15,13 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 import com.tesseract.bluetooth.BluetoothController
 import com.tesseract.bluetooth.BluetoothService
+import com.tesseract.bluetooth.BluetoothStatusChangeCallback
 import com.tesseract.music.Music
 import com.tesseract.music.MusicController
 import com.tesseract.music.Player
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(), MainActivity.StatusChanged {
+class HomeFragment : Fragment(), BluetoothStatusChangeCallback {
 
     private lateinit var musicController: MusicController
 

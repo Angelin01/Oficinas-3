@@ -6,6 +6,18 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 
 class BluetoothController: ViewModel() {
+
+	var bluetoothList: MutableLiveData<List<BluetoothDevice>> = MutableLiveData()
+	var discoveredBluetoothList: MutableLiveData<List<BluetoothDevice>> = MutableLiveData()
+
+	init {
+		bluetoothList.value = ArrayList()
+	}
+
+	fun setFoundBluetoothDevices(devices: ArrayList<BluetoothDevice>) {
+		discoveredBluetoothList.postValue(devices)
+	}
+
 	fun requestPairedBluetooth() {
 		val mPairedDevices = BluetoothController.bluetoothAdapter!!.bondedDevices
 		val list: ArrayList<BluetoothDevice> = ArrayList()
@@ -18,11 +30,6 @@ class BluetoothController: ViewModel() {
 		bluetoothList.postValue(list)
 	}
 
-	var bluetoothList: MutableLiveData<List<BluetoothDevice>> = MutableLiveData()
-
-	init {
-		bluetoothList.value = ArrayList()
-	}
 
     companion object {
         var bluetoothAdapter: BluetoothAdapter? = null

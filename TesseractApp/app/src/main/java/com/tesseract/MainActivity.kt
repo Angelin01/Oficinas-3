@@ -1,6 +1,9 @@
 package com.tesseract
 
 import android.app.AlertDialog
+import android.arch.lifecycle.ViewModelProviders
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -14,9 +17,8 @@ import android.support.v4.content.LocalBroadcastManager
 import android.widget.Toast
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationResponse
-import com.tesseract.bluetooth.BluetoothMessageCallback
+import com.tesseract.bluetooth.*
 import com.tesseract.light.LightFragment
-import com.tesseract.bluetooth.BluetoothService
 import com.tesseract.communication.ConnectionsFragment
 import com.tesseract.communication.TesseractCommunication
 import com.tesseract.spotify.SpotifyController
@@ -30,12 +32,18 @@ class MainActivity : AppCompatActivity() {
     //endregion
 
     private var bluetoothBroadcastFilter: IntentFilter = IntentFilter(BluetoothService.STATE_CHANGED)
+	private var bluetoothDiscoverFilter: IntentFilter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+	private var bluetoothDiscoverFinishedFilter: IntentFilter = IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+
+	private var foundBluetoothDeviceList: ArrayList<BluetoothDevice> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         registerReceiver(bluetoothBroadcastReceiver, bluetoothBroadcastFilter)
+	    registerReceiver(bluetoothBroadcastReceiver, bluetoothDiscoverFilter)
+	    registerReceiver(bluetoothBroadcastReceiver, bluetoothDiscoverFinishedFilter)
         BluetoothService.setListener(TesseractCommunication as BluetoothMessageCallback)
 
         val mMainNav: BottomNavigationView = findViewById(R.id.home_nav_bar)
@@ -96,13 +104,13 @@ class MainActivity : AppCompatActivity() {
 
     public override fun onPause() {
         super.onPause()
-        LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(this.bluetoothBroadcastReceiver)
+	    LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(this.bluetoothBroadcastReceiver)
 
     }
 
     public override fun onDestroy() {
         super.onDestroy()
-        unregisterReceiver(bluetoothBroadcastReceiver)
+	    unregisterReceiver(bluetoothBroadcastReceiver)
     }
 
 	override fun onBackPressed() {
@@ -153,34 +161,64 @@ class MainActivity : AppCompatActivity() {
 	private val bluetoothBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
-            if (action == BluetoothService.STATE_CHANGED) {
-                val state = intent.getIntExtra("state", 0)
-
-                when (state) {
-                    BluetoothService.BluetoothStates.STATE_CONNECTED.ordinal -> {
-                        updateStatusBluetoothView(true)
-                        Toast.makeText(context, "Bluetooth Connected", Toast.LENGTH_SHORT).show()
-                    }
-                    BluetoothService.BluetoothStates.STATE_NONE.ordinal, BluetoothService.BluetoothStates.STATE_CONNECTION_LOST.ordinal -> {
-                        updateStatusBluetoothView(false)
-                        Toast.makeText(context, "Bluetooth Disconnected", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
+	        when (action) {
+		        BluetoothService.STATE_CHANGED -> onBluetoothStatusChange(intent, context)
+		        BluetoothDevice.ACTION_FOUND -> onBluetoothDevicesFound()
+		        BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> onBluetoothDiscoverFinished()
+	        }
         }
+
+		private fun onBluetoothDiscoverFinished() {
+			sendFoundDevicesToList()
+		}
+
+		private fun onBluetoothDevicesFound() {
+			val device: BluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+			if (device.bondState != BluetoothDevice.BOND_BONDED) {
+
+				foundBluetoothDeviceList.add(device)
+			}
+		}
+
+		private fun onBluetoothStatusChange(intent: Intent, context: Context) {
+			val state = intent.getIntExtra("state", 0)
+
+			when (state) {
+				BluetoothService.BluetoothStates.STATE_CONNECTED.ordinal -> {
+					updateStatusBluetoothView(true)
+					Toast.makeText(context, "Bluetooth Connected", Toast.LENGTH_SHORT).show()
+				}
+				BluetoothService.BluetoothStates.STATE_NONE.ordinal, BluetoothService.BluetoothStates.STATE_CONNECTION_LOST.ordinal -> {
+					updateStatusBluetoothView(false)
+					Toast.makeText(context, "Bluetooth Disconnected", Toast.LENGTH_SHORT).show()
+				}
+			}
+		}
+	}
+
+	private fun sendFoundDevicesToList() {
+		val bluetoothController: BluetoothController = this.run { ViewModelProviders.of(this).get(BluetoothController::class.java) }!!
+//		bluetoothController.setFoundBluetoothDevices(foundBluetoothDeviceList)
+	}
+
+	private var mCallback: BluetoothStatusChangeCallback? = null
+
+	fun updateStatusBluetoothView(connected: Boolean) {
+	    notifyHomeFragment(connected)
+	    notifyConnectinoFragment(connected)
     }
 
-    private var mCallback: StatusChanged? = null
+	private fun notifyHomeFragment(connected: Boolean) {
+		val homeFragment = this.supportFragmentManager.findFragmentByTag("home") ?: return
 
-    interface StatusChanged {
-        fun onStatusChange(connected: Boolean)
+		mCallback = homeFragment as BluetoothStatusChangeCallback
+		(mCallback as HomeFragment).onStatusChange(connected)
+	}
 
-    }
+	private fun notifyConnectinoFragment(connected: Boolean) {
+		val connectionFragment = this.supportFragmentManager.findFragmentByTag("connection") ?: return
 
-    fun updateStatusBluetoothView(connected: Boolean) {
-        val homeFragment = this.supportFragmentManager.findFragmentByTag("home") ?: return
-
-        mCallback = homeFragment as StatusChanged
-        (mCallback as HomeFragment).onStatusChange(connected)
-    }
+		mCallback = connectionFragment as BluetoothStatusChangeCallback
+		(mCallback as ConnectionsFragment).onStatusChange(connected)
+	}
 }
