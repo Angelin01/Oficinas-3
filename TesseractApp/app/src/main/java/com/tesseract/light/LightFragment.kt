@@ -15,17 +15,34 @@ class LightFragment : Fragment() {
 
 	private lateinit var lightController: LightController
 
+	private lateinit var colorImageViews: ArrayList<ImageView>
+	private lateinit var colorTextViews: ArrayList<TextView>
+
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val view: View = inflater.inflate(R.layout.fragment_light, container, false)
 
 		lightController = activity?.run { ViewModelProviders.of(this).get(LightController::class.java) }!!
 
-
 		this.initializeColorViews(view)
 
-		val lights: ArrayList<Light> = this.getLights()
+		setupFaceSpinner(view)
+		setupPatternSpinner(view)
+		setupEditPatternsButton(view, savedInstanceState)
+		setupFinishSelectButton(view)
+
+		return view
+	}
+
+	private fun setupFinishSelectButton(view: View) {
+		val imageViewEditPatters: Button = view.findViewById(R.id.buttonFinishLightSelection)
+		imageViewEditPatters.setOnClickListener {
+			lightController.setConfigurationOnTesseract()
+		}
+	}
+
+	private fun setupPatternSpinner(view: View) {
 		val spinner: Spinner = view.findViewById(R.id.spinner_leds_patterns)
-		val spinnerAdapter: ArrayAdapter<Light> = ArrayAdapter(this.context!!, android.R.layout.simple_spinner_item, lights)
+		val spinnerAdapter: ArrayAdapter<Light> = ArrayAdapter(this.context!!, android.R.layout.simple_spinner_item, lightController.lightPatterns)
 		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 		spinner.adapter = spinnerAdapter
 
@@ -36,10 +53,33 @@ class LightFragment : Fragment() {
 			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 				val light: Light = parent!!.selectedItem as Light
 				updateLightParameters(light)
+				updateSelectedPattern(light)
 			}
 		}
+	}
 
+	private fun updateSelectedPattern(light: Light) {
+		lightController.selectedPatterns[lightController.currentFace] = light
+	}
 
+	private fun setupFaceSpinner(view: View) {
+		val spinner: Spinner = view.findViewById(R.id.spinner_leds_face)
+		val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(this.context!!, android.R.layout.simple_spinner_item, lightController.lightFaces)
+		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+		spinner.adapter = spinnerAdapter
+
+		spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+			override fun onNothingSelected(parent: AdapterView<*>?) {
+			}
+
+			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+				lightController.currentFace = position
+				updateLightParameters(lightController.selectedPatterns[lightController.currentFace]!!)
+			}
+		}
+	}
+
+	private fun setupEditPatternsButton(view: View, savedInstanceState: Bundle?) {
 		val imageViewEditPatters: ImageButton = view.findViewById(R.id.imageButtonEditPatterns)
 		imageViewEditPatters.setOnClickListener {
 			val transaction = fragmentManager!!.beginTransaction()
@@ -49,21 +89,23 @@ class LightFragment : Fragment() {
 			}
 			transaction.commit()
 		}
-
-		return view
 	}
 
-	private lateinit var colorImageViews: ArrayList<ImageView>
-	private lateinit var colorTextViews: ArrayList<TextView>
 	private fun initializeColorViews(view: View) {
 		colorImageViews = ArrayList()
-		colorImageViews.add(view.findViewById(R.id.imageViewFirstColor))
-		colorImageViews.add(view.findViewById(R.id.imageViewSecondColor))
-		colorImageViews.add(view.findViewById(R.id.imageViewThirdColor))
+		with(colorImageViews) {
+			add(view.findViewById(R.id.imageViewFirstColor))
+			add(view.findViewById(R.id.imageViewSecondColor))
+			add(view.findViewById(R.id.imageViewThirdColor))
+			add(view.findViewById(R.id.imageViewFourthColor))
+		}
 		colorTextViews = ArrayList()
-		colorTextViews.add(view.findViewById(R.id.textViewFirstColor))
-		colorTextViews.add(view.findViewById(R.id.textViewSecondColor))
-		colorTextViews.add(view.findViewById(R.id.textViewThirdColor))
+		with(colorTextViews) {
+			add(view.findViewById(R.id.textViewFirstColor))
+			add(view.findViewById(R.id.textViewSecondColor))
+			add(view.findViewById(R.id.textViewThirdColor))
+			add(view.findViewById(R.id.textViewFourthColor))
+		}
 	}
 
 
@@ -88,13 +130,6 @@ class LightFragment : Fragment() {
 			this.colorImageViews[index].visibility = View.VISIBLE
 			this.colorImageViews[index].setBackgroundColor(Color.parseColor(element))
 		}
-	}
-
-	private fun getLights(): ArrayList<Light> {
-		val lights: ArrayList<Light> = ArrayList()
-		lights.add(lightController.getLight(0))
-		lights.add(lightController.getLight(1))
-		return lights
 	}
 
 }

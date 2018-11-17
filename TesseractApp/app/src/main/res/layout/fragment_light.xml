@@ -14,6 +14,21 @@
         android:layout_height="match_parent">
 
 
+        <Button
+            android:id="@+id/buttonFinishLightSelection"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="Finish"
+            android:textColor="@color/Commands"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.513"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <RelativeLayout
         android:id="@+id/relativeLayout5"
         android:layout_width="0dp"
@@ -35,42 +50,60 @@
                 android:textSize="24sp" />
         </RelativeLayout>
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/relativeLayout4"
             android:layout_width="353dp"
-            android:layout_height="103dp"
+            android:layout_height="165dp"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.483"
+            app:layout_constraintHorizontal_bias="0.516"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout5">
+
+            <Spinner
+                android:id="@+id/spinner_leds_face"
+                android:layout_width="320dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
             <Spinner
                 android:id="@+id/spinner_leds_patterns"
                 android:layout_width="320dp"
                 android:layout_height="36dp"
-                android:layout_below="@+id/textView6"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="13dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:layout_editor_absoluteY="291dp" />
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/spinner_leds_face"
+                app:layout_constraintStart_toStartOf="@+id/spinner_leds_face"
+                app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
             <TextView
-            android:id="@+id/textView6"
-            android:layout_width="173dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="99dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="81dp"
-            android:text="Select Pattern"
-            android:textAlignment="center" />
+                android:id="@+id/textView6"
+                android:layout_width="173dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Select Tesseract Face"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="173dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="52dp"
+                android:text="Select Pattern"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/textView6"
+                app:layout_constraintStart_toStartOf="@+id/textView6"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_leds_face" />
+
+        </android.support.constraint.ConstraintLayout>
 
         <ImageButton
         android:id="@+id/imageButtonEditPatterns"
@@ -85,14 +118,14 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
-        android:id="@+id/textViewDescriptionTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:text="Description"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout4" />
+            android:id="@+id/textViewDescriptionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout4" />
 
         <TextView
         android:id="@+id/textView10"
@@ -105,21 +138,21 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
 
         <TextView
-        android:id="@+id/textViewDescription"
-        android:layout_width="352dp"
-        android:layout_height="97dp"
-        android:layout_marginTop="12dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewDescriptionTitle" />
+            android:id="@+id/textViewDescription"
+            android:layout_width="352dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="12dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDescriptionTitle" />
 
         <RelativeLayout
             android:id="@+id/relativeLayoutFirstColor"
             android:layout_width="168dp"
             android:layout_height="43dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="12dp"
             android:layout_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView10">
@@ -148,12 +181,13 @@
 
         <RelativeLayout
             android:id="@+id/relativeLayoutSecondColor"
-            android:layout_width="168dp"
+            android:layout_width="170dp"
             android:layout_height="43dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="4dp"
             android:layout_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayoutFirstColor">
+            app:layout_constraintStart_toEndOf="@+id/relativeLayoutFirstColor"
+            app:layout_constraintTop_toTopOf="@+id/relativeLayoutFirstColor"
+            tools:layout_editor_absoluteY="359dp">
 
             <ImageView
                 android:id="@+id/imageViewSecondColor"
@@ -183,9 +217,10 @@
             android:layout_width="168dp"
             android:layout_height="43dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayoutSecondColor">
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayoutFirstColor">
 
             <ImageView
                 android:id="@+id/imageViewThirdColor"
@@ -208,5 +243,38 @@
                 android:layout_toEndOf="@+id/imageViewThirdColor"
                 android:text="TextView" />
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutFourthColor"
+            android:layout_width="170dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/relativeLayoutThirdColor"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayoutSecondColor">
+
+            <ImageView
+                android:id="@+id/imageViewFourthColor"
+                android:layout_width="33dp"
+                android:layout_height="26dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="7dp"
+                android:background="@color/Commands" />
+
+            <TextView
+                android:id="@+id/textViewFourthColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="14dp"
+                android:layout_toEndOf="@+id/imageViewFourthColor"
+                android:text="TextView" />
+        </RelativeLayout>
+
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

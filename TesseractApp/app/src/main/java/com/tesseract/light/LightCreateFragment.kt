@@ -35,7 +35,7 @@ class LightCreateFragment : Fragment() {
 		defineSelectColorListeners(view)
 		val finishButton: Button = view.findViewById(R.id.buttonFinishLightEdit)
 		finishButton.setOnClickListener {
-			lightController.sendLightConfigurations(editingLight)
+			lightController.sendNewLightPattern(editingLight)
 			val transaction = fragmentManager!!.beginTransaction()
 			transaction.replace(R.id.home_view_frame, LightFragment())
 			transaction.addToBackStack(null)
