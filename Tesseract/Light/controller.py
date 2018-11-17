@@ -1,3 +1,5 @@
+from Audio import Audio
+from FrequencyAnalyzer.SoundAnalyzer import SoundAnalyzer
 import spidev
 import Light.ws2812 as ws2812
 
@@ -6,6 +8,8 @@ import multiprocessing
 import time
 
 from Light.LightFunctions.convert_strip import rising_ring
+
+from Audio.Audio import getLoopbackAudioData
 
 
 class TimedLightShow(multiprocessing.Process):
@@ -33,9 +37,15 @@ class TimedLightShow(multiprocessing.Process):
         self.spi = spidev.SpiDev()
         self.spi.open(0, 0)
 
+        self.sound_analyzer = SoundAnalyzer(Audio.chunk_size)
+
     def run(self):
 
         while True:
+            data = getLoopbackAudioData()
+            amplitudes = self.sound_analyzer.getAmplitudes(data)
+            print(amplitudes)
+
             result = self.ref_function(self.ref_function_args)
             result = rising_ring(result)
 

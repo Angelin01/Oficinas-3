@@ -8,7 +8,7 @@ from Spotify.SpotifyClient import SpotifyClient
 from Light.LightFunctions.color_gen import gen_rainbow_gradient
 from Light.LightFunctions.handler_creators import create_wave_handler_args
 from Light.LightFunctions.handlers import standard_handler, wave_handler
-from Light.LightFunctions.modifiers import wave_modifier, gen_sine_wave
+from Light.LightFunctions.modifiers import gen_sine_wave
 from Light.controller import TimedLightShow
 from Light.LightFunctions.handlers import standard_handler, wave_handler
 
@@ -18,7 +18,7 @@ class Tesseract():
 
 		# TODO: Create LED control thread
 		self.bluetooth_service = BluetoothService(self)
-		self.acc_service = AccService(self)
+		# self.acc_service = AccService(self)
 
 		self.lightConfig()
 
@@ -26,12 +26,13 @@ class Tesseract():
 
 	def run(self):
 		self.bluetooth_service.start()
-		self.acc_service.start()
+		# self.acc_service.start()
 		self.lights = self.light_show.start()
+
 
 	def stop_services(self, s, f):
 		self.bluetooth_service.stop_service()
-		self.acc_service.stop_service()
+		# self.acc_service.stop_service()
 		self.lights = self.light_show.stop()
 
 

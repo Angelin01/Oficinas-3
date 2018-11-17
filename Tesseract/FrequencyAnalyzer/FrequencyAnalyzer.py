@@ -1,5 +1,5 @@
 import scipy.fftpack
-from rpi_audio_levels import AudioLevels
+# from rpi_audio_levels import AudioLevels
 import numpy as np
 from Audio import Audio
 
@@ -19,7 +19,7 @@ def calculateFFT(music_samples, chunk_size, n_bands=24, bands_intervals=[], usin
 		fourier = gpu(samples_windowed)
 
 	fourier = np.abs(fourier[:chunk_size // 2])
-	fourier = fourier ** 2 / chunk_size
+	fourier = fourier * 2 / chunk_size
 	n_bands, frequencies = bands(fourier, n_bands, sample_rate)
 
 	return n_bands, frequencies
