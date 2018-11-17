@@ -8,29 +8,20 @@ import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
 import com.tesseract.MainActivity
-import com.tesseract.bluetooth.BluetoothMessageCallback
 import com.tesseract.communication.TesseractCommunication
+import com.tesseract.music.Music
+import com.tesseract.music.MusicController
 
-class SpotifyController: ViewModel(), BluetoothMessageCallback {
-	override fun callbackMessageReceiver(values: Any, subtype: String?) {
-		val gson = Gson()
-		when (subtype) {
-			"list" -> {
-				this.spotifyPlayList.postValue(getSpotifyPlaylist(values as ArrayList<String>))
-			}
-
-		}
-	}
+class SpotifyController: ViewModel() {
 
 	var spotifyPlayList: MutableLiveData<List<SpotifyPlaylist>> = MutableLiveData()
 
 	init {
 		spotifyPlayList.value = ArrayList()
-		TesseractCommunication.spotifyPlaylistListener = this
 	}
 
 	fun searchPlaylist(search: String?) {
-		spotifyPlayList.value = foundSpotifyPlaylist(search)
+		spotifyPlayList.value = findSpotifyPlaylist(search)
 	}
 
 	private val sampleSpotifyPlaylist: String = """[
@@ -46,14 +37,14 @@ class SpotifyController: ViewModel(), BluetoothMessageCallback {
     }
 ]"""
 
-	private fun foundSpotifyPlaylist(search: String?): List<SpotifyPlaylist> {
+	private fun findSpotifyPlaylist(search: String?): List<SpotifyPlaylist> {
 		this.requestSpotifyPlaylist(search)
 		val gson = Gson()
 		val spotifyPlaylist: List<SpotifyPlaylist> = gson.fromJson(sampleSpotifyPlaylist, Array<SpotifyPlaylist>::class.java).toList()
 		return spotifyPlaylist
 	}
 
-	// TODO: Convert search to json
+	// TODO: Convert to a request to API
 	private fun requestSpotifyPlaylist(search: String?) {
 		if (search == null) {
 			TesseractCommunication.sendRequest("spotify", "search-playlist", "null")
@@ -64,6 +55,7 @@ class SpotifyController: ViewModel(), BluetoothMessageCallback {
 	}
 
 
+	// TODO: Convert to a request to API
 	private fun getSpotifyPlaylist(values: ArrayList<String>): List<SpotifyPlaylist> {
 		val gson = Gson()
 		val spotifyPlaylist: ArrayList<SpotifyPlaylist> = ArrayList()
@@ -71,6 +63,10 @@ class SpotifyController: ViewModel(), BluetoothMessageCallback {
 			spotifyPlaylist.add(gson.fromJson(gson.toJson(playlistFound), SpotifyPlaylist::class.java))
 		}
 		return spotifyPlaylist
+	}
+
+	fun selectPlaylist(playListName: String) {
+		// spotify.playPlaylist(playListName)
 	}
 
 	companion object {
@@ -82,6 +78,7 @@ class SpotifyController: ViewModel(), BluetoothMessageCallback {
 		var token: String = ""
 
 		var isActive: Boolean = false
+		lateinit var musicControllerListener: MusicController
 
 		fun setSpotifyConnection(token: String)
 		{
@@ -103,6 +100,12 @@ class SpotifyController: ViewModel(), BluetoothMessageCallback {
 		fun nextTrack()
 		{
 			SpotifyHTTPRequests.postPlaylistNavigationCommand("next")
+			val music: Music = getCurrentMusic()
+			musicControllerListener.callbackMusisChange(music)
+		}
+
+		private fun getCurrentMusic(): Music {
+			return Music("sample", "sample band", "https://proxy.duckduckgo.com/iur/?f=1&image_host=https%3A%2F%2F40.media.tumblr.com%2F5fad4aa35c3902a4fe09afa75112e33d%2Ftumblr_nf7cxglVpL1tlvkqao1_500.jpg&u=https://78.media.tumblr.com/5fad4aa35c3902a4fe09afa75112e33d/tumblr_nf7cxglVpL1tlvkqao1_500.jpg", 60)
 		}
 
 		fun previousTrack()
@@ -118,6 +121,10 @@ class SpotifyController: ViewModel(), BluetoothMessageCallback {
 		fun resume()
 		{
 			SpotifyHTTPRequests.postPlaylistNavigationCommand("play")
+		}
+
+		fun sendCommand(command: String) {
+
 		}
 	}
 }

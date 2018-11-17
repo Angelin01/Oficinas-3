@@ -6,9 +6,37 @@ import android.util.Log
 import com.google.gson.Gson
 import com.tesseract.bluetooth.BluetoothMessageCallback
 import com.tesseract.communication.TesseractCommunication
+import com.tesseract.spotify.SpotifyController
+import com.tesseract.wifi.SpotifyControllerCallback
 
 
-class MusicController : ViewModel(), BluetoothMessageCallback {
+class MusicController : ViewModel(), BluetoothMessageCallback, SpotifyControllerCallback {
+
+	private val COMMAND_PAUSE = "pause"
+	private val COMMAND_PLAY = "play"
+	private val COMMAND_NEXT = "next"
+	private val COMMAND_SHUFFLE = "shuffle"
+	private val COMMAND_PREVIOUS = "previous"
+
+	var player: MutableLiveData<Player> = MutableLiveData()
+	var music: MutableLiveData<Music> = MutableLiveData()
+
+	var musicIndex: Int = 0 // para testes
+
+
+	init {
+		player.value = Player()
+		this.loadLastMusic()
+
+		TesseractCommunication.musicListener = this
+		SpotifyController.musicControllerListener = this
+
+	}
+
+	override fun callbackMusisChange(music: Music) {
+		this.music.postValue(music)
+	}
+
 
 	val sampleMusic: String = """[
     {
@@ -46,28 +74,24 @@ class MusicController : ViewModel(), BluetoothMessageCallback {
 
 	}
 
-	var player: MutableLiveData<Player> = MutableLiveData()
-	var music: MutableLiveData<Music> = MutableLiveData()
-
-	var musicIndex: Int = 0 // para testes
-
-	init {
-		player.value = Player()
-		this.loadLastMusic()
-
-		TesseractCommunication.musicListener = this
-
-	}
-
 	fun play() {
 		player.value = player.value!!.copy(playing = true)
-		TesseractCommunication.sendCommand("play")
+		sendCommand(COMMAND_PLAY)
 		this.music.value = getMusic(musicIndex)
+	}
+
+	private fun sendCommand(command: String) {
+		if (SpotifyController.isActive) {
+			SpotifyController.sendCommand(command)
+			return
+		}
+
+		TesseractCommunication.sendCommand(command)
 	}
 
 	private fun pause() {
 		player.value = player.value!!.copy(playing = false)
-		TesseractCommunication.sendCommand("pause")
+		sendCommand(COMMAND_PAUSE)
 	}
 
 	fun playToggle() {
@@ -82,23 +106,23 @@ class MusicController : ViewModel(), BluetoothMessageCallback {
 	fun next() {
 		musicIndex++
 		if (musicIndex > 2) musicIndex = 0
-		TesseractCommunication.sendCommand("next")
+		sendCommand(COMMAND_NEXT)
 	}
 
 	fun previous() {
 		musicIndex--
 		if (musicIndex < 0) musicIndex = 2
-		TesseractCommunication.sendCommand("previous")
+		sendCommand(COMMAND_PREVIOUS)
 	}
 
 	fun shuffleToggle() {
 		if (player.value!!.shuffle) {
 			player.value = player.value!!.copy(shuffle = false)
-			TesseractCommunication.sendCommand("shuffle")
+			sendCommand(COMMAND_SHUFFLE)
 			return
 		}
 
-		TesseractCommunication.sendCommand("shuffle")
+		sendCommand(COMMAND_SHUFFLE)
 		player.value = player.value!!.copy(shuffle = true)
 	}
 
@@ -111,7 +135,7 @@ class MusicController : ViewModel(), BluetoothMessageCallback {
 			player.value!!.volume = 100
 		}
 
-		TesseractCommunication.sendCommand("volume: " + player.value!!.volume.toString())
+		sendCommand("volume: " + player.value!!.volume.toString())
 
 	}
 

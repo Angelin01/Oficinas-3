@@ -15,8 +15,6 @@ object TesseractCommunication: BluetoothMessageCallback {
 			musicListener.callbackMessageReceiver(request!!.value, request.subtype)
 		} else if (request?.type.toString() == "wifi") {
 			wifiListener.callbackMessageReceiver(request!!.value, request.subtype)
-		} else if (request?.type.toString() == "spotify") {
-			spotifyPlaylistListener.callbackMessageReceiver(request!!.value, request.subtype)
 		}
 	}
 
@@ -35,5 +33,4 @@ object TesseractCommunication: BluetoothMessageCallback {
 
 	lateinit var musicListener: BluetoothMessageCallback
 	lateinit var wifiListener: BluetoothMessageCallback
-	lateinit var spotifyPlaylistListener: BluetoothMessageCallback
 }
