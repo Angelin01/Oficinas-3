@@ -17,7 +17,7 @@ class SoundAnalyzer():
 		n_bands = 20
 		fourier_amplitudes, frequencies = FrequencyAnalyzer.calculateFFT(music_data, self.chunk_size,
 		                                                                 n_bands=n_bands,
-		                                                                 using_scipy=False,
+		                                                                 using_scipy=True,
 		                                                                 sample_rate=self.sample_rate)
 		return fourier_amplitudes
 

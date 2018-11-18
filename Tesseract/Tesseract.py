@@ -37,16 +37,16 @@ class Tesseract():
 
 
 	def lightConfig(self):
-		# n_leds = 80
+		n_leds = 80
 
-		# gradient = gen_rainbow_gradient(0, 360, 1, 100)
-		# wave = gen_sine_wave(0.5, 3, n_leds)
-		# wave_handler_args = create_wave_handler_args(gradient, wave, 10, n_leds)
+		gradient = gen_rainbow_gradient(0, 360, 1, 100)
+		wave = gen_sine_wave(0.5, 3, n_leds)
+		wave_handler_args = create_wave_handler_args(gradient, wave, 10, n_leds)
 
-		fft_args = create_fft_freq_color_handler_args((255, 0, 0), (0, 0, 255), 1)
-		self.light_show = TimedLightShow(fft_freq_color_handler, fft_args, 0.1, -1)
+		# fft_args = create_fft_freq_color_handler_args((0, 20, 0), (0, 20, 0), 1)
+		# self.light_show = TimedLightShow(fft_freq_color_handler, fft_args, 0.1, -1)
 
-		# self.light_show = TimedLightShow(wave_handler, wave_handler_args, 0.05, -1)
+		self.light_show = TimedLightShow(wave_handler, wave_handler_args, 0.05, -1)
 
 
 if __name__ == '__main__':

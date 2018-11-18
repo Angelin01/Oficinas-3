@@ -138,6 +138,7 @@ def fft_freq_color_handler(args_dict: dict):
 
     data = getLoopbackAudioData()
     fft_result = sound_analyzer.getAmplitudes(data)
+    print(fft_result)
 
     updated_led_sequence = []
 
