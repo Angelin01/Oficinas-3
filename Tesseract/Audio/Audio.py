@@ -9,7 +9,7 @@ sample_rate = 44100
 
 p = pyaudio.PyAudio()
 
-input_device_index = 2
+input_device_index = 1
 
 stream = p.open(format=data_format,
                 channels=n_channels,

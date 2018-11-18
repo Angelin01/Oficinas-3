@@ -1,3 +1,5 @@
+from Audio import Audio
+from FrequencyAnalyzer.SoundAnalyzer import SoundAnalyzer
 import spidev
 import Light.ws2812 as ws2812
 
@@ -33,11 +35,13 @@ class TimedLightShow(multiprocessing.Process):
         self.spi = spidev.SpiDev()
         self.spi.open(0, 0)
 
+
     def run(self):
 
         while True:
+
             result = self.ref_function(self.ref_function_args)
-            result = rising_ring(result)
+            # result = rising_ring(result)
 
             time.sleep(self.interval)
 

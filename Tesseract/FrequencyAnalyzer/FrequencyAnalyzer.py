@@ -19,13 +19,14 @@ def calculateFFT(music_samples, chunk_size, n_bands=24, bands_intervals=[], usin
 		fourier = gpu(samples_windowed)
 
 	fourier = np.abs(fourier[:chunk_size // 2])
-	fourier = fourier ** 2 / chunk_size
+	fourier = fourier * 2 / chunk_size
 	n_bands, frequencies = bands(fourier, n_bands, sample_rate)
 
 	return n_bands, frequencies
 
 
 def gpu(data):
+	print("Inside gpu function")
 	DATA_SIZE = 11
 	BANDS_COUNT = len(data)
 	audio_levels = AudioLevels(DATA_SIZE, BANDS_COUNT)
@@ -36,7 +37,10 @@ def gpu(data):
 		new_data.append(float(i))
 
 	data = np.array(new_data, dtype=np.float32)
+	print("antes")
 	levels, _, _ = audio_levels.compute(data, bands_indexes)
+	print("Levels")
+	print(levels)
 	return levels
 
 
