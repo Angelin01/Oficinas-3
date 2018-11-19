@@ -86,7 +86,7 @@ class Accelerometer():
 			# y_rotation = self.get_y_rotation(x, y, z)
 
 			if tilting_right or tilting_left:
-				if x_rotation < 10 and x_rotation > -10:
+				if 10 > x_rotation > -10:
 					if tilting_right:
 						return AccReading.INC_RIGHT
 					elif tilting_left:
