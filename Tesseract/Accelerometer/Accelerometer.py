@@ -51,7 +51,10 @@ class Accelerometer():
 		tilting_right = False
 		tilting_left = False
 		moved_up = False
-		last_stable_y = y = - self.read_word_2c(0x3b) / 16384.0
+		last_x = self.read_word_2c(0x3d) / 16384.0
+		last_y = - self.read_word_2c(0x3b) / 16384.0
+		last_z = self.read_word_2c(0x3f) / 16384.0
+		accumulated_movement = 0
 
 		while True:
 			#gyro_xout = read_word_2c(0x43)
@@ -62,9 +65,23 @@ class Accelerometer():
 			# code_x = real_y
 			# code_y = - real_x
 
+
+
 			x = self.read_word_2c(0x3d) / 16384.0
 			y = - self.read_word_2c(0x3b) / 16384.0
 			z = self.read_word_2c(0x3f) / 16384.0
+
+			# FIXME More magic numbers, the > 10 and > 150 below. Needs adjusting.
+			# FIXME Triggers if there is a simple 1 axis movement, should probably check if at least two axis moved
+			#       more than a certain amount
+			# If moved sufficiently, add to accumulated_movement
+			# If not, reset accumulated_movement
+			moved = abs(x - last_x) + abs(y - last_y) + abs(z - last_z)
+			accumulated_movement += moved if moved > 10 else 0
+
+			if accumulated_movement > 150:
+				return AccReading.AGITATION
+
 			x_rotation = self.get_x_rotation(x, y, z)
 			y_rotation = self.get_y_rotation(x, y, z)
 
@@ -79,11 +96,11 @@ class Accelerometer():
 
 			elif moved_up:
 				# FIXME 15 is a magic number, don't know precise reading, so guessing slightly smaller than number below
-				if y < last_stable_y - 15:
+				if y < last_y - 15:
 					return AccReading.UP_DOWN
 
 			# FIXME 20 is a magic number, don't know precise reading, so guessing
-			elif y > last_stable_y + 20:
+			elif y > last_y + 20:
 				moved_up = True
 				print('Cima!')
 
@@ -96,6 +113,8 @@ class Accelerometer():
 				print('Esquerda!')
 
 			# Update 'last' variables for next read
-			last_stable_y = y
+			last_x = x
+			last_y = y
+			last_z = z
 
 
