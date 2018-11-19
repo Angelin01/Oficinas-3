@@ -55,8 +55,13 @@ class Accelerometer():
 			#gyro_xout = read_word_2c(0x43)
 			#gyro_yout = read_word_2c(0x45)
 			#gyro_zout = read_word_2c(0x47)
-			x = self.read_word_2c(0x3b) / 16384.0
-			y = self.read_word_2c(0x3d) / 16384.0
+
+			# Accelerometer is sideways, rotated 90° to the right
+			# code_x = real_y
+			# code_y = - real_x
+
+			x = self.read_word_2c(0x3d) / 16384.0
+			y = - self.read_word_2c(0x3b) / 16384.0
 			z = self.read_word_2c(0x3f) / 16384.0
 			x_rotation = self.get_x_rotation(x, y, z)
 			y_rotation = self.get_y_rotation(x, y, z)
