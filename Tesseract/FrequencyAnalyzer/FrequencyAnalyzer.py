@@ -31,7 +31,7 @@ def gpu(data):
 	BANDS_COUNT = len(data)
 	audio_levels = AudioLevels(DATA_SIZE, BANDS_COUNT)
 
-	bands_indexes = [[i, i + 1] for i in range(1024)]
+	bands_indexes = [[i, i + 1] for i in range(Audio.chunk_size // 2)]
 	new_data = []
 	for i in data:
 		new_data.append(float(i))

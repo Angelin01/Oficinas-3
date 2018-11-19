@@ -1,0 +1,5 @@
+Init pulseaudio (turns on raspotify)
+
+execute sudo modprobe snd-aloop
+
+and works

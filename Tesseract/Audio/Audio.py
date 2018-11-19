@@ -1,26 +1,23 @@
-import pyaudio
 import struct
 import numpy as np
 
-chunk_size = 1024 * 2
-data_format = pyaudio.paInt16
-n_channels = 2
+import alsaaudio as alsa
+
+chunk_size = 1024
+data_format = alsa.PCM_FORMAT_S16_LE
+n_channels = 1
 sample_rate = 44100
 
-p = pyaudio.PyAudio()
-
-input_device_index = 1
-
-stream = p.open(format=data_format,
-                channels=n_channels,
-                rate=sample_rate,
-                input=True,
-                frames_per_buffer=chunk_size,
-                input_device_index=input_device_index)
+stream = alsa.PCM(alsa.PCM_CAPTURE, device='hw:1,1')
+stream.setchannels(n_channels)
+stream.setrate(sample_rate)
+stream.setperiodsize(chunk_size)
 
 
 def getLoopbackAudioData():
-	raw_data = stream.read(chunk_size, exception_on_overflow=False)
+	length, raw_data = stream.read()
+	if length < chunk_size:
+		return np.zeros(chunk_size)
 
 	# Convert raw sound data to Numpy array
 	fmt = "%dH" % (len(raw_data) / 2)
@@ -31,6 +28,4 @@ def getLoopbackAudioData():
 
 
 def stopLoopbackAudioStream():
-	stream.stop_stream()
 	stream.close()
-	p.terminate()
