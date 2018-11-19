@@ -48,8 +48,10 @@ class Accelerometer():
 
 
 	def wait_for_movement(self):
-		inclinado_direita = False
-		inclinado_esquerda = False
+		tilting_right = False
+		tilting_left = False
+		moved_up = False
+		last_stable_y = y = - self.read_word_2c(0x3b) / 16384.0
 
 		while True:
 			#gyro_xout = read_word_2c(0x43)
@@ -66,17 +68,34 @@ class Accelerometer():
 			x_rotation = self.get_x_rotation(x, y, z)
 			y_rotation = self.get_y_rotation(x, y, z)
 
-			if inclinado_direita or inclinado_esquerda:
+			if tilting_right or tilting_left:
 				if x_rotation < 10 and x_rotation > -10:
-					if inclinado_direita:
+					if tilting_right:
 						return AccReading.INC_RIGHT
-					elif inclinado_esquerda:
+					elif tilting_left:
 						return AccReading.INC_LEFT
 					else:
 						return AccReading.NONE
+
+			elif moved_up:
+				# FIXME 15 is a magic number, don't know precise reading, so guessing slightly smaller than number below
+				if y < last_stable_y - 15:
+					return AccReading.UP_DOWN
+
+			# FIXME 20 is a magic number, don't know precise reading, so guessing
+			elif y > last_stable_y + 20:
+				moved_up = True
+				print('Cima!')
+
 			elif x_rotation > 70:
-				inclinado_direita = True
+				tilting_right = True
 				print('Direita!')
+
 			elif x_rotation < -70:
-				inclinado_esquerda = True
+				tilting_left = True
 				print('Esquerda!')
+
+			# Update 'last' variables for next read
+			last_stable_y = y
+
+
