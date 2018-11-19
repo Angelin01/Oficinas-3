@@ -1,5 +1,4 @@
 from Audio import Audio
-from FrequencyAnalyzer.SoundAnalyzer import SoundAnalyzer
 import spidev
 import Light.ws2812 as ws2812
 
