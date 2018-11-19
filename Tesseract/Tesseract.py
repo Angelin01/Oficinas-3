@@ -16,14 +16,15 @@ from multiprocessing import Queue
 class Tesseract():
 	def __init__(self):
 		self.bluetooth_queue = Queue()
+		bluetooth_leds_queue = Queue()
 		
 		self.spotify = SpotifyClient(self)
 
 		# TODO: Create LED control thread
-		self.bluetooth_service = BluetoothService(self, self.bluetooth_queue)
+		self.bluetooth_service = BluetoothService(self, self.bluetooth_queue, bluetooth_leds_queue)
 		# self.acc_service = AccService(self)
 
-		self.lightConfig()
+		self.lightConfig(bluetooth_leds_queue)
 
 		self.is_spotify = False
 
@@ -39,7 +40,7 @@ class Tesseract():
 		self.lights = self.light_show.stop()
 
 
-	def lightConfig(self):
+	def lightConfig(self, bluetooth_leds_queue):
 		n_leds = 80
 
 		gradient = gen_rainbow_gradient(0, 360, 1, 100)
@@ -49,7 +50,7 @@ class Tesseract():
 		# fft_args = create_fft_freq_color_handler_args((0, 20, 0), (0, 20, 0), 1)
 		# self.light_show = TimedLightShow(fft_freq_color_handler, fft_args, 0.1, -1)
 
-		self.light_show = TimedLightShow(wave_handler, wave_handler_args, 0.05, -1)
+		self.light_show = TimedLightShow(wave_handler, wave_handler_args, 0.05, -1, bluetooth_leds_queue)
 
 
 if __name__ == '__main__':
