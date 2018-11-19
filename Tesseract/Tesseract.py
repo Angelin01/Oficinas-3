@@ -11,13 +11,16 @@ from Light.LightFunctions.handlers import standard_handler, wave_handler, fft_fr
 from Light.LightFunctions.modifiers import gen_sine_wave
 from Light.controller import TimedLightShow
 from Light.LightFunctions.handlers import standard_handler, wave_handler
+from multiprocessing import Queue
 
 class Tesseract():
 	def __init__(self):
+		self.bluetooth_queue = Queue()
+		
 		self.spotify = SpotifyClient(self)
 
 		# TODO: Create LED control thread
-		self.bluetooth_service = BluetoothService(self)
+		self.bluetooth_service = BluetoothService(self, self.bluetooth_queue)
 		# self.acc_service = AccService(self)
 
 		self.lightConfig()
