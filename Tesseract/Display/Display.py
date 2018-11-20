@@ -7,6 +7,7 @@ from asyncio import sleep
 
 class Display(multiprocessing.Process):
 	def __init__(self, write_queue):
+		super().__init__()
 		self.write_queue = write_queue
 
 		self.strings_to_write = ['', '']
