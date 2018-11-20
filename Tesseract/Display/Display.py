@@ -3,6 +3,7 @@ from threading import Thread
 from RPi import GPIO
 from RPLCD.gpio import CharLCD
 from asyncio import sleep
+from ctypes import c_bool
 
 
 class Display(multiprocessing.Process):
@@ -11,12 +12,12 @@ class Display(multiprocessing.Process):
 		self.write_queue = write_queue
 
 		self.strings_to_write = ['', '']
-		self.changed = True
+		self.changed = multiprocessing.Value(c_bool, True)
 
 		self.lcd = CharLCD(pin_rs=18, pin_rw=None, pin_e=23, pins_data=[12, 16, 20, 21], numbering_mode=GPIO.BCM,
 		                   cols=16, rows=2, auto_linebreaks=False)
 		self.lcd.cursor_mode = 'hide'
-		self.watch_queue = Thread(target=self.update_to_write)
+		self.watch_queue = Thread(target=self.update_to_write, args=(self.changed,))
 
 	def run(self):
 		self.watch_queue.start()
@@ -26,7 +27,7 @@ class Display(multiprocessing.Process):
 		i, j = 0, 0
 
 		while True:
-			if self.changed:
+			if self.changed.value:
 				i, j = 0, 0
 				self.lcd.clear()
 
@@ -51,7 +52,7 @@ class Display(multiprocessing.Process):
 					max_j = len(bottom_string)
 					bottom_freeze_ticks = 4
 
-				self.changed = False
+				self.changed.value = False
 
 			if top_scroll:
 				self.lcd.cursor_pos(0, 0)
@@ -79,9 +80,9 @@ class Display(multiprocessing.Process):
 
 			sleep(0.2)
 
-	def update_to_write(self):
+	def update_to_write(self, changed):
 		while True:
 			msg = self.write_queue.get()
 			if msg[0] != self.strings_to_write[0] or msg[1] != self.strings_to_write[1]:
 				self.strings_to_write[0], self.strings_to_write[1] = msg[0], msg[1]
-				self.changed = True
+				changed.value = True
