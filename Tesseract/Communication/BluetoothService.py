@@ -60,13 +60,16 @@ class BluetoothService(multiprocessing.Process):
 			if msg["type"] == "wifi":
 				print('wifi command')
 				if msg["subtype"] == "request-list":
-					conn.send(self.json_all_wifis())
+					available_wifis = self.json_all_wifis()
+					self.bluetooth_send(conn, available_wifis)
 
 				elif msg["subtype"] == "connect":
-					conn.send(self.connect_wifi(msg["value"]))
+					connect_wifi_attempt = self.connect_wifi(msg["value"])
+					self.bluetooth_send(conn, connect_wifi_attempt)
 
 				elif msg["subtype"] == "request-status":
-					conn.send(self.wifi_status())
+					wifi_status = self.wifi_status()
+					self.bluetooth_send(conn, wifi_status)
 
 			# ============ Processing spotify messages ============= #
 			elif msg["type"] == "spotify":
@@ -77,15 +80,17 @@ class BluetoothService(multiprocessing.Process):
 				elif msg["subtype"] == "disconnect":
 					self.tesseract.is_spotify = False
 
+	def bluetooth_send(self, conn, wifi_status):
+		msg = wifi_status + b'--end_of_message'
+		sent = conn.send(msg)
+
+
+
 	@staticmethod
 	def json_all_wifis():
 		json_list = {"type": "wifi", "subtype": "list", "value": []}
-		i = 0
 		for cell in list(Cell.all('wlan0')):
 			json_list.get("value").append({"ssid": cell.ssid, "signal": cell.signal, "encryption_type": cell.encryption_type})
-			if i > 3:
-				break
-			i += 1
 		return json.dumps(json_list, separators=(',', ':')).encode('utf-8')
 
 	def connect_spotify(self, value):
