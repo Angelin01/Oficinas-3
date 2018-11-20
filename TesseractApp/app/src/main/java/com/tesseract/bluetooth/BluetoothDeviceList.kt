@@ -77,7 +77,7 @@ class BluetoothDeviceList : Fragment(), BluetoothListAdapter.OnBluetoothItemClic
 		recyclerViewBluetooth.adapter = bluetoothListAdapter
 
 		bluetoothController.bluetoothList.observe(activity!!, Observer<List<BluetoothDevice>> { bluetoothList ->
-			updateWifiList(bluetoothList as ArrayList<BluetoothDevice>)
+			updateBluetoothList(bluetoothList as ArrayList<BluetoothDevice>)
 		})
 		bluetoothController.requestPairedBluetooth()
 
@@ -94,8 +94,8 @@ class BluetoothDeviceList : Fragment(), BluetoothListAdapter.OnBluetoothItemClic
 		return view
 	}
 
-	private fun updateWifiList(bluetoothList: ArrayList<BluetoothDevice>) {
-		activity!!.runOnUiThread {
+	private fun updateBluetoothList(bluetoothList: ArrayList<BluetoothDevice>) {
+		activity?.runOnUiThread {
 			bluetoothListAdapter.updateList(bluetoothList)
 		}
 	}
