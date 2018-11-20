@@ -80,4 +80,4 @@ class AccService(multiprocessing.Process):
 
 	def agitated(self):
 		if self.spotify_client.is_active:
-			self.tesseract.spotify_client.shuffle()
+			self.spotify_client.shuffle()
