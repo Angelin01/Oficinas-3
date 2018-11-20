@@ -41,48 +41,45 @@ class Accelerometer():
 		return math.degrees(radians)
 
 	def wait_for_movement(self):
-		tilting_right = False
-		tilting_left = False
-		moved_up = False
-		last_x = self.read_word_2c(0x3d) / 16384.0
-		last_y = - self.read_word_2c(0x3b) / 16384.0
-		last_z = self.read_word_2c(0x3f) / 16384.0
-		accumulated_movement = 0
+		#region [ Magic numbers ]
+		agitation_intensity_threshold = 18000
+		agitation_counter_max = 70
+		tilting_counter_max = 60
+		tilting_angle_detection = 30
 
+		axis_movement = 10000
+		gravity = 16384.0
+		updown_tolerance = 4000
+		#endregion
+
+		tilting_right_count = 0
+		tilting_left_count = 0
+		agitation_counter = 0
 		updown_state = 0
 
 		while True:
 			#gyro_xout = read_word_2c(0x43)
 			#gyro_yout = read_word_2c(0x45)
 			#gyro_zout = read_word_2c(0x47)
-
-			gravity = 16384.0
-
 			x = self.read_word_2c(0x3b)
 			y = self.read_word_2c(0x3d)
 			z = self.read_word_2c(0x3f)
-			x_normalized = x / gravity
-			y_normalized = y / gravity
-			z_normalized = z / gravity
-
-			axis_movement = 10000
+			#x_normalized = x / gravity
+			#y_normalized = y / gravity
+			#z_normalized = z / gravity
 
 			''' UP-DOWN DETECTION '''
-			if z < axis_movement and x < axis_movement:
-				if updown_state == 0 and y > (gravity + axis_movement):
-					print('subindo! y = ' + str(y))
+			if z < 10000 and x < 10000:
+				if updown_state == 0 and y > 20000:
+					# going up
 					updown_state = 1
 
-				elif updown_state == 1 and y < (gravity - axis_movement):
-					print('parou de subir! y = ' + str(y))
+				elif updown_state == 1 and y < 10000:
+					# going back down
 					updown_state = 2
 
-				elif updown_state == 2 and ((gravity - axis_movement) < y < (gravity + axis_movement)):
-					print('aguardando! y = ' + str(y))
-					updown_state = 3
-
-				elif updown_state == 3 and y < (gravity - axis_movement):
-					print('descendo! y = ' + str(y))
+				elif updown_state == 2 and y > 20000:
+					# movement complete
 					return AccReading.UP_DOWN
 
 			else:
@@ -90,30 +87,38 @@ class Accelerometer():
 
 			''' ROTATION DETECTION '''
 			x_rotation = self.get_x_rotation(x, y, z)
-			if tilting_right or tilting_left:
+			if tilting_right_count > tilting_counter_max or tilting_left_count > tilting_counter_max:
 				if 10 > x_rotation > -10:
-					if tilting_right:
+					if tilting_right_count > tilting_counter_max:
 						return AccReading.INC_RIGHT
-					elif tilting_left:
+					elif tilting_left_count > tilting_counter_max:
 						return AccReading.INC_LEFT
 					else:
 						return AccReading.NONE
 
-			elif x_rotation > 70:
-				tilting_right = True
-				print('Esquerda!')
+			elif x_rotation > tilting_angle_detection:
+				tilting_right_count = 0
+				tilting_left_count += 1
+				if tilting_right_count > tilting_counter_max:
+					print('Esquerda!')
 
-			elif x_rotation < -70:
-				tilting_left = True
-				print('Direita!')
+			elif x_rotation < -tilting_angle_detection:
+				tilting_right_count += 1
+				tilting_left_count = 0
+				if tilting_left_count > tilting_counter_max:
+					print('Direita!')
 
-			# FIXME More magic numbers, the > 10 and > 150 below. Needs adjusting.
-			# FIXME Triggers if there is a simple 1 axis movement, should probably check if at least two axis moved
-			#       more than a certain amount
-			# If moved sufficiently, add to accumulated_movement
-			# If not, reset accumulated_movement
-			'''moved = abs(x - last_x) + abs(y - last_y) + abs(z - last_z)
-			accumulated_movement += moved if moved > 10 else 0
+			else:
+				tilting_right_count = 0
+				tilting_left_count = 0
 
-			if accumulated_movement > 150:
-				return AccReading.AGITATION'''
+			''' AGITATION DETECTION '''
+			if math.sqrt((x*x) + (y*y) + (z*z)) > agitation_intensity_threshold:
+				agitation_counter += 1
+			else:
+				agitation_counter = 0
+
+			# print('agitation counter: ' + str(agitation_counter))
+
+			if agitation_counter == agitation_counter_max:
+				return AccReading.AGITATION
