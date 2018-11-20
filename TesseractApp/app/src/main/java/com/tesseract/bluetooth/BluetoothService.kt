@@ -280,24 +280,16 @@ class BluetoothService : Service() {
 
         override fun run() {
             Log.i(TAG, "BEGIN mConnectedThread")
-            val buffer = ByteArray(1024)
-            var bytes: Int
+            val bufferSize = 1024
+	        val buffer = ByteArray(bufferSize)
 
             // Keep listening to the InputStream while connected
             while (mState == BluetoothStates.STATE_CONNECTED) {
                 try {
                     // Read from the InputStream
-                    bytes = mmInStream!!.read(buffer)
-                    var input = String(buffer)
-                    input = input.substring(0, bytes)
-                    Log.d(TAG, input)
+                    val input = readInput(buffer, bufferSize)
 
-	                // mock
-	                if (input.equals("music")) {
-		                input = mockMusicResponse()
-	                }
-
-	                messageCallback!!.callbackMessageReceiver(input, null)
+                    tesseractCommunicationCallback!!.callbackMessageReceiver(input, null)
 
                 } catch (e: IOException) {
                     Log.e(TAG, "disconnected", e)
@@ -308,55 +300,19 @@ class BluetoothService : Service() {
             }
         }
 
-	    var mockerMusicIndex = 0
-        private fun mockMusicResponse(): String {
-	        val sampleMusic1: String = """
-{
-	"type": "music",
-	"subtype": "music",
-	"value":
-    {
-      "name": "music 1",
-      "band_name": "band 1",
-      "album_cover_url": "http://animallemundopet.com.br/wp-content/uploads/2014/10/Los-gatos-nos-ignoran-1-777x518.jpg",
-      "duration": "1.0"
-    }
-}"""
-	        val sampleMusic2: String = """
-{
-	"type": "music",
-	"subtype": "music",
-	"value":
-    {
-      "name": "music 2",
-      "band_name": "band 2",
-      "album_cover_url": "https://i.ytimg.com/vi/_43lSXa1yDs/maxresdefault.jpg",
-      "duration": "2.0"
-    }
-}"""
-	        val sampleMusic3: String = """
-{
-	"type": "music",
-	"subtype": "music",
-	"value":
-    {
-      "name": "music 3",
-      "band_name": "band 3",
-      "album_cover_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiEzGp5Ww0avJTR2SiwaXEmE7vJQ__e-vaq-D4Yz4p1mN96_7SXQ",
-      "duration": "3.0"
-    }
-}"""
-	        if (mockerMusicIndex == 0) {
-		        mockerMusicIndex = 1
-		        return sampleMusic1
-	        } else if (mockerMusicIndex == 1) {
-		        mockerMusicIndex = 2
-		        return sampleMusic2
-	        } else {
-		        mockerMusicIndex = 0
-		        return sampleMusic3
-	        }
+        private fun readInput(buffer: ByteArray, bufferSize: Int): String {
+	        var received = ""
+	        var bytes: Int
+	        do {
+		        bytes = mmInStream!!.read(buffer)
+		        var input = String(buffer)
+		        input = input.substring(0, bytes)
+		        received += input
+	        } while (!received.contains("--end_of_message"))
+
+	        return received.replace("--end_of_message", "")
         }
+
 
         /**
          * Write to the connected OutStream.
@@ -393,10 +349,10 @@ class BluetoothService : Service() {
 
         const val STATE_CHANGED = "com.you.tesseract.BLUETOOTH_CONNECTION_CHANGED"
 
-        private var messageCallback: BluetoothMessageCallback? = null
+        private var tesseractCommunicationCallback: BluetoothMessageCallback? = null
 
         fun setListener(listener: BluetoothMessageCallback) {
-            messageCallback = listener
+            tesseractCommunicationCallback = listener
         }
 
     }
