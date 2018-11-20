@@ -20,7 +20,7 @@ class Tesseract():
 		self.bluetooth_queue = Queue()
 		bluetooth_leds_queue = Queue()
 		bluetooth_acc_queue = Queue()
-        display_queue = Queue()
+		display_queue = Queue()
 
 		self.bluetooth_service = BluetoothService(self, self.bluetooth_queue, bluetooth_leds_queue, bluetooth_acc_queue)
 		self.acc_service = AccService(self, bluetooth_acc_queue)
