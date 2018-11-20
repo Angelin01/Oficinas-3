@@ -12,18 +12,18 @@ stream = alsa.PCM(alsa.PCM_CAPTURE, device='hw:1,1')
 stream.setchannels(n_channels)
 stream.setrate(sample_rate)
 stream.setperiodsize(chunk_size)
-
+stream.setformat(data_format)
 
 def getLoopbackAudioData():
-	length, raw_data = stream.read()
-	if length < chunk_size:
-		return np.zeros(chunk_size)
+	length = 0
+	while length < chunk_size:
+		length, raw_data = stream.read()
 
+	# raw_data = raw_data[:chunk_size]
 	# Convert raw sound data to Numpy array
 	fmt = "%dH" % (len(raw_data) / 2)
 	data = struct.unpack(fmt, raw_data)
 	data = np.array(data, dtype='h')
-
 	return data
 
 
