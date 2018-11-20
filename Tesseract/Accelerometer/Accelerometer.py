@@ -1,6 +1,16 @@
-from Accelerometer.AccReading import AccReading
 import smbus
 import math
+
+from enum import Enum
+
+class AccReading(Enum):
+	NONE = 0,
+	INC_RIGHT = 1, 
+	INC_LEFT = 2,
+	INC_FRONT = 3,
+	INC_BACK = 4,
+	UP_DOWN = 5,
+	AGITATION = 6
 
 
 class Accelerometer():
@@ -13,17 +23,14 @@ class Accelerometer():
 		self.power_mgmt_2 = 0x6c
 		self.bus.write_byte_data(self.address, self.power_mgmt_1, 0)
 
-
 	def read_byte(self, adr):
 		return self.bus.read_byte_data(self.address, adr)
-
 
 	def read_word(self, adr):
 		high = self.bus.read_byte_data(self.address, adr)
 		low = self.bus.read_byte_data(self.address, adr+1)
 		val = (high << 8) + low
 		return val
-
 
 	def read_word_2c(self, adr):
 		val = self.read_word(adr)
@@ -32,20 +39,16 @@ class Accelerometer():
 		else:
 			return val
 
-
 	def dist(self, a, b):
 		return math.sqrt((a*a)+(b*b))
 
-
 	def get_y_rotation(self, x, y, z):
-		radians = math.atan2(x, self.dist(y,z))
-		return -math.degrees(radians)
-
-
-	def get_x_rotation(self, x, y, z):
 		radians = math.atan2(y, self.dist(x,z))
 		return math.degrees(radians)
 
+	def get_x_rotation(self, x, y, z):
+		radians = math.atan2(x, self.dist(y,z))
+		return math.degrees(radians)
 
 	def wait_for_movement(self):
 		tilting_right = False
@@ -56,35 +59,47 @@ class Accelerometer():
 		last_z = self.read_word_2c(0x3f) / 16384.0
 		accumulated_movement = 0
 
+		updown_state = 0
+
 		while True:
 			#gyro_xout = read_word_2c(0x43)
 			#gyro_yout = read_word_2c(0x45)
 			#gyro_zout = read_word_2c(0x47)
 
-			# Accelerometer is sideways, rotated 90° to the right
-			# code_x = real_y
-			# code_y = - real_x
+			gravity = 16384.0
 
+			x = self.read_word_2c(0x3b)
+			y = self.read_word_2c(0x3d)
+			z = self.read_word_2c(0x3f)
+			x_normalized = x / gravity
+			y_normalized = y / gravity
+			z_normalized = z / gravity
 
+			axis_movement = 10000
 
-			x = self.read_word_2c(0x3d) / 16384.0
-			y = - self.read_word_2c(0x3b) / 16384.0
-			z = self.read_word_2c(0x3f) / 16384.0
+			''' UP-DOWN DETECTION '''
+			if z < axis_movement and x < axis_movement:
+				if updown_state == 0 and y > (gravity + axis_movement):
+					print('subindo! y = ' + str(y))
+					updown_state = 1
 
-			# FIXME More magic numbers, the > 10 and > 150 below. Needs adjusting.
-			# FIXME Triggers if there is a simple 1 axis movement, should probably check if at least two axis moved
-			#       more than a certain amount
-			# If moved sufficiently, add to accumulated_movement
-			# If not, reset accumulated_movement
-			moved = abs(x - last_x) + abs(y - last_y) + abs(z - last_z)
-			accumulated_movement += moved if moved > 10 else 0
+				elif updown_state == 1 and y < (gravity - axis_movement):
+					print('parou de subir! y = ' + str(y))
+					updown_state = 2
 
-			if accumulated_movement > 150:
-				return AccReading.AGITATION
+				elif updown_state == 2 and ((gravity - axis_movement) < y < (gravity + axis_movement)):
+					print('aguardando! y = ' + str(y))
+					updown_state = 3
 
+				elif updown_state == 3 and y < (gravity - axis_movement):
+					print('descendo! y = ' + str(y))
+					return AccReading.UP_DOWN
+
+			else:
+				updown_state = 0
+
+			''' ROTATION DETECTION '''
 			x_rotation = self.get_x_rotation(x, y, z)
-			# y_rotation = self.get_y_rotation(x, y, z)
-
 			if tilting_right or tilting_left:
 				if 10 > x_rotation > -10:
 					if tilting_right:
@@ -94,27 +109,21 @@ class Accelerometer():
 					else:
 						return AccReading.NONE
 
-			elif moved_up:
-				# FIXME 15 is a magic number, don't know precise reading, so guessing slightly smaller than number below
-				if y < last_y - 15:
-					return AccReading.UP_DOWN
-
-			# FIXME 20 is a magic number, don't know precise reading, so guessing
-			elif y > last_y + 20:
-				moved_up = True
-				print('Cima!')
-
 			elif x_rotation > 70:
 				tilting_right = True
-				print('Direita!')
+				print('Esquerda!')
 
 			elif x_rotation < -70:
 				tilting_left = True
-				print('Esquerda!')
+				print('Direita!')
 
-			# Update 'last' variables for next read
-			last_x = x
-			last_y = y
-			last_z = z
+			# FIXME More magic numbers, the > 10 and > 150 below. Needs adjusting.
+			# FIXME Triggers if there is a simple 1 axis movement, should probably check if at least two axis moved
+			#       more than a certain amount
+			# If moved sufficiently, add to accumulated_movement
+			# If not, reset accumulated_movement
+			'''moved = abs(x - last_x) + abs(y - last_y) + abs(z - last_z)
+			accumulated_movement += moved if moved > 10 else 0
 
-
+			if accumulated_movement > 150:
+				return AccReading.AGITATION'''
