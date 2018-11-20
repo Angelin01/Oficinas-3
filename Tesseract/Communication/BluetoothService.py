@@ -74,11 +74,7 @@ class BluetoothService(multiprocessing.Process):
 			# ============ Processing spotify messages ============= #
 			elif msg["type"] == "spotify":
 				print('spotify command')
-				if msg["subtype"] == "connect":
-					self.connect_spotify(msg["value"])
-
-				elif msg["subtype"] == "disconnect":
-					self.tesseract.is_spotify = False
+				self.acc_queue.put(msg)
 
 	def bluetooth_send(self, conn, wifi_status):
 		msg = wifi_status + b'--end_of_message'

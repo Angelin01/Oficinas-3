@@ -1,16 +1,34 @@
 import multiprocessing
-from Spotify.SpotifyClient import SpotifyClient
 from Accelerometer.Accelerometer import Accelerometer
 from Accelerometer.AccReading import AccReading
+from Spotify.SpotifyClient import SpotifyClient
+from threading import Thread
 
 
 class AccService(multiprocessing.Process):
-	def __init__(self, tesseract):
+	def __init__(self, tesseract, bluetooth_queue):
 		super().__init__()
 		self.tesseract = tesseract
 		self.accelerometer = Accelerometer()
+		self.bluetooth_queue = bluetooth_queue
+		self.spotify_client = SpotifyClient()
 
+		Thread(target=self.read_queue).start()
 		self._stop_service = False
+
+	def read_queue(self):
+		while not self._stop_service:
+			msg = self.bluetooth_queue.get()
+
+			if msg["type"] == "spotify":
+				if msg["subtype"] == "disconnect":
+					self.spotify_client.is_active = False
+
+				elif msg["subtype"] == "connect":
+					self.spotify_client.connect(msg["subtype"]["token"], msg["subtype"]["deviceID"])
+
+			else:
+				print("invalid message received by spotify process")
 
 	def stop_service(self):
 		self._stop_service = True
@@ -32,12 +50,12 @@ class AccService(multiprocessing.Process):
 				self.agitated()
 
 	def inclined_right(self):
-		if self.tesseract.is_spotify:
-			self.tesseract.spotify.next_track()
+		if self.spotify_client.is_active:
+			self.spotify_client.next_track()
 
 	def inclined_left(self):
-		if self.tesseract.is_spotify:
-			self.tesseract.spotify.previous_track()
+		if self.spotify_client.is_active:
+			self.spotify_client.previous_track()
 
 	def inclined_front(self):
 		pass
@@ -46,7 +64,12 @@ class AccService(multiprocessing.Process):
 		pass
 
 	def up_and_down(self):
-		pass
+		if self.spotify_client.is_active:
+			if self.spotify_client.is_playing():
+				self.spotify_client.pause()
+			else:
+				self.spotify_client.pause()
 
 	def agitated(self):
-		pass
+		if self.spotify_client.is_active:
+			self.tesseract.spotify_client.shuffle()
