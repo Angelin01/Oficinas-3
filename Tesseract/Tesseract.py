@@ -4,7 +4,6 @@ from Accelerometer.AccService import AccService
 from Audio import Audio
 from Communication.BluetoothService import BluetoothService
 from FrequencyAnalyzer.SoundAnalyzer import SoundAnalyzer
-from Spotify.SpotifyClient import SpotifyClient
 from Display.Display import Display
 
 # Temp import
@@ -21,30 +20,24 @@ class Tesseract():
 		self.bluetooth_queue = Queue()
 		bluetooth_leds_queue = Queue()
 		bluetooth_acc_queue = Queue()
-		display_queue = Queue()
-    
-		self.spotify = SpotifyClient(self)
+        display_queue = Queue()
 
-		# TODO: Create LED control thread
 		self.bluetooth_service = BluetoothService(self, self.bluetooth_queue, bluetooth_leds_queue, bluetooth_acc_queue)
-		# self.acc_service = AccService(self, bluetooth_acc_queue)
+		self.acc_service = AccService(self, bluetooth_acc_queue)
 
 		self.display = Display(display_queue)
 
 		self.lightConfig(bluetooth_leds_queue)
 
-		self.is_spotify = False
-
 	def run(self):
 		self.display.start()
 		self.bluetooth_service.start()
-		# self.acc_service.start()
+		self.acc_service.start()
 		self.lights = self.light_show.start()
-
 
 	def stop_services(self, s, f):
 		self.bluetooth_service.stop_service()
-		# self.acc_service.stop_service()
+		self.acc_service.stop_service()
 		self.lights = self.light_show.stop()
 
 

@@ -3,7 +3,7 @@ import smbus
 import math
 
 
-class Accelerometer():
+class Accelerometer:
 
 	def __init__(self):
 		self.bus = smbus.SMBus(1) # or bus = smbus.SMBus(1) for Revision 2 boards

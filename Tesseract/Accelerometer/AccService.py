@@ -1,21 +1,47 @@
 import multiprocessing
-from Spotify.SpotifyClient import SpotifyClient
 from Accelerometer.Accelerometer import Accelerometer
 from Accelerometer.AccReading import AccReading
+from Spotify.SpotifyClient import SpotifyClient
+from threading import Thread
 
 
 class AccService(multiprocessing.Process):
-	def __init__(self, tesseract):
+	def __init__(self, tesseract, bluetooth_queue):
 		super().__init__()
 		self.tesseract = tesseract
 		self.accelerometer = Accelerometer()
+		self.bluetooth_queue = bluetooth_queue
+		self.spotify_client = SpotifyClient()
+
+		self.thread_communication_list = [self.spotify_client]
+		self.queue_thread = Thread(target=self.read_queue)
 
 		self._stop_service = False
+
+	def read_queue(self):
+		while True:
+			msg = self.bluetooth_queue.get()
+
+			print("spotify message received!")
+
+			if msg["type"] == "spotify":
+				spotify_client = self.thread_communication_list[0]
+
+				if msg["subtype"] == "disconnect":
+					spotify_client.is_active = False
+
+				elif msg["subtype"] == "connect":
+					spotify_client.connect(msg["value"]["token"], msg["value"]["deviceID"])
+
+			else:
+				print("invalid message received by spotify process")
 
 	def stop_service(self):
 		self._stop_service = True
 
 	def run(self):
+		self.queue_thread.start()
+
 		while not self._stop_service:
 			reading = self.accelerometer.wait_for_movement()
 			if reading == AccReading.INC_RIGHT:
@@ -32,12 +58,12 @@ class AccService(multiprocessing.Process):
 				self.agitated()
 
 	def inclined_right(self):
-		if self.tesseract.is_spotify:
-			self.tesseract.spotify.next_track()
+		if self.spotify_client.is_active:
+			self.spotify_client.next_track()
 
 	def inclined_left(self):
-		if self.tesseract.is_spotify:
-			self.tesseract.spotify.previous_track()
+		if self.spotify_client.is_active:
+			self.spotify_client.previous_track()
 
 	def inclined_front(self):
 		pass
@@ -46,7 +72,12 @@ class AccService(multiprocessing.Process):
 		pass
 
 	def up_and_down(self):
-		pass
+		if self.spotify_client.is_active:
+			if self.spotify_client.is_playing():
+				self.spotify_client.pause()
+			else:
+				self.spotify_client.pause()
 
 	def agitated(self):
-		pass
+		if self.spotify_client.is_active:
+			self.spotify_client.shuffle()
