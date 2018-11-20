@@ -13,16 +13,21 @@ from Light.LightFunctions.handlers import standard_handler, wave_handler, fft_fr
 from Light.LightFunctions.modifiers import gen_sine_wave
 from Light.controller import TimedLightShow
 from Light.LightFunctions.handlers import standard_handler, wave_handler
+from multiprocessing import Queue
 
 class Tesseract():
 	def __init__(self):
+		self.bluetooth_queue = Queue()
+		bluetooth_leds_queue = Queue()
+		bluetooth_acc_queue = Queue()
+
 		self.spotify = SpotifyClient(self)
 
 		# TODO: Create LED control thread
-		self.bluetooth_service = BluetoothService(self)
-		# self.acc_service = AccService(self)
+		self.bluetooth_service = BluetoothService(self, self.bluetooth_queue, bluetooth_leds_queue, bluetooth_acc_queue)
+		# self.acc_service = AccService(self, bluetooth_acc_queue)
 
-		self.lightConfig()
+		self.lightConfig(bluetooth_leds_queue)
 
 		self.is_spotify = False
 
@@ -38,7 +43,7 @@ class Tesseract():
 		self.lights = self.light_show.stop()
 
 
-	def lightConfig(self):
+	def lightConfig(self, bluetooth_leds_queue):
 		n_leds = 80
 
 		# gradient = gen_rainbow_gradient(0, 360, 1, 100)
@@ -46,7 +51,7 @@ class Tesseract():
 		# wave_handler_args = create_wave_handler_args(gradient, wave, 10, n_leds)
 
 		fft_args = create_fft_freq_color_handler_args((0, 20, 0), (0, 20, 0), 1)
-		self.light_show = TimedLightShow(fft_freq_color_handler, fft_args, 0.1, -1)
+		self.light_show = TimedLightShow(fft_freq_color_handler, fft_args, 0.1, -1, bluetooth_leds_queue)
 
 		# self.light_show = TimedLightShow(wave_handler, wave_handler_args, 0.05, -1)
 

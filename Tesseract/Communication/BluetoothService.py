@@ -12,8 +12,11 @@ from Communication.scheme_wpa import SchemeWPA
 class BluetoothService(multiprocessing.Process):
 	UUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
-	def __init__(self, tesseract):
+	def __init__(self, tesseract, main_queue, leds_queue, acc_queue):
 		super().__init__()
+		self.main_queue = main_queue
+		self.leds_queue = leds_queue
+		self.acc_queue = acc_queue
 		self.tesseract = tesseract
 
 		# Creates socket to listen for bluetooth connections
