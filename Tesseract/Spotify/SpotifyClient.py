@@ -1,7 +1,7 @@
 import requests
 
 
-class SpotifyClient():
+class SpotifyClient:
 
 	def __init__(self):
 		print('Spotify init')
@@ -24,19 +24,24 @@ class SpotifyClient():
 		return header
 
 	def next_track(self):
+		print('spotify next track')
 		requests.post('https://api.spotify.com/v1/me/player/next', headers=self.make_header())
 
 	def previous_track(self):
+		print('spotify previous track')
 		requests.post('https://api.spotify.com/v1/me/player/previous', headers=self.make_header())
 
 	def pause(self):
-		requests.post('https://api.spotify.com/v1/me/player/pause', headers=self.make_header())
+		print('spotify pause playback')
+		requests.put('https://api.spotify.com/v1/me/player/pause', headers=self.make_header())
 
 	def play(self):
-		requests.post('https://api.spotify.com/v1/me/player/play', headers=self.make_header())
+		print('spotify resume playback')
+		requests.put('https://api.spotify.com/v1/me/player/play', headers=self.make_header())
 
 	def shuffle(self):
-		requests.post('https://api.spotify.com/v1/me/player/shuffle', headers=self.make_header())
+		print('spotify shuffle')
+		requests.put('https://api.spotify.com/v1/me/player/shuffle', headers=self.make_header())
 
 	def is_playing(self):
 		return False
