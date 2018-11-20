@@ -1,3 +1,5 @@
+import numpy
+
 from Audio import Audio
 from Audio.Audio import getLoopbackAudioData
 from FrequencyAnalyzer.SoundAnalyzer import SoundAnalyzer
@@ -138,7 +140,7 @@ def fft_freq_color_handler(args_dict: dict):
 
     data = getLoopbackAudioData()
     fft_result = sound_analyzer.getAmplitudes(data)
-    print(fft_result)
+    filterInf(fft_result)
 
     updated_led_sequence = []
 
@@ -164,3 +166,8 @@ def fft_freq_color_handler(args_dict: dict):
     args_dict['max_fft_sample'] = max_sample
 
     return updated_led_sequence * 4
+
+def filterInf(fft_result):
+    for index, value in enumerate(fft_result):
+        if numpy.isinf(fft_result[index]):
+            fft_result[index] = 0

@@ -4,7 +4,7 @@ import numpy as np
 from Audio import Audio
 
 
-def calculateFFT(music_samples, chunk_size, n_bands=24, bands_intervals=[], using_scipy=True,
+def calculateFFT(music_samples, chunk_size, n_bands=20, bands_intervals=[], using_scipy=True,
                  sample_rate=Audio.sample_rate):
 	window = np.hanning(0)
 
@@ -26,21 +26,17 @@ def calculateFFT(music_samples, chunk_size, n_bands=24, bands_intervals=[], usin
 
 
 def gpu(data):
-	print("Inside gpu function")
 	DATA_SIZE = 11
 	BANDS_COUNT = len(data)
 	audio_levels = AudioLevels(DATA_SIZE, BANDS_COUNT)
 
-	bands_indexes = [[i, i + 1] for i in range(Audio.chunk_size // 2)]
+	bands_indexes = [[i, i + 1] for i in range(Audio.chunk_size*2)]
 	new_data = []
 	for i in data:
 		new_data.append(float(i))
 
 	data = np.array(new_data, dtype=np.float32)
-	print("antes")
 	levels, _, _ = audio_levels.compute(data, bands_indexes)
-	print("Levels")
-	print(levels)
 	return levels
 
 

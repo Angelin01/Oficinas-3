@@ -1,3 +1,5 @@
+import threading
+
 from Audio import Audio
 import spidev
 import Light.ws2812 as ws2812
@@ -9,7 +11,7 @@ import time
 from Light.LightFunctions.convert_strip import rising_ring
 
 
-class TimedLightShow(multiprocessing.Process):
+class TimedLightShow(threading.Thread):
 
     def __init__(self, ref_function, ref_function_args, interval, duration, bluetooth_queue):
         """
