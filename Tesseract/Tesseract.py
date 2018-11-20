@@ -17,12 +17,13 @@ class Tesseract():
 	def __init__(self):
 		self.bluetooth_queue = Queue()
 		bluetooth_leds_queue = Queue()
+		bluetooth_acc_queue = Queue()
 		
 		self.spotify = SpotifyClient(self)
 
 		# TODO: Create LED control thread
-		self.bluetooth_service = BluetoothService(self, self.bluetooth_queue, bluetooth_leds_queue)
-		# self.acc_service = AccService(self)
+		self.bluetooth_service = BluetoothService(self, self.bluetooth_queue, bluetooth_leds_queue, bluetooth_acc_queue)
+		# self.acc_service = AccService(self, bluetooth_acc_queue)
 
 		self.lightConfig(bluetooth_leds_queue)
 
