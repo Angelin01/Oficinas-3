@@ -10,9 +10,15 @@ class Display(multiprocessing.Process):
 		self.write_queue = write_queue
 		self.strings_to_write = ['', '']
 		self.lcd = CharLCD(pin_rs=18, pin_rw=None, pin_e=23, pins_data=[12, 16, 20, 21], numbering_mode=GPIO.BCM, cols=16, rows=2)
+		self.watch_queue = Thread(target=self.update_to_write)
 
 	def run(self):
+		self.watch_queue.start()
+
 		pass
 
 	def update_to_write(self):
-		pass
+		while True:
+			msg = self.write_queue.get()
+			if msg[0] != self.strings_to_write[0] or msg[1] != self.strings_to_write[1]:
+				self.strings_to_write[0], self.strings_to_write[1] = msg[0], msg[1]
