@@ -12,6 +12,8 @@ import com.tesseract.communication.TesseractCommunication
 import com.tesseract.music.Music
 import com.tesseract.music.MusicController
 
+class DeviceDisconnectedException(message:String): Exception(message)
+
 class SpotifyController: ViewModel() {
 
 	var spotifyPlayList: MutableLiveData<List<SpotifyPlaylist>> = MutableLiveData()
@@ -72,7 +74,7 @@ class SpotifyController: ViewModel() {
 	companion object {
 		val clientID = "fbd9312c3e1e4942ac05ef1012776736"
 		val redirectURI = "com.tesseract.app://callback"
-		val deviceName = "Tesseract"
+		val deviceName = "kaminski" //"Tesseract"
 
 		var deviceID: String = ""
 		var token: String = ""
@@ -92,39 +94,73 @@ class SpotifyController: ViewModel() {
 		fun requestSpotifyToken(activity: FragmentActivity?)
 		{
 			val builder = AuthenticationRequest.Builder(clientID, AuthenticationResponse.Type.TOKEN, redirectURI)
-			builder.setScopes(Array(3) {"streaming"; "user-read-playback-state"; "user-modify-playback-state"})
+			builder.setScopes(arrayOf("streaming", "user-read-playback-state", "user-modify-playback-state"))
 			val request = builder.build()
 			AuthenticationClient.openLoginActivity(activity, MainActivity.spotifyRequestCode, request)
 		}
 
-		fun nextTrack()
-		{
-			SpotifyHTTPRequests.postPlaylistNavigationCommand("next")
-			val music: Music = getCurrentMusic()
-			musicControllerListener.callbackMusisChange(music)
-		}
-
 		private fun getCurrentMusic(): Music {
-			return Music("sample", "sample band", "https://proxy.duckduckgo.com/iur/?f=1&image_host=https%3A%2F%2F40.media.tumblr.com%2F5fad4aa35c3902a4fe09afa75112e33d%2Ftumblr_nf7cxglVpL1tlvkqao1_500.jpg&u=https://78.media.tumblr.com/5fad4aa35c3902a4fe09afa75112e33d/tumblr_nf7cxglVpL1tlvkqao1_500.jpg", 60)
-		}
+			val playbackInfoJson = SpotifyHTTPRequests.getPlaybackInfo()
+			if (playbackInfoJson.get("device").asJsonObject.get("id").asString != deviceID)
+				throw DeviceDisconnectedException("Tesseract not connected")
 
-		fun previousTrack()
-		{
-			SpotifyHTTPRequests.postPlaylistNavigationCommand("previous")
-		}
+			val musicInfoJson = playbackInfoJson.get("item").asJsonObject
+			val musicName = musicInfoJson.get("name").asString
 
-		fun pause()
-		{
-			SpotifyHTTPRequests.postPlaylistNavigationCommand("pause")
-		}
+			var artists = ""
+			val artistJsonArray = musicInfoJson.get("artists").asJsonArray
+			for (element in artistJsonArray)
+			{
+				if (artists != "")
+					artists += ", "
+				val artistJson = element.asJsonObject
+				artists += artistJson.get("name").asString
+			}
 
-		fun resume()
-		{
-			SpotifyHTTPRequests.postPlaylistNavigationCommand("play")
+			val albumCoversJsonArray = musicInfoJson.get("album").asJsonObject.get("images").asJsonArray
+			var albumCoverSize = 0
+			var albumCoverURL = ""
+			for (element in albumCoversJsonArray)
+			{
+				val albumCoverJson = element.asJsonObject
+				if (albumCoverJson.get("height").asInt > albumCoverSize)
+				{
+					albumCoverSize = albumCoverJson.get("height").asInt
+					albumCoverURL = albumCoverJson.get("url").asString
+				}
+			}
+
+			val duration = musicInfoJson.get("duration_ms").asInt
+
+			return Music(musicName, artists, albumCoverURL, duration)
 		}
 
 		fun sendCommand(command: String) {
+			when (command)
+			{
+				"next" -> SpotifyHTTPRequests.postPlaylistNavigationCommand("next")
+				"previous" -> SpotifyHTTPRequests.postPlaylistNavigationCommand("previous")
+				"pause" -> SpotifyHTTPRequests.putPlaylistNavigationCommand("pause")
+				"play" -> SpotifyHTTPRequests.putPlaylistNavigationCommand("play")
+				"shuffle" -> SpotifyHTTPRequests.putPlaylistNavigationCommand("shuffle") //TODO: Special case, needs parameter
+			}
 
+			when (command)
+			{
+				"next", "previous" ->
+				{
+					try
+					{
+						Thread.sleep(500) //TODO: Find better solution to wait for server to update information.
+						val music: Music = getCurrentMusic()
+						musicControllerListener.callbackMusisChange(music)
+					}
+					catch (e: DeviceDisconnectedException)
+					{
+						return
+					}
+				}
+			}
 		}
 	}
 }
