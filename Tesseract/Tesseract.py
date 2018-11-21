@@ -20,10 +20,11 @@ class Tesseract():
 		self.bluetooth_queue = Queue()
 		bluetooth_leds_queue = Queue()
 		bluetooth_acc_queue = Queue()
+		self.acc_leds_queue = Queue()
 		display_queue = Queue()
 
 		self.bluetooth_service = BluetoothService(self, self.bluetooth_queue, bluetooth_leds_queue, bluetooth_acc_queue)
-		self.acc_service = AccService(self, bluetooth_acc_queue, display_queue)
+		self.acc_service = AccService(self, bluetooth_acc_queue, display_queue, self.acc_leds_queue)
 
 		self.display = Display(display_queue)
 
@@ -49,7 +50,7 @@ class Tesseract():
 		# wave_handler_args = create_wave_handler_args(gradient, wave, 10, n_leds)
 
 		fft_args = create_fft_freq_color_handler_args((0, 20, 0), (0, 20, 0), 1)
-		self.light_show = TimedLightShow(fft_freq_color_handler, fft_args, 0.1, -1, bluetooth_leds_queue)
+		self.light_show = TimedLightShow(fft_freq_color_handler, fft_args, 0.1, -1, bluetooth_leds_queue, self.acc_leds_queue)
 
 		# self.light_show = TimedLightShow(wave_handler, wave_handler_args, 0.05, -1)
 

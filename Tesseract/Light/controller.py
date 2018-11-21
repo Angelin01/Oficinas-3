@@ -13,20 +13,22 @@ from Light.LightFunctions.convert_strip import rising_ring
 
 class TimedLightShow(threading.Thread):
 
-    def __init__(self, ref_function, ref_function_args, interval, duration, bluetooth_queue):
+    def __init__(self, ref_function, ref_function_args, interval, duration, bluetooth_queue, acc_queue):
         """
         :param ref_function: A reference to the function to be called.
         :param ref_function_args: The arguments to be passed to the function as a dictionary.
         :param interval: The interval in seconds between function calls.
         :param duration: For how long the function will remain active. If 0 or negative, is infinite.
 		:param bluetooth_queue: The queue that receives stuff from the Bluetooth service
+		:param acc_queue: The queue that receives stuff from the Accelerometer service
         """
         super().__init__()
         self.ref_function = ref_function
         self.ref_function_args = ref_function_args
         self.interval = interval
         self.duration = duration
-		self.bluetooth_queue = bluetooth_queue
+        self.bluetooth_queue = bluetooth_queue
+        self.acc_queue = acc_queue
 
         self.stop_event = multiprocessing.Event()
 
