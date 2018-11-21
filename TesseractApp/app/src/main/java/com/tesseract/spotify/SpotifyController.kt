@@ -145,6 +145,8 @@ class SpotifyController: ViewModel() {
 				"shuffle" -> SpotifyHTTPRequests.putPlaylistNavigationCommand("shuffle") //TODO: Special case, needs parameter
 			}
 
+			TesseractCommunication.sendRequest("spotify", "command", command)
+
 			when (command)
 			{
 				"next", "previous" ->
@@ -158,6 +160,28 @@ class SpotifyController: ViewModel() {
 					catch (e: DeviceDisconnectedException)
 					{
 						return
+					}
+				}
+			}
+		}
+
+		fun callbackMessageReceiver(value: Any, subtype: String)
+		{
+			if (subtype == "command")
+			{
+				when (value)
+				{
+					"next", "previous", "play", "pause", "shuffle" ->
+					{
+						try
+						{
+							val music: Music = getCurrentMusic()
+							musicControllerListener.callbackMusisChange(music)
+						}
+						catch (e: DeviceDisconnectedException)
+						{
+							return
+						}
 					}
 				}
 			}
