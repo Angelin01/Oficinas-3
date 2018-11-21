@@ -1,6 +1,7 @@
 package com.tesseract.spotify
 
 import android.os.AsyncTask
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.io.BufferedReader
 import java.io.BufferedWriter
@@ -53,7 +54,7 @@ class SpotifyHTTPRequests {
             }
         }
 
-        class PlaylistNavigationRequest : AsyncTask<String, Void, String>() {
+        class PlaylistNavigationPostRequest : AsyncTask<String, Void, String>() {
 
             override fun doInBackground(vararg strings: String): String? {
                 try
@@ -84,6 +85,64 @@ class SpotifyHTTPRequests {
             }
         }
 
+        class PlaylistNavigationPutRequest : AsyncTask<String, Void, String>() {
+
+            override fun doInBackground(vararg strings: String): String? {
+                try
+                {
+                    var urlConnection = URL(strings[0]).openConnection() as HttpURLConnection
+                    urlConnection.setRequestProperty("Authorization", "Bearer " + SpotifyController.token)
+                    urlConnection.doOutput = true
+
+                    /*val writer = BufferedWriter(OutputStreamWriter(urlConnection.outputStream, "UTF-8"))
+                    writer.write("device_id=" + SpotifyController.deviceID)*/
+
+                    urlConnection.requestMethod = "PUT"
+                    val responseCode = urlConnection.responseCode
+                    if (responseCode != HttpURLConnection.HTTP_OK)
+                    {
+                        val error = urlConnection.errorStream.bufferedReader().use(BufferedReader::readText)
+                        throw Exception(error)
+                    }
+                }
+                catch (e: Exception)
+                {
+                    e.printStackTrace()
+                }
+
+                return null
+            }
+        }
+
+        class PlaybackInfoRequest : AsyncTask<String, Void, String>() {
+            private var playbackInfo: String = ""
+
+            override fun doInBackground(vararg strings: String): String? {
+                try
+                {
+                    var urlConnection = URL(strings[0]).openConnection() as HttpURLConnection
+                    urlConnection.setRequestProperty("Authorization", "Bearer " + SpotifyController.token)
+                    urlConnection.setRequestProperty("Accept", "application/json")
+                    urlConnection.setRequestProperty("Content-Type", "application/json")
+
+                    val responseCode = urlConnection.responseCode
+                    if (responseCode == HttpURLConnection.HTTP_OK)
+                        playbackInfo = urlConnection.inputStream.bufferedReader().use(BufferedReader::readText).toString()
+                    else
+                    {
+                        val error = urlConnection.errorStream.bufferedReader().use(BufferedReader::readText)
+                        throw Exception(error)
+                    }
+                }
+                catch (e: Exception)
+                {
+                    e.printStackTrace()
+                }
+
+                return playbackInfo
+            }
+        }
+
         fun getDeviceID(): String
         {
             return DeviceIDRequest().execute("https://api.spotify.com/v1/me/player/devices").get()
@@ -91,7 +150,18 @@ class SpotifyHTTPRequests {
 
         fun postPlaylistNavigationCommand(command: String)
         {
-            PlaylistNavigationRequest().execute("https://api.spotify.com/v1/me/player/" + command)
+            PlaylistNavigationPostRequest().execute("https://api.spotify.com/v1/me/player/" + command).get()
+        }
+
+        fun putPlaylistNavigationCommand(command: String)
+        {
+            PlaylistNavigationPutRequest().execute("https://api.spotify.com/v1/me/player/" + command).get()
+        }
+
+        fun getPlaybackInfo(): JsonObject
+        {
+            val playbackInfo = PlaybackInfoRequest().execute("https://api.spotify.com/v1/me/player").get()
+            return JsonParser().parse(playbackInfo).asJsonObject
         }
     }
 }

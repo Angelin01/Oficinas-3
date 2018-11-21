@@ -64,20 +64,20 @@ class SpotifyClient:
 		try:
 			return str(response_json["device"]["id"] == self.deviceID) and response_json["shuffle_state"]
 		except:
-			return False
+			return None
 
 	def is_playing(self):
 		response_json = self.playback_info()
 		try:
 			return str(response_json["device"]["id"] == self.deviceID) and response_json["is_playing"]
 		except:
-			return False
+			return None
 
 	def playback_info(self):
 		r = requests.get('https://api.spotify.com/v1/me/player', headers=self.make_header())
 
 		if r.status_code != 200:
 			print('no spotify devices detected')
-			return NULL
+			return None
 
 		return json.loads(r.text)
