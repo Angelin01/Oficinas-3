@@ -4,17 +4,18 @@ import json
 
 class SpotifyClient:
 
-	def __init__(self):
+	def __init__(self, display_queue):
 		print('Spotify init')
 		self.is_active = False
 		self.token = ''
 		self.deviceID = ''
+		self.display_queue = display_queue
 
 	def connect(self, token, deviceID):
 		self.token = token
 		self.deviceID = deviceID
 		self.is_active = True
-		print('Spotify connected!')
+		self.display_queue.put(['Spotify', 'conectado!'])
 		print('Token: ' + self.token)
 		print('Device ID: ' + self.deviceID)
 
@@ -33,31 +34,33 @@ class SpotifyClient:
 	def next_track(self):
 		print('spotify next track')
 		payloads = self.make_device_param()
-		requests.post('https://api.spotify.com/v1/me/player/next', headers=self.make_header(), params=payloads)
+		r = requests.post('https://api.spotify.com/v1/me/player/next', headers=self.make_header(), params=payloads)
+		return r.status_code in [200, 204]
 
 	def previous_track(self):
 		print('spotify previous track')
 		payloads = self.make_device_param()
-		requests.post('https://api.spotify.com/v1/me/player/previous', headers=self.make_header(), params=payloads)
+		r = requests.post('https://api.spotify.com/v1/me/player/previous', headers=self.make_header(), params=payloads)
+		return r.status_code in [200, 204]
 
 	def pause(self):
 		print('spotify pause playback')
 		payloads = self.make_device_param()
-		requests.put('https://api.spotify.com/v1/me/player/pause', headers=self.make_header(), params=payloads)
+		r = requests.put('https://api.spotify.com/v1/me/player/pause', headers=self.make_header(), params=payloads)
+		return r.status_code in [200, 204]
 
 	def play(self):
 		print('spotify resume playback')
 		payloads = self.make_device_param()
-		requests.put('https://api.spotify.com/v1/me/player/play', headers=self.make_header(), params=payloads)
+		r = requests.put('https://api.spotify.com/v1/me/player/play', headers=self.make_header(), params=payloads)
+		return r.status_code in [200, 204]
 
 	def shuffle(self):
 		print('spotify shuffle')
 		payloads = self.make_device_param()
 		payloads['state'] = not self.shuffle_state()
 		r = requests.put('https://api.spotify.com/v1/me/player/shuffle', headers=self.make_header(), params=payloads)
-		if r.status_code not in [200, 204]:
-			print(r.status_code)
-			print(json.loads(r.text))
+		return r.status_code in [200, 204]
 
 	def shuffle_state(self):
 		response_json = self.playback_info()
