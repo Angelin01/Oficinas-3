@@ -113,7 +113,10 @@ class AccService(multiprocessing.Process):
 			playback_info_json = self.spotify_client.playback_info()
 			music_name = playback_info_json["item"]["name"]
 			artist_name = playback_info_json["item"]["artists"][0]["name"]
+			print('writing in display')
 			self.display_queue.put([music_name, artist_name])
+			print('music: ' + music_name)
+			print('artist name: ' + artist_name)
 		except:
 			print('update display error')
 			pass

@@ -59,38 +59,44 @@ class BluetoothService(multiprocessing.Process):
 
 	def read_queue_from_acc(self, conn):
 		while True:
-			spotify_command = self.from_acc_queue.get()
+			try:
+				spotify_command = self.from_acc_queue.get()
 
-			if spotify_command["type"] == "spotify":
-				print('sending command to app')
+				if spotify_command["type"] == "spotify":
+					print('sending command to app')
 
-				if spotify_command["subtype"] == "command":
-					print('command: ' + spotify_command["value"])
-					conn.send(spotify_command)
+					if spotify_command["subtype"] == "command":
+						print('command: ' + spotify_command["value"])
+						self.bluetooth_send(conn, json.dumps(spotify_command, separators=(',', ':')).encode('utf-8'))
+			except:
+				pass
 
 	def answer_client(self, conn):
 		while True:
-			msg = json.loads(conn.recv(4096).decode('utf-8'))
+			try:
+				msg = json.loads(conn.recv(4096).decode('utf-8'))
 
-			# ============ Processing wifi messages ============= #
-			if msg["type"] == "wifi":
-				print('wifi command')
-				if msg["subtype"] == "request-list":
-					available_wifis = self.json_all_wifis()
-					self.bluetooth_send(conn, available_wifis)
+				# ============ Processing wifi messages ============= #
+				if msg["type"] == "wifi":
+					print('wifi command')
+					if msg["subtype"] == "request-list":
+						available_wifis = self.json_all_wifis()
+						self.bluetooth_send(conn, available_wifis)
 
-				elif msg["subtype"] == "connect":
-					connect_wifi_attempt = self.connect_wifi(msg["value"])
-					self.bluetooth_send(conn, connect_wifi_attempt)
+					elif msg["subtype"] == "connect":
+						connect_wifi_attempt = self.connect_wifi(msg["value"])
+						self.bluetooth_send(conn, connect_wifi_attempt)
 
-				elif msg["subtype"] == "request-status":
-					wifi_status = self.wifi_status()
-					self.bluetooth_send(conn, wifi_status)
+					elif msg["subtype"] == "request-status":
+						wifi_status = self.wifi_status()
+						self.bluetooth_send(conn, wifi_status)
 
-			# ============ Processing spotify messages ============= #
-			elif msg["type"] == "spotify":
-				print('spotify command')
-				self.acc_queue.put(msg)
+				# ============ Processing spotify messages ============= #
+				elif msg["type"] == "spotify":
+					print('spotify command')
+					self.acc_queue.put(msg)
+			except:
+				pass
 
 	def bluetooth_send(self, conn, wifi_status):
 		msg = wifi_status + b'--end_of_message'
