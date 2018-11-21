@@ -12,13 +12,14 @@ from Communication.scheme_wpa import SchemeWPA
 class BluetoothService(multiprocessing.Process):
 	UUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
-	def __init__(self, tesseract, main_queue, leds_queue, acc_queue, display_queue):
+	def __init__(self, tesseract, main_queue, leds_queue, acc_queue, display_queue, from_acc_queue):
 		super().__init__()
 		self.main_queue = main_queue
 		self.leds_queue = leds_queue
 		self.acc_queue = acc_queue
 		self.tesseract = tesseract
 		self.display_queue = display_queue
+		self.from_acc_queue = from_acc_queue
 
 		# Creates socket to listen for bluetooth connections
 		self.blue_sck = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
@@ -49,11 +50,23 @@ class BluetoothService(multiprocessing.Process):
 				client_phone_sock, client_phone_info = self.blue_sck.accept()
 				print('Device paired!')
 				self.display_queue.put(['Dispositivo', 'conectado!'])
+				threading.Thread(target=self.read_queue_from_acc, args=(client_phone_sock,)).start()
 				threading.Thread(target=self.answer_client, args=(client_phone_sock,)).start()
 
 		except IOError:
 			print('Bluetooth service error.')
 			pass
+
+	def read_queue_from_acc(self, conn):
+		while True:
+			spotify_command = self.from_acc_queue.get()
+
+			if spotify_command["type"] == "spotify":
+				print('sending command to app')
+
+				if spotify_command["subtype"] == "command":
+					print('command: ' + spotify_command["value"])
+					conn.send(spotify_command)
 
 	def answer_client(self, conn):
 		while True:
@@ -91,11 +104,6 @@ class BluetoothService(multiprocessing.Process):
 		for cell in list(Cell.all('wlan0')):
 			json_list.get("value").append({"ssid": cell.ssid, "signal": cell.signal, "encryption_type": cell.encryption_type})
 		return json.dumps(json_list, separators=(',', ':')).encode('utf-8')
-
-	def connect_spotify(self, value):
-		self.tesseract.spotify.token = value["token"]
-		print('spotify token: ' + self.tesseract.spotify.token)
-		self.tesseract.is_spotify = True
 
 	@staticmethod
 	def connect_wifi(value):

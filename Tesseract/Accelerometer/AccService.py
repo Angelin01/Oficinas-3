@@ -7,13 +7,14 @@ from threading import Thread
 
 
 class AccService(multiprocessing.Process):
-	def __init__(self, tesseract, bluetooth_queue, display_queue, leds_queue):
+	def __init__(self, tesseract, from_bluetooth_queue, display_queue, leds_queue, to_bluetooth_queue):
 		super().__init__()
 		self.tesseract = tesseract
 		self.accelerometer = Accelerometer()
-		self.bluetooth_queue = bluetooth_queue
+		self.from_bluetooth_queue = from_bluetooth_queue
 		self.display_queue = display_queue
 		self.leds_queue = leds_queue
+		self.to_bluetooth_queue = to_bluetooth_queue
 		self.spotify_client = SpotifyClient(self.display_queue)
 
 		self.thread_communication_list = [self.spotify_client]
@@ -23,7 +24,7 @@ class AccService(multiprocessing.Process):
 
 	def read_queue(self):
 		while True:
-			msg = self.bluetooth_queue.get()
+			msg = self.from_bluetooth_queue.get()
 
 			print("spotify message received!")
 
@@ -35,6 +36,9 @@ class AccService(multiprocessing.Process):
 
 				elif msg["subtype"] == "connect":
 					spotify_client.connect(msg["value"]["token"], msg["value"]["deviceID"])
+
+				elif msg["subtype"] == "command":
+					self.update_display()
 
 			else:
 				print("invalid message received by spotify process")
@@ -64,11 +68,13 @@ class AccService(multiprocessing.Process):
 		if self.spotify_client.is_active:
 			if self.spotify_client.next_track():
 				self.update_display()
+				self.send_command_to_app("next")
 
 	def inclined_left(self):
 		if self.spotify_client.is_active:
 			if self.spotify_client.previous_track():
 				self.update_display()
+				self.send_command_to_app("previous")
 
 	def inclined_front(self):
 		pass
@@ -79,9 +85,13 @@ class AccService(multiprocessing.Process):
 	def up_and_down(self):
 		if self.spotify_client.is_active:
 			if self.spotify_client.is_playing():
-				result = self.spotify_client.pause()
+				if self.spotify_client.pause():
+					result = True
+					self.send_command_to_app("pause")
 			else:
-				result = self.spotify_client.play()
+				if self.spotify_client.play():
+					result = True
+					self.send_command_to_app("play")
 
 			if result:
 				self.update_display()
@@ -90,6 +100,7 @@ class AccService(multiprocessing.Process):
 		if self.spotify_client.is_active:
 			if self.spotify_client.shuffle():
 				self.update_display()
+				self.send_command_to_app("shuffle")
 				led_shuffle_command = '''
 					{
 						"config": "shuffle"
@@ -106,3 +117,13 @@ class AccService(multiprocessing.Process):
 		except:
 			print('update display error')
 			pass
+
+	def send_command_to_app(self, command):
+		json_command = '''
+			{
+			   "type": "spotify",
+			   "subtype": "command",
+			   "value": "''' + command + '''"
+			}
+		'''
+		self.to_bluetooth_queue.put(json.dumps(json_command))
