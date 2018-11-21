@@ -1,4 +1,5 @@
 import multiprocessing
+import json
 from Accelerometer.Accelerometer import Accelerometer
 from Accelerometer.AccReading import AccReading
 from Spotify.SpotifyClient import SpotifyClient
@@ -6,12 +7,13 @@ from threading import Thread
 
 
 class AccService(multiprocessing.Process):
-	def __init__(self, tesseract, bluetooth_queue, display_queue):
+	def __init__(self, tesseract, bluetooth_queue, display_queue, leds_queue):
 		super().__init__()
 		self.tesseract = tesseract
 		self.accelerometer = Accelerometer()
 		self.bluetooth_queue = bluetooth_queue
 		self.display_queue = display_queue
+		self.leds_queue = leds_queue
 		self.spotify_client = SpotifyClient(self.display_queue)
 
 		self.thread_communication_list = [self.spotify_client]
@@ -88,6 +90,12 @@ class AccService(multiprocessing.Process):
 		if self.spotify_client.is_active:
 			if self.spotify_client.shuffle():
 				self.update_display()
+				led_shuffle_command = '''
+					{
+						"config": "shuffle"
+					}
+				'''
+				self.leds_queue.put(json.loads(led_shuffle_command))
 
 	def update_display(self):
 		try:
