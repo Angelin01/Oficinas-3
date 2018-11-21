@@ -9,20 +9,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.tesseract.R
+import java.io.File
+import java.io.FileInputStream
+
 
 class LightFragment : Fragment() {
-
 
 	private lateinit var lightController: LightController
 
 	private lateinit var colorImageViews: ArrayList<ImageView>
 	private lateinit var colorTextViews: ArrayList<TextView>
 
+	private fun loadResourcesFromMemory() {
+		val userPatterns = readFromMemory()
+		if (!userPatterns.isEmpty()) {
+			lightController.addUserPatternsFromString(userPatterns)
+		}
+
+	}
+
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val view: View = inflater.inflate(R.layout.fragment_light, container, false)
 
 		lightController = activity?.run { ViewModelProviders.of(this).get(LightController::class.java) }!!
 
+		loadResourcesFromMemory()
 		this.initializeColorViews(view)
 
 		setupFaceSpinner(view)
@@ -108,7 +119,6 @@ class LightFragment : Fragment() {
 		}
 	}
 
-
 	private fun updateLightParameters(light: Light) {
 		for (colorImageView: ImageView in this.colorImageViews) {
 			colorImageView.visibility = View.INVISIBLE
@@ -130,6 +140,27 @@ class LightFragment : Fragment() {
 			this.colorImageViews[index].visibility = View.VISIBLE
 			this.colorImageViews[index].setBackgroundColor(Color.parseColor(element))
 		}
+	}
+
+
+	private fun readFromMemory(): String {
+		val path = context!!.filesDir
+		val file = File(path, lightController.filename)
+		if (!file.exists()) {
+			file.createNewFile()
+		}
+
+		val length = file.length().toInt()
+		val bytes = ByteArray(length)
+
+		val inputStream = FileInputStream(file)
+		try {
+			inputStream.read(bytes)
+		} finally {
+			inputStream.close()
+		}
+
+		return String(bytes)
 	}
 
 }
