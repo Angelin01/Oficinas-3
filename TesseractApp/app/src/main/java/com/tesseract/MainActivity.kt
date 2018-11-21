@@ -22,6 +22,9 @@ import com.tesseract.light.LightFragment
 import com.tesseract.communication.ConnectionsFragment
 import com.tesseract.communication.TesseractCommunication
 import com.tesseract.spotify.SpotifyController
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
 

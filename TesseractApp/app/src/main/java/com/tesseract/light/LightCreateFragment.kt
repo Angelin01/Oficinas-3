@@ -10,13 +10,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerView
-import com.skydoves.colorpickerview.listeners.ColorListener
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import com.tesseract.R
+import kotlinx.android.synthetic.main.fragment_light_create.*
+import java.io.File
+import java.io.FileOutputStream
 
 class LightCreateFragment : Fragment() {
 
 	private lateinit var selectingColor: ImageView
+	private var selectingColorIndex: Int = 0
 	private lateinit var editingLight: Light
 
 	private lateinit var lightController: LightController
@@ -31,11 +36,14 @@ class LightCreateFragment : Fragment() {
 		val lights: ArrayList<Light> = this.getLights()
 
 		initializeSpinner(view, lights)
-		initializeColorPicker(view)
+		initializeColorPicker(view, lights.get(0))
 		defineSelectColorListeners(view)
+
 		val finishButton: Button = view.findViewById(R.id.buttonFinishLightEdit)
 		finishButton.setOnClickListener {
+			editingLight.name = editTextLightName.text.toString()
 			lightController.sendNewLightPattern(editingLight)
+			saveNewPattern()
 			val transaction = fragmentManager!!.beginTransaction()
 			transaction.replace(R.id.home_view_frame, LightFragment())
 			transaction.addToBackStack(null)
@@ -52,6 +60,7 @@ class LightCreateFragment : Fragment() {
 			selectingColor.setImageResource(0)
 			selectingColor = colorFirstImageView
 			selectingColor.setImageResource(R.drawable.highlight_lights)
+			selectingColorIndex = 0
 		}
 
 		val colorSecondImageView: ImageView = view.findViewById(R.id.editImageViewSecondColor)
@@ -60,6 +69,7 @@ class LightCreateFragment : Fragment() {
 			selectingColor.setImageResource(0)
 			selectingColor = colorSecondImageView
 			selectingColor.setImageResource(R.drawable.highlight_lights)
+			selectingColorIndex = 1
 		}
 
 		val colorThirdImageView: ImageView = view.findViewById(R.id.editImageViewThirdColor)
@@ -68,22 +78,35 @@ class LightCreateFragment : Fragment() {
 			selectingColor.setImageResource(0)
 			selectingColor = colorThirdImageView
 			selectingColor.setImageResource(R.drawable.highlight_lights)
+			selectingColorIndex = 2
+		}
+
+		val colorFourthImageView: ImageView = view.findViewById(R.id.editImageViewFourthColor)
+		colorFourthImageView.setOnClickListener {
+			Log.d("TAG", "Fourth image clicked")
+			selectingColor.setImageResource(0)
+			selectingColor = colorFourthImageView
+			selectingColor.setImageResource(R.drawable.highlight_lights)
+			selectingColorIndex = 3
 		}
 	}
-
 	private lateinit var colorPickerView: ColorPickerView
 
-	private fun initializeColorPicker(view: View) {
+	private fun initializeColorPicker(view: View, light: Light) {
 		selectingColor = view.findViewById(R.id.editImageViewFirstColor)
 		selectingColor.setImageResource(R.drawable.highlight_lights)
 		colorPickerView = view.findViewById(R.id.colorPickerView)
-		colorPickerView.setColorListener(ColorListener { color, _ ->
-			setColor(color)
+		colorPickerView.setColorListener(ColorEnvelopeListener{ colorEnvelope, _ ->
+			setColor(colorEnvelope)
 		})
+		editingLight = light
 	}
 
-	private fun setColor(color: Int) {
-		selectingColor.setBackgroundColor(color)
+	private fun setColor(color: ColorEnvelope) {
+		selectingColor.setBackgroundColor(color.color)
+		var rgbColor = color.hexCode.substring(2)
+
+		editingLight.colors[selectingColorIndex] = "#" + rgbColor
 
 	}
 
@@ -113,19 +136,20 @@ class LightCreateFragment : Fragment() {
 
 	// TODO: replace for RecyclerView
 	private lateinit var colorImageViews: ArrayList<ImageView>
+
 	private lateinit var colorTextViews: ArrayList<TextView>
 	private fun initializeColorViews(view: View) {
 		colorImageViews = ArrayList()
 		colorImageViews.add(view.findViewById(R.id.editImageViewFirstColor))
 		colorImageViews.add(view.findViewById(R.id.editImageViewSecondColor))
 		colorImageViews.add(view.findViewById(R.id.editImageViewThirdColor))
+		colorImageViews.add(view.findViewById(R.id.editImageViewFourthColor))
 		colorTextViews = ArrayList()
 		colorTextViews.add(view.findViewById(R.id.editTextViewFirstColor))
 		colorTextViews.add(view.findViewById(R.id.editTextViewSecondColor))
 		colorTextViews.add(view.findViewById(R.id.editTextViewThirdColor))
+		colorTextViews.add(view.findViewById(R.id.editTextViewFourthColor))
 	}
-
-
 	private fun updateLightParameters(light: Light) {
 		for (colorImageView: ImageView in this.colorImageViews) {
 			colorImageView.visibility = View.INVISIBLE
@@ -153,4 +177,22 @@ class LightCreateFragment : Fragment() {
 		return lights
 	}
 
+	private fun saveNewPattern() {
+		writeToMemory(lightController.getListPatternsAsString().toString())
+	}
+
+	private fun writeToMemory(string: String) {
+		val path = context!!.filesDir
+		val file = File(path, lightController.filename)
+		if (!file.exists()) {
+			file.createNewFile()
+		}
+
+		val stream = FileOutputStream(file)
+		try {
+			stream.write(string.toByteArray())
+		} finally {
+			stream.close()
+		}
+	}
 }

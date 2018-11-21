@@ -1,4 +1,5 @@
 import multiprocessing
+import json
 from Accelerometer.Accelerometer import Accelerometer
 from Accelerometer.AccReading import AccReading
 from Spotify.SpotifyClient import SpotifyClient
@@ -6,12 +7,14 @@ from threading import Thread
 
 
 class AccService(multiprocessing.Process):
-	def __init__(self, tesseract, bluetooth_queue):
+	def __init__(self, tesseract, bluetooth_queue, display_queue, leds_queue):
 		super().__init__()
 		self.tesseract = tesseract
 		self.accelerometer = Accelerometer()
 		self.bluetooth_queue = bluetooth_queue
-		self.spotify_client = SpotifyClient()
+		self.display_queue = display_queue
+		self.leds_queue = leds_queue
+		self.spotify_client = SpotifyClient(self.display_queue)
 
 		self.thread_communication_list = [self.spotify_client]
 		self.queue_thread = Thread(target=self.read_queue)
@@ -59,11 +62,13 @@ class AccService(multiprocessing.Process):
 
 	def inclined_right(self):
 		if self.spotify_client.is_active:
-			self.spotify_client.next_track()
+			if self.spotify_client.next_track():
+				self.update_display()
 
 	def inclined_left(self):
 		if self.spotify_client.is_active:
-			self.spotify_client.previous_track()
+			if self.spotify_client.previous_track():
+				self.update_display()
 
 	def inclined_front(self):
 		pass
@@ -74,10 +79,30 @@ class AccService(multiprocessing.Process):
 	def up_and_down(self):
 		if self.spotify_client.is_active:
 			if self.spotify_client.is_playing():
-				self.spotify_client.pause()
+				result = self.spotify_client.pause()
 			else:
-				self.spotify_client.pause()
+				result = self.spotify_client.play()
+
+			if result:
+				self.update_display()
 
 	def agitated(self):
 		if self.spotify_client.is_active:
-			self.spotify_client.shuffle()
+			if self.spotify_client.shuffle():
+				self.update_display()
+				led_shuffle_command = '''
+					{
+						"config": "shuffle"
+					}
+				'''
+				self.leds_queue.put(json.loads(led_shuffle_command))
+
+	def update_display(self):
+		try:
+			playback_info_json = self.spotify_client.playback_info
+			music_name = playback_info_json["item"]["name"]
+			artist_name = playback_info_json["item"]["artists"][0]["name"]
+			self.display_queue.put([music_name, artist_name])
+		except:
+			print('update display error')
+			pass
