@@ -12,12 +12,13 @@ from Communication.scheme_wpa import SchemeWPA
 class BluetoothService(multiprocessing.Process):
 	UUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
-	def __init__(self, tesseract, main_queue, leds_queue, acc_queue):
+	def __init__(self, tesseract, main_queue, leds_queue, acc_queue, display_queue):
 		super().__init__()
 		self.main_queue = main_queue
 		self.leds_queue = leds_queue
 		self.acc_queue = acc_queue
 		self.tesseract = tesseract
+		self.display_queue = display_queue
 
 		# Creates socket to listen for bluetooth connections
 		self.blue_sck = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
@@ -44,8 +45,10 @@ class BluetoothService(multiprocessing.Process):
 		try:
 			while not self._stop_service:
 				print('Waiting for bluetooth connection')
+				self.display_queue.put(['Esperando con.', 'Bluetooth...'])
 				client_phone_sock, client_phone_info = self.blue_sck.accept()
 				print('Device paired!')
+				self.display_queue.put(['Dispositivo', 'conectado!'])
 				threading.Thread(target=self.answer_client, args=(client_phone_sock,)).start()
 
 		except IOError:
