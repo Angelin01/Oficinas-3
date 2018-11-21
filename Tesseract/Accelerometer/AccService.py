@@ -126,4 +126,4 @@ class AccService(multiprocessing.Process):
 			   "value": "''' + command + '''"
 			}
 		'''
-		self.to_bluetooth_queue.put(json.dumps(json_command))
+		self.to_bluetooth_queue.put(json.loads(json_command))
