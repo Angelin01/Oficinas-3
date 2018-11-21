@@ -99,7 +99,7 @@ class AccService(multiprocessing.Process):
 
 	def update_display(self):
 		try:
-			playback_info_json = self.spotify_client.playback_info
+			playback_info_json = self.spotify_client.playback_info()
 			music_name = playback_info_json["item"]["name"]
 			artist_name = playback_info_json["item"]["artists"][0]["name"]
 			self.display_queue.put([music_name, artist_name])
