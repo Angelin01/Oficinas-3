@@ -2,13 +2,16 @@ package com.tesseract.light
 
 import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.tesseract.R
+import kotlinx.android.synthetic.main.fragment_light.view.*
 import java.io.File
 import java.io.FileInputStream
 
@@ -19,6 +22,8 @@ class LightFragment : Fragment() {
 
 	private lateinit var colorImageViews: ArrayList<ImageView>
 	private lateinit var colorTextViews: ArrayList<TextView>
+	private lateinit var textViewsParameterNames: ArrayList<TextView>
+	private lateinit var textViewsParameterValues: ArrayList<TextView>
 
 	private fun loadResourcesFromMemory() {
 		val userPatterns = readFromMemory()
@@ -108,14 +113,26 @@ class LightFragment : Fragment() {
 			add(view.findViewById(R.id.imageViewFirstColor))
 			add(view.findViewById(R.id.imageViewSecondColor))
 			add(view.findViewById(R.id.imageViewThirdColor))
-			add(view.findViewById(R.id.imageViewFourthColor))
 		}
 		colorTextViews = ArrayList()
 		with(colorTextViews) {
 			add(view.findViewById(R.id.textViewFirstColor))
 			add(view.findViewById(R.id.textViewSecondColor))
 			add(view.findViewById(R.id.textViewThirdColor))
-			add(view.findViewById(R.id.textViewFourthColor))
+		}
+
+		textViewsParameterNames = ArrayList()
+		with(textViewsParameterNames) {
+			add(view.findViewById(R.id.textViewFirstParameterName))
+			add(view.findViewById(R.id.textViewSecondParameterName))
+			add(view.findViewById(R.id.textViewThirdParameterName))
+		}
+
+		textViewsParameterValues = ArrayList()
+		with(textViewsParameterValues) {
+			add(view.findViewById(R.id.textViewFirstParameterValue))
+			add(view.findViewById(R.id.textViewSecondParameterValue))
+			add(view.findViewById(R.id.textViewThirdParameterValue))
 		}
 	}
 
@@ -123,13 +140,16 @@ class LightFragment : Fragment() {
 		for (colorImageView: ImageView in this.colorImageViews) {
 			colorImageView.visibility = View.INVISIBLE
 		}
+		setTextViewInvisible(colorTextViews)
 
-		for (colorTextView: TextView in this.colorTextViews) {
-			colorTextView.visibility = View.INVISIBLE
-		}
+		setTextViewInvisible(textViewsParameterNames)
+		setTextViewInvisible(textViewsParameterValues)
 
 		val textViewDescription: TextView = view!!.findViewById(R.id.textViewDescription)
 		textViewDescription.text = light.description
+
+		val textViewPatternName: TextView = view!!.findViewById(R.id.textViewPatternName)
+		textViewPatternName.text = light.pattern_type
 
 		light.colors_parameters.forEachIndexed { index, element ->
 			this.colorTextViews[index].visibility = View.VISIBLE
@@ -139,6 +159,43 @@ class LightFragment : Fragment() {
 		light.colors.forEachIndexed { index, element ->
 			this.colorImageViews[index].visibility = View.VISIBLE
 			this.colorImageViews[index].setBackgroundColor(Color.parseColor(element))
+		}
+
+		trySetParameters(light)
+	}
+
+	private fun trySetParameters(light: Light) {
+		Log.d("TAG", light.toString())
+
+		var parameterIndex = 0
+		if (light.intensity != null) {
+			textViewsParameterNames[parameterIndex].text= "Intensity"
+			textViewsParameterNames[parameterIndex].visibility = View.VISIBLE
+			textViewsParameterValues[parameterIndex].text = light.intensity.toString()
+			textViewsParameterValues[parameterIndex].visibility = View.VISIBLE
+			parameterIndex += 1
+		}
+
+		if (light.speed != null) {
+			textViewsParameterNames[parameterIndex].text= "Speed"
+			textViewsParameterNames[parameterIndex].visibility = View.VISIBLE
+			textViewsParameterValues[parameterIndex].text = light.speed.toString()
+			textViewsParameterValues[parameterIndex].visibility = View.VISIBLE
+			parameterIndex += 1
+		}
+
+		if (light.modifier != null) {
+			textViewsParameterNames[parameterIndex].text= "Modifier"
+			textViewsParameterNames[parameterIndex].visibility = View.VISIBLE
+			textViewsParameterValues[parameterIndex].text = light.modifier
+			textViewsParameterValues[parameterIndex].visibility = View.VISIBLE
+			parameterIndex += 1
+		}
+	}
+
+	private fun setTextViewInvisible(colorTextViews1: ArrayList<TextView>) {
+		for (colorTextView: TextView in colorTextViews1) {
+			colorTextView.visibility = View.INVISIBLE
 		}
 	}
 
