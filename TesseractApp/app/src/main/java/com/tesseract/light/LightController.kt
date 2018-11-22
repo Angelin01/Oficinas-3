@@ -38,7 +38,7 @@ class LightController() : ViewModel() {
 	val gson = Gson()
 
 	init {
-		lightPatterns = loadDefaultPatterns()!!
+		lightPatterns = getPatterns()
 		initSelectedPatterns()
 	}
 
@@ -70,7 +70,7 @@ class LightController() : ViewModel() {
 		selectedPatterns[BACK_FACE_INDEX] = lightPatterns[0]
 	}
 
-	private fun loadDefaultPatterns(): ArrayList<Light>? {
+	fun getPatterns(): ArrayList<Light> {
 		val light: List<Light> = gson.fromJson(sampleLights, Array<Light>::class.java).toList()
 		return light as ArrayList<Light>
 	}
@@ -99,14 +99,27 @@ class LightController() : ViewModel() {
 		{
 		  "name": "rainbow",
 		  "description": "A beauty unicorn",
+		  "pattern_type" : "rainbow",
 		  "colors": ["#43e1ff", "#00574B", "#D81B60"],
 		  "colors_parameters": ["low frequency", "medium frequency", "high frequency" ]
 		},
 		{
 		  "name": "Shiny",
 		  "description": "Quiet light",
+		  "pattern_type" : "Wave",
 		  "colors": ["#D81B60"],
 		  "colors_parameters": ["All"]
+		},
+		{
+		  "name": "Speedy",
+		  "description": "Fast",
+		  "pattern_type" : "fft",
+		  "colors": ["#D81B60"],
+		  "colors_parameters": ["Zoom"],
+		  "speed": 2,
+		  "intensity" : 80,
+		  "face": "left",
+		  "modifier": "Rising"
 		}
 	]"""
 	}

@@ -14,8 +14,10 @@
         <RelativeLayout
             android:id="@+id/relativeLayout4"
             android:layout_width="353dp"
-            android:layout_height="103dp"
+            android:layout_height="79dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.516"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +29,7 @@
                 android:layout_height="36dp"
                 android:layout_below="@+id/textView6"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="13dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_editor_absoluteY="291dp" />
@@ -41,7 +43,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginStart="99dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="81dp"
                 android:text="Select Pattern"
                 android:textAlignment="center" />
@@ -53,13 +55,12 @@
             android:layout_width="210dp"
             android:layout_height="198dp"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="156dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextLightName"
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
             app:palette="@drawable/palette"
             app:selector="@drawable/wheel" />
 
@@ -69,10 +70,12 @@
             android:layout_height="34dp"
             android:layout_marginTop="8dp"
             android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="@+id/editTextViewFirstColor"
             app:layout_constraintLeft_toLeftOf="@+id/textView3"
             app:layout_constraintRight_toRightOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/editTextViewFirstColor"
-            android:focusable="true">
+            app:layout_constraintStart_toStartOf="@+id/editTextViewFirstColor"
+            app:layout_constraintTop_toBottomOf="@+id/editTextViewFirstColor">
 
         </ImageView>
 
@@ -82,10 +85,12 @@
             android:layout_height="33dp"
             android:layout_marginTop="8dp"
             android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="@+id/editTextViewSecondColor"
             app:layout_constraintLeft_toLeftOf="@+id/textView3"
             app:layout_constraintRight_toRightOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/editTextViewSecondColor"
-            android:focusable="true">
+            app:layout_constraintStart_toStartOf="@+id/editTextViewSecondColor"
+            app:layout_constraintTop_toBottomOf="@+id/editTextViewSecondColor">
 
         </ImageView>
 
@@ -93,46 +98,35 @@
             android:id="@+id/editImageViewThirdColor"
             android:layout_width="55dp"
             android:layout_height="33dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:clickable="true"
             android:focusable="true"
+            app:layout_constraintEnd_toEndOf="@+id/editTextViewThirdColor"
             app:layout_constraintLeft_toLeftOf="@+id/textView3"
             app:layout_constraintRight_toRightOf="@+id/textView3"
+            app:layout_constraintStart_toStartOf="@+id/editTextViewThirdColor"
             app:layout_constraintTop_toBottomOf="@+id/editTextViewThirdColor">
-
-        </ImageView>
-
-        <ImageView
-            android:id="@+id/editImageViewFourthColor"
-            android:layout_width="55dp"
-            android:layout_height="33dp"
-            android:layout_marginTop="12dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintLeft_toLeftOf="@+id/textView3"
-            app:layout_constraintRight_toRightOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/editTextViewFourthColor">
 
         </ImageView>
 
         <TextView
             android:id="@+id/textView3"
-            android:layout_width="wrap_content"
+            android:layout_width="83dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="282dp"
             android:text="Select Colors"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/colorPickerView"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout4" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextLightName" />
 
         <Button
             android:id="@+id/buttonFinishLightEdit"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_height="39dp"
             android:layout_marginBottom="16dp"
             android:background="@color/colorPrimaryDark"
             android:text="Finish"
@@ -166,52 +160,92 @@
             android:id="@+id/editTextViewFirstColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/textView3"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/colorPickerView"
+            app:layout_constraintTop_toTopOf="@+id/colorPickerView" />
 
         <TextView
             android:id="@+id/editTextViewSecondColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/textView3"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
+            app:layout_constraintEnd_toEndOf="@+id/editTextViewFirstColor"
+            app:layout_constraintStart_toStartOf="@+id/editTextViewFirstColor"
             app:layout_constraintTop_toBottomOf="@+id/editImageViewFirstColor" />
 
         <TextView
             android:id="@+id/editTextViewThirdColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/textView3"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
+            app:layout_constraintEnd_toEndOf="@+id/editTextViewSecondColor"
+            app:layout_constraintStart_toStartOf="@+id/editTextViewSecondColor"
             app:layout_constraintTop_toBottomOf="@+id/editImageViewSecondColor" />
-
-        <TextView
-            android:id="@+id/editTextViewFourthColor"
-            android:layout_width="wrap_content"
-            android:layout_height="17dp"
-            android:layout_marginTop="16dp"
-            android:text="TextView"
-            app:layout_constraintEnd_toEndOf="@+id/textView3"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/editImageViewThirdColor" />
 
         <EditText
             android:id="@+id/editTextLightName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:ems="10"
             android:hint="Choose name"
             android:inputType="textPersonName"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout4" />
+
+        <EditText
+            android:id="@+id/editTextCreateSpeed"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Speed"
+            android:inputType="number"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/textView15"
+            app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+        <EditText
+            android:id="@+id/editTextCreateIntensity"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Intensity"
+            android:inputType="number"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/editTextCreateSpeed"
+            app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Parameters"
+            app:layout_constraintStart_toStartOf="@+id/colorPickerView"
+            app:layout_constraintTop_toBottomOf="@+id/colorPickerView" />
+
+        <Spinner
+            android:id="@+id/spinner_create_modifier"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editTextCreateIntensity"
+            app:layout_constraintEnd_toEndOf="@+id/relativeLayout4"
+            app:layout_constraintStart_toEndOf="@+id/editTextCreateIntensity"
+            app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>
