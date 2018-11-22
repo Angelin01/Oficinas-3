@@ -54,7 +54,7 @@ class SpotifyList : Fragment(), SpotifyListAdapter.OnSpotifyPlaylistItemClickLis
 			var textSearch: String = editTextPlaylistSearch.text.toString()
 			textSearch = textSearch.trim()
 			if (textSearch.isEmpty()) {
-				textSearch = null.toString()
+				textSearch = ""
 			}
 			spotifyController.searchPlaylist(textSearch)
 		}
