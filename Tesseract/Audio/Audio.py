@@ -8,7 +8,7 @@ data_format = alsa.PCM_FORMAT_S16_LE
 n_channels = 1
 sample_rate = 44100
 
-stream = alsa.PCM(alsa.PCM_CAPTURE, device='hw:1,1')
+stream = alsa.PCM(alsa.PCM_CAPTURE, device='hw:Loopback,1,1')
 stream.setchannels(n_channels)
 stream.setrate(sample_rate)
 stream.setperiodsize(chunk_size)

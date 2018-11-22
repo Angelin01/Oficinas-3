@@ -135,6 +135,9 @@ class LightCreateFragment : Fragment() {
 		}
 
 		val intensityView: EditText = view!!.findViewById(R.id.editTextCreateIntensity)
+		if (intensityView.text.toString().isEmpty()) {
+			return
+		}
 		editingLight.intensity = intensityView.text.toString().toInt()
 	}
 
@@ -144,12 +147,15 @@ class LightCreateFragment : Fragment() {
 		}
 
 		val speedView: EditText = view!!.findViewById(R.id.editTextCreateSpeed)
+		if (speedView.text.toString().isEmpty()) {
+			return
+		}
 		editingLight.speed = speedView.text.toString().toFloat()
 	}
 
 	private fun initializeModifierSpinner(view: View) {
 		val spinner: Spinner = view.findViewById(R.id.spinner_create_modifier)
-		val modifiers: ArrayList<String> = arrayListOf("Modifier 1", "Modifier 2")
+		val modifiers: ArrayList<String> = arrayListOf("rising", "descending", "left_to_right", "right_to_left")
 		val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(this.context!!, android.R.layout.simple_spinner_item, modifiers)
 		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 

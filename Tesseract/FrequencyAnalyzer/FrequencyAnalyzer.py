@@ -3,8 +3,29 @@ from rpi_audio_levels import AudioLevels
 import numpy as np
 from Audio import Audio
 
+bands_intervals = [
+	[0, 31],
+	[31, 44],
+	[44, 68],
+	[68, 88],
+	[88, 125],
+	[125, 180],
+	[180, 250],
+	[250, 355],
+	[355, 500],
+	[500, 710],
+	[710, 1000],
+	[1000, 1400],
+	[1400, 2000],
+	[2000, 2800],
+	[2800, 4000],
+	[4000, 5600],
+	[5600, 8000],
+	[8000, 11300],
+	[11300, 16000],
+	[16000, 22000]]
 
-def calculateFFT(music_samples, chunk_size, n_bands=20, bands_intervals=[], using_scipy=True,
+def calculateFFT(music_samples, chunk_size, n_bands=20, using_scipy=True,
                  sample_rate=Audio.sample_rate):
 	window = np.hanning(0)
 
@@ -20,9 +41,9 @@ def calculateFFT(music_samples, chunk_size, n_bands=20, bands_intervals=[], usin
 
 	fourier = np.abs(fourier[:chunk_size // 2])
 	fourier = fourier * 2 / chunk_size
-	n_bands, frequencies = bands(fourier, n_bands, sample_rate)
+	n_bands = bands(fourier, chunk_size // 2, sample_rate, bands_intervals)
 
-	return n_bands, frequencies
+	return n_bands
 
 
 def gpu(data):
@@ -39,21 +60,23 @@ def gpu(data):
 	levels, _, _ = audio_levels.compute(data, bands_indexes)
 	return levels
 
-
-def bands(fourier, n_bands, sample_rate):
-	frequencies = []
+def bands(fourier, sample_size, sample_rate, bands_intervals):
+	indexes = getIndexFromFrequency(sample_size, sample_rate, bands_intervals)
 	levels = []
-	max_frequency = sample_rate // 2
-	bandwidth = max_frequency // n_bands
-	points = int(np.floor(len(fourier) // n_bands))
-	for band in range(n_bands):
-		low_frequency = band * bandwidth
-		high_frequency = low_frequency + bandwidth
-
-		frequencies.append((high_frequency + low_frequency) // 2)
-		points_for_band = fourier[band * points: band * points + points]
+	for band in indexes:
+		points_for_band = max(fourier[band[0]: band[1]])
 
 		level = sum(points_for_band)
 		levels.append(level)
 
-	return levels, frequencies
+	return levels
+
+def getIndexFromFrequency(sample_size, sample_rate, bands_frequencies):
+	frequency_spacing = (sample_rate / 2) / sample_size
+	indexes = []
+	for band in bands_frequencies:
+		init_index = int(band[0] // frequency_spacing)
+		end_index = int(np.floor(band[1] / frequency_spacing))
+		indexes.append([init_index, end_index])
+
+	return indexes

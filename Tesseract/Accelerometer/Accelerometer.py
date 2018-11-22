@@ -42,7 +42,7 @@ class Accelerometer:
 
 	def wait_for_movement(self):
 		#region [ Magic numbers ]
-		agitation_intensity_threshold = 18000
+		agitation_intensity_threshold = 24000
 		agitation_counter_max = 70
 		tilting_counter_max = 60
 		tilting_angle_detection = 30

@@ -74,7 +74,7 @@ class SpotifyController: ViewModel() {
 	companion object {
 		val clientID = "fbd9312c3e1e4942ac05ef1012776736"
 		val redirectURI = "com.tesseract.app://callback"
-		val deviceName = "kaminski" //"Tesseract"
+		val deviceName = "tesseract"
 
 		var deviceID: String = ""
 		var token: String = ""

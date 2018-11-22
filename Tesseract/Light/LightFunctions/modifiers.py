@@ -32,11 +32,11 @@ class JohnsonType(Enum):
     REACH = 2
 
 
-def johnson_modifier(color_values: list, n_leds: int, johnson_type: JohnsonType = JohnsonType.FULL_RING):
+def johnson_modifier(color_sequence: list, n_leds: int, johnson_type: JohnsonType = JohnsonType.FULL_RING):
     """
     Uses, so that instead of changing colors the LEDs turn on/off
     sequentially
-    :param color_values: The sequence of colors.
+    :param color_sequence: The sequence of colors.
     :param n_leds: The number of LEDs to be controlled.
     :param johnson_type: If JohnsonType.FULL_RING, the sequence will first turn on LEDs on then repeat,
                             but then turning them off.
@@ -50,7 +50,7 @@ def johnson_modifier(color_values: list, n_leds: int, johnson_type: JohnsonType 
     for i in range(n_leds):
         step = []
         counter = 0
-        for gc in color_values:
+        for gc in color_sequence:
             step.append(gc) if counter < i else step.append((0, 0, 0))
             counter += 1
         johnson_gradient.append(step)
@@ -59,7 +59,7 @@ def johnson_modifier(color_values: list, n_leds: int, johnson_type: JohnsonType 
         for i in range(n_leds):
             step = []
             counter = 0
-            for gc in color_values:
+            for gc in color_sequence:
                 step.append(gc) if counter >= i else step.append((0, 0, 0))
                 counter += 1
             johnson_gradient.append(step)
