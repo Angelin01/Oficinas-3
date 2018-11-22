@@ -26,45 +26,45 @@ class SpotifyController: ViewModel() {
 		spotifyPlayList.value = findSpotifyPlaylist(search)
 	}
 
-	private val sampleSpotifyPlaylist: String = """[
-    {
-      "name":"Cat Metal",
-      "playlist_cover_URI":"http://i65.tinypic.com/mvno5e.jpg",
-      "music_quantity":10
-    },
-    {
-      "name":"Blues",
-      "playlist_cover_URI":"http://petitecurie.com/wp-content/uploads/2013/08/521888_679515475396424_1593317559_n.jpg",
-      "music_quantity":25
-    }
-]"""
+	private fun findSpotifyPlaylist(search: String?): ArrayList<SpotifyPlaylist> {
+        var spotifyPlaylists: ArrayList<SpotifyPlaylist> = ArrayList()
 
-	private fun findSpotifyPlaylist(search: String?): List<SpotifyPlaylist> {
-		this.requestSpotifyPlaylist(search)
-		val gson = Gson()
-		val spotifyPlaylist: List<SpotifyPlaylist> = gson.fromJson(sampleSpotifyPlaylist, Array<SpotifyPlaylist>::class.java).toList()
-		return spotifyPlaylist
-	}
+        val userPlaylistsJsonArray = SpotifyHTTPRequests.getUserPlaylists().get("items").asJsonArray
+        for (element in userPlaylistsJsonArray)
+        {
+            try
+            {
+                val userPlaylistJson = element.asJsonObject
 
-	// TODO: Convert to a request to API
-	private fun requestSpotifyPlaylist(search: String?) {
-		if (search == null) {
-			TesseractCommunication.sendRequest("spotify", "search-playlist", "null")
-			return
-		}
+                var userPlaylistName = userPlaylistJson.get("name").asString
+                var musicQuantity = userPlaylistJson.get("tracks").asJsonObject.get("total").asInt
+                var userPlaylistCoverUri = ""
 
-		TesseractCommunication.sendRequest("spotify", "search-playlist", search)
-	}
+                val userPlaylistCoversJsonArray = userPlaylistJson.get("images").asJsonArray
+                var userPlaylistCoverSize = 0
+                for (element in userPlaylistCoversJsonArray)
+                {
+                    val userPlaylistCoverJson = element.asJsonObject
+                    if (userPlaylistCoverJson.get("height").asInt > userPlaylistCoverSize)
+                    {
+                        userPlaylistCoverSize = userPlaylistCoverJson.get("height").asInt
+                        userPlaylistCoverUri = userPlaylistCoverJson.get("url").asString
+                    }
+                }
 
+                if (search == null || search == "" || search in userPlaylistName)
+                {
+                    val spotifyPlaylist = SpotifyPlaylist(name = userPlaylistName, playlist_cover_URI = userPlaylistCoverUri, music_quantity = musicQuantity)
+                    spotifyPlaylists.add(spotifyPlaylist)
+                }
+            }
+            catch (e: Exception)
+            {
+                //
+            }
+        }
 
-	// TODO: Convert to a request to API
-	private fun getSpotifyPlaylist(values: ArrayList<String>): List<SpotifyPlaylist> {
-		val gson = Gson()
-		val spotifyPlaylist: ArrayList<SpotifyPlaylist> = ArrayList()
-		for (playlistFound: Any in values) {
-			spotifyPlaylist.add(gson.fromJson(gson.toJson(playlistFound), SpotifyPlaylist::class.java))
-		}
-		return spotifyPlaylist
+        return spotifyPlaylists
 	}
 
 	fun selectPlaylist(playListName: String) {
@@ -94,7 +94,7 @@ class SpotifyController: ViewModel() {
 		fun requestSpotifyToken(activity: FragmentActivity?)
 		{
 			val builder = AuthenticationRequest.Builder(clientID, AuthenticationResponse.Type.TOKEN, redirectURI)
-			builder.setScopes(arrayOf("streaming", "user-read-playback-state", "user-modify-playback-state"))
+			builder.setScopes(arrayOf("streaming", "user-read-playback-state", "user-modify-playback-state", "playlist-read-private"))
 			val request = builder.build()
 			AuthenticationClient.openLoginActivity(activity, MainActivity.spotifyRequestCode, request)
 		}
