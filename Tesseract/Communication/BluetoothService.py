@@ -12,12 +12,14 @@ from Communication.scheme_wpa import SchemeWPA
 class BluetoothService(multiprocessing.Process):
 	UUID = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
 
-	def __init__(self, tesseract, main_queue, leds_queue, acc_queue):
+	def __init__(self, tesseract, main_queue, leds_queue, acc_queue, display_queue, from_acc_queue):
 		super().__init__()
 		self.main_queue = main_queue
 		self.leds_queue = leds_queue
 		self.acc_queue = acc_queue
 		self.tesseract = tesseract
+		self.display_queue = display_queue
+		self.from_acc_queue = from_acc_queue
 
 		# Creates socket to listen for bluetooth connections
 		self.blue_sck = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
@@ -44,37 +46,57 @@ class BluetoothService(multiprocessing.Process):
 		try:
 			while not self._stop_service:
 				print('Waiting for bluetooth connection')
+				self.display_queue.put(['Esperando con.', 'Bluetooth...'])
 				client_phone_sock, client_phone_info = self.blue_sck.accept()
 				print('Device paired!')
+				self.display_queue.put(['Dispositivo', 'conectado!'])
+				threading.Thread(target=self.read_queue_from_acc, args=(client_phone_sock,)).start()
 				threading.Thread(target=self.answer_client, args=(client_phone_sock,)).start()
 
 		except IOError:
 			print('Bluetooth service error.')
 			pass
 
+	def read_queue_from_acc(self, conn):
+		while True:
+			try:
+				spotify_command = self.from_acc_queue.get()
+
+				if spotify_command["type"] == "spotify":
+					print('sending command to app')
+
+					if spotify_command["subtype"] == "command":
+						print('command: ' + spotify_command["value"])
+						self.bluetooth_send(conn, json.dumps(spotify_command, separators=(',', ':')).encode('utf-8'))
+			except:
+				pass
+
 	def answer_client(self, conn):
 		while True:
-			msg = json.loads(conn.recv(4096).decode('utf-8'))
+			try:
+				msg = json.loads(conn.recv(4096).decode('utf-8'))
 
-			# ============ Processing wifi messages ============= #
-			if msg["type"] == "wifi":
-				print('wifi command')
-				if msg["subtype"] == "request-list":
-					available_wifis = self.json_all_wifis()
-					self.bluetooth_send(conn, available_wifis)
+				# ============ Processing wifi messages ============= #
+				if msg["type"] == "wifi":
+					print('wifi command')
+					if msg["subtype"] == "request-list":
+						available_wifis = self.json_all_wifis()
+						self.bluetooth_send(conn, available_wifis)
 
-				elif msg["subtype"] == "connect":
-					connect_wifi_attempt = self.connect_wifi(msg["value"])
-					self.bluetooth_send(conn, connect_wifi_attempt)
+					elif msg["subtype"] == "connect":
+						connect_wifi_attempt = self.connect_wifi(msg["value"])
+						self.bluetooth_send(conn, connect_wifi_attempt)
 
-				elif msg["subtype"] == "request-status":
-					wifi_status = self.wifi_status()
-					self.bluetooth_send(conn, wifi_status)
+					elif msg["subtype"] == "request-status":
+						wifi_status = self.wifi_status()
+						self.bluetooth_send(conn, wifi_status)
 
-			# ============ Processing spotify messages ============= #
-			elif msg["type"] == "spotify":
-				print('spotify command')
-				self.acc_queue.put(msg)
+				# ============ Processing spotify messages ============= #
+				elif msg["type"] == "spotify":
+					print('spotify command')
+					self.acc_queue.put(msg)
+			except:
+				pass
 
 	def bluetooth_send(self, conn, wifi_status):
 		msg = wifi_status + b'--end_of_message'
@@ -88,11 +110,6 @@ class BluetoothService(multiprocessing.Process):
 		for cell in list(Cell.all('wlan0')):
 			json_list.get("value").append({"ssid": cell.ssid, "signal": cell.signal, "encryption_type": cell.encryption_type})
 		return json.dumps(json_list, separators=(',', ':')).encode('utf-8')
-
-	def connect_spotify(self, value):
-		self.tesseract.spotify.token = value["token"]
-		print('spotify token: ' + self.tesseract.spotify.token)
-		self.tesseract.is_spotify = True
 
 	@staticmethod
 	def connect_wifi(value):

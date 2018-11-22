@@ -90,3 +90,5 @@ class Display(multiprocessing.Process):
 				with lock:
 					self.strings_to_write[0], self.strings_to_write[1] = msg[0], msg[1]
 					changed.value = True
+			
+			sleep(2)

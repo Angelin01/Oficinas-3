@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.gson.Gson
 import com.tesseract.bluetooth.BluetoothController
 import com.tesseract.bluetooth.BluetoothMessageCallback
+import com.tesseract.spotify.SpotifyController
 
 object TesseractCommunication: BluetoothMessageCallback {
 
@@ -15,6 +16,8 @@ object TesseractCommunication: BluetoothMessageCallback {
 			musicListener.callbackMessageReceiver(request!!.value, request.subtype)
 		} else if (request?.type.toString() == "wifi") {
 			wifiListener.callbackMessageReceiver(request!!.value, request.subtype)
+		} else if (request?.type.toString() == "spotify") {
+			SpotifyController.callbackMessageReceiver(request!!.value, request.subtype)
 		}
 	}
 

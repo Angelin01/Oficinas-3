@@ -143,6 +143,35 @@ class SpotifyHTTPRequests {
             }
         }
 
+        class UserPlaylistsRequest : AsyncTask<String, Void, String>() {
+            private var userPlaylists: String = ""
+
+            override fun doInBackground(vararg strings: String): String? {
+                try
+                {
+                    var urlConnection = URL(strings[0]).openConnection() as HttpURLConnection
+                    urlConnection.setRequestProperty("Authorization", "Bearer " + SpotifyController.token)
+                    urlConnection.setRequestProperty("Accept", "application/json")
+                    urlConnection.setRequestProperty("Content-Type", "application/json")
+
+                    val responseCode = urlConnection.responseCode
+                    if (responseCode == HttpURLConnection.HTTP_OK)
+                        userPlaylists = urlConnection.inputStream.bufferedReader().use(BufferedReader::readText).toString()
+                    else
+                    {
+                        val error = urlConnection.errorStream.bufferedReader().use(BufferedReader::readText)
+                        throw Exception(error)
+                    }
+                }
+                catch (e: Exception)
+                {
+                    e.printStackTrace()
+                }
+
+                return userPlaylists
+            }
+        }
+
         fun getDeviceID(): String
         {
             return DeviceIDRequest().execute("https://api.spotify.com/v1/me/player/devices").get()
@@ -162,6 +191,12 @@ class SpotifyHTTPRequests {
         {
             val playbackInfo = PlaybackInfoRequest().execute("https://api.spotify.com/v1/me/player").get()
             return JsonParser().parse(playbackInfo).asJsonObject
+        }
+
+        fun getUserPlaylists(): JsonObject
+        {
+            val userPlaylists = UserPlaylistsRequest().execute("https://api.spotify.com/v1/me/playlists").get()
+            return JsonParser().parse(userPlaylists).asJsonObject
         }
     }
 }
