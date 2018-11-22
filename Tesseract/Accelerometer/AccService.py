@@ -65,12 +65,14 @@ class AccService(multiprocessing.Process):
 				self.agitated()
 
 	def inclined_right(self):
+		self.display_queue.put(["right", ""])
 		if self.spotify_client.is_active:
 			if self.spotify_client.next_track():
 				self.update_display()
 				self.send_command_to_app("next")
 
 	def inclined_left(self):
+		self.display_queue.put(["left", ""])
 		if self.spotify_client.is_active:
 			if self.spotify_client.previous_track():
 				self.update_display()
@@ -83,6 +85,7 @@ class AccService(multiprocessing.Process):
 		pass
 
 	def up_and_down(self):
+		self.display_queue.put(["updown", ""])
 		if self.spotify_client.is_active:
 			if self.spotify_client.is_playing():
 				if self.spotify_client.pause():
@@ -97,6 +100,7 @@ class AccService(multiprocessing.Process):
 				self.update_display()
 
 	def agitated(self):
+		self.display_queue.put(["agitated", ""])
 		if self.spotify_client.is_active:
 			if self.spotify_client.shuffle():
 				self.update_display()

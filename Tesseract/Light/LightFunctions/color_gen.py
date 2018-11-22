@@ -1,4 +1,4 @@
-from Light.color import Color, ColorMode
+from color import Color, ColorMode
 
 
 def gen_rainbow_gradient(start_hue: int, end_hue: int, speed: float, intensity: int, gradient_backwards: bool = False):
@@ -55,7 +55,11 @@ def gen_color_gradient(speed: float, intensity: int, *colors, color_mode=ColorMo
     :param speed: The speed of the gradient change.
     :param intensity: The intensity value in which the gradient occurs. Between 0 and 255.
     :param colors: An array of RGB or HSL values. All colors in the list must be from the same color space.
-                   Each channel is a value between 0 and 1.
+                   RGB values are between 0 and 255.
+                   HSL values are more complicated:
+                    H: 0 to 360
+                    S: 0 to 100
+                    L: 0 to 100
     :param color_mode: The color space the colors belong to.
     :return: An array of GRB tuples.
     """
@@ -72,10 +76,21 @@ def gen_color_gradient(speed: float, intensity: int, *colors, color_mode=ColorMo
 
         for s in range(color_change_steps):
             lerp_color = color_lerp(color_start, color_end, s / 10)
-            gradient_colors.append(Color(*lerp_color, color_mode))
+
+            if color_mode == ColorMode.RGB:
+                norm_lerp_color = [c / 255 for c in lerp_color]
+            else:
+                norm_lerp_color = lerp_color[0] / 360, lerp_color[1] / 100, lerp_color[2] / 100
+
+            gradient_colors.append(Color(*norm_lerp_color, color_mode))
 
     # Closing the loop.
-    gradient_colors.append(Color(*colors[0], color_mode))
+    if color_mode == ColorMode.RGB:
+        norm_color = [c / 255 for c in colors[0]]
+    else:
+        norm_color = colors[0][0] / 360, colors[0][1] / 100, colors[0][2] / 100
+
+    gradient_colors.append(Color(*norm_color, color_mode))
 
     if color_mode == ColorMode.HSL:
         Color.batch_hsl_to_rgb(gradient_colors)
