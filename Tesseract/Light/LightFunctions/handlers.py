@@ -1,13 +1,12 @@
-from LightFunctions.color_gen import color_lerp
-from controllerUtils import rotate_list_left
+from Light.LightFunctions.color_gen import color_lerp
+from Light.controllerUtils import rotate_list_left
 
 from Audio.Audio import getLoopbackAudioData
 from FrequencyAnalyzer.SoundAnalyzer import SoundAnalyzer
 
-from LEDstripController.color import ColorMode, Color
-from LEDstripController.controllerUtils import sep_bar_levels
-from LEDstripController.fft_sample_requester import FftSampleRequester
-from LEDstripController.tesseract_light_face import TesseractLightFace
+from Light.color import ColorMode, Color
+from Light.controllerUtils import sep_bar_levels
+from Light.fft_sample_requester import FftSampleRequester
 
 
 def standard_handler(args_dict: dict):

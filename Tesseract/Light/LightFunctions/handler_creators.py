@@ -1,4 +1,4 @@
-from LEDstripController.color import ColorMode, Color
+from Light.color import ColorMode, Color
 
 
 def create_wave_handler_args(color_sequence, wave, color_delay, n_leds):

@@ -1,4 +1,4 @@
-from color import Color, ColorMode
+from Light.color import Color, ColorMode
 
 
 def gen_rainbow_gradient(start_hue: int, end_hue: int, speed: float, intensity: int, gradient_backwards: bool = False):

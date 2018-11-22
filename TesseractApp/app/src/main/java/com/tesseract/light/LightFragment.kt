@@ -2,7 +2,6 @@ package com.tesseract.light
 
 import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.tesseract.R
-import kotlinx.android.synthetic.main.fragment_light.view.*
 import java.io.File
 import java.io.FileInputStream
 
@@ -149,7 +147,7 @@ class LightFragment : Fragment() {
 		textViewDescription.text = light.description
 
 		val textViewPatternName: TextView = view!!.findViewById(R.id.textViewPatternName)
-		textViewPatternName.text = light.pattern_type
+		textViewPatternName.text = light.pattern
 
 		light.colors_parameters.forEachIndexed { index, element ->
 			this.colorTextViews[index].visibility = View.VISIBLE

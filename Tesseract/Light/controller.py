@@ -1,12 +1,12 @@
 import spidev
-import ws2812
+from Light import ws2812
 
 import threading
 import time
 
-from LEDstripController.LightFunctions.random import gen_random
-from LEDstripController.light_config_parser import parse_light_config
-from LEDstripController.tesseract_light_face import TesseractLightFace
+from Light.LightFunctions.random import gen_random
+from Light.light_config_parser import parse_light_config
+from Light.tesseract_light_face import TesseractLightFace
 
 
 class TimedLightShow(threading.Thread):
@@ -50,7 +50,8 @@ class TimedLightShow(threading.Thread):
 	def bluetooth_queue_msg_watcher(self):
 
 		while True:
-			msg = self.acc_queue.get()
+			msg = self.bluetooth_queue.get()
+			print(msg)
 
 			parsed_configs = parse_light_config(msg)
 
@@ -129,7 +130,8 @@ class TimedLightShow(threading.Thread):
 				time.sleep(self.controller_interval)
 				continue
 
-			result = [self.light_faces[i].get_new_sequence() for i in range(4)]
+			result = (self.light_faces[0].get_new_sequence() + self.light_faces[1].get_new_sequence() +
+			          self.light_faces[2].get_new_sequence() + self.light_faces[3].get_new_sequence())
 
 			# Sleeps the thread for a moment.
 			time.sleep(self.controller_interval)

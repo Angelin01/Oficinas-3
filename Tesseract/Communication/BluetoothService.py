@@ -95,6 +95,10 @@ class BluetoothService(multiprocessing.Process):
 				elif msg["type"] == "spotify":
 					print('spotify command')
 					self.acc_queue.put(msg)
+
+				elif msg["type"] == "light":
+					print('Light command')
+					self.leds_queue.put(msg["value"])
 			except:
 				pass
 

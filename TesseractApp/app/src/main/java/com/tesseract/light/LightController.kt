@@ -19,10 +19,10 @@ class LightController() : ViewModel() {
 
 
 	private val REQUEST_SUBTYPE_NEW_PATTERN: String = "new-pattern"
-	private val FRONT_FACE = "Front"
-	private val LEFT_FACE = "Left"
-	private val RIGHT_FACE = "Right"
-	private val BACK_FACE = "Back"
+	private val FRONT_FACE = "front"
+	private val LEFT_FACE = "left"
+	private val RIGHT_FACE = "right"
+	private val BACK_FACE = "back"
 	private val FRONT_FACE_INDEX = 0
 	private val LEFT_FACE_INDEX = 1
 
@@ -64,15 +64,15 @@ class LightController() : ViewModel() {
 
 
 	private fun initSelectedPatterns() {
-		selectedPatterns[FRONT_FACE_INDEX] = lightPatterns[0]
-		selectedPatterns[LEFT_FACE_INDEX] = lightPatterns[0]
-		selectedPatterns[RIGHT_FACE_INDEX] = lightPatterns[0]
-		selectedPatterns[BACK_FACE_INDEX] = lightPatterns[0]
+		selectedPatterns[FRONT_FACE_INDEX] =  lightPatterns[0].copy()
+		selectedPatterns[LEFT_FACE_INDEX] = lightPatterns[0].copy()
+		selectedPatterns[RIGHT_FACE_INDEX] = lightPatterns[0].copy()
+		selectedPatterns[BACK_FACE_INDEX] = lightPatterns[0].copy()
 	}
 
 	fun getPatterns(): ArrayList<Light> {
 		val light: List<Light> = gson.fromJson(sampleLights, Array<Light>::class.java).toList()
-		return light as ArrayList<Light>
+		return ArrayList(light)
 	}
 
 	fun getLight(index: Int): Light {
@@ -89,37 +89,52 @@ class LightController() : ViewModel() {
 	}
 
 	fun setConfigurationOnTesseract() {
-		val lightJson: JsonElement = gson.toJsonTree(selectedPatterns)
+		val lights = ArrayList<Light>()
+		selectedPatterns[0]!!.face = "front"
+		selectedPatterns[1]!!.face = "left"
+		selectedPatterns[2]!!.face = "right"
+		selectedPatterns[3]!!.face = "back"
+		convertHashMapToList(0, "front", lights)
+		convertHashMapToList(1, "left", lights)
+		convertHashMapToList(2, "right", lights)
+		convertHashMapToList(3, "back", lights)
+		Log.d("TAG", lights.toString())
+
+
+		val lightJson: JsonElement = gson.toJsonTree(lights)
 		Log.d("TAG", lightJson.toString())
 		TesseractCommunication.sendRequest(REQUEST_TYPE, REQUEST_SUBTYPE_SET_CONFIGURATION, lightJson)
+	}
+
+	private fun convertHashMapToList(index: Int, face_name: String, lights: ArrayList<Light>) {
+		val light_front = selectedPatterns.get(index)!!
+		light_front.face = face_name
+		lights.add(light_front)
 	}
 
 	companion object {
 		private const val sampleLights: String = """[
 		{
-		  "name": "rainbow",
-		  "description": "A beauty unicorn",
-		  "pattern_type" : "rainbow",
-		  "colors": ["#43e1ff", "#00574B", "#D81B60"],
-		  "colors_parameters": ["low frequency", "medium frequency", "high frequency" ]
-		},
-		{
-		  "name": "Shiny",
-		  "description": "Quiet light",
-		  "pattern_type" : "Wave",
-		  "colors": ["#D81B60"],
-		  "colors_parameters": ["All"]
-		},
-		{
-		  "name": "Speedy",
+		  "name": "wave",
 		  "description": "Fast",
-		  "pattern_type" : "fft",
-		  "colors": ["#D81B60"],
-		  "colors_parameters": ["Zoom"],
-		  "speed": 2,
+		  "pattern" : "wave",
+		  "colors": ["#43e1ff", "#00574B", "#D81B60"],
+		  "colors_parameters": ["color 1", "color 2", "color 3"],
+		  "speed": 1,
 		  "intensity" : 80,
-		  "face": "left",
-		  "modifier": "Rising"
+		  "face": null,
+		  "modifier": "rising"
+		},
+		{
+		  "name": "wave",
+		  "description": "Fast",
+		  "pattern" : "wave",
+		  "colors": ["#43e1ff", "#00574B", "#D81B60"],
+		  "colors_parameters": ["color 1", "color 2", "color 3"],
+		  "speed": 1,
+		  "intensity" : 80,
+		  "face": null,
+		  "modifier": "rising"
 		}
 	]"""
 	}
