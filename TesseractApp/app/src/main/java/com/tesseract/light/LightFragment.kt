@@ -23,6 +23,9 @@ class LightFragment : Fragment() {
 	private lateinit var textViewsParameterNames: ArrayList<TextView>
 	private lateinit var textViewsParameterValues: ArrayList<TextView>
 
+	lateinit var spinner: Spinner
+	lateinit var faceSpinner: Spinner
+
 	private fun loadResourcesFromMemory() {
 		val userPatterns = readFromMemory()
 		if (!userPatterns.isEmpty()) {
@@ -55,7 +58,7 @@ class LightFragment : Fragment() {
 	}
 
 	private fun setupPatternSpinner(view: View) {
-		val spinner: Spinner = view.findViewById(R.id.spinner_leds_patterns)
+		spinner = view.findViewById(R.id.spinner_leds_patterns)
 		val spinnerAdapter: ArrayAdapter<Light> = ArrayAdapter(this.context!!, android.R.layout.simple_spinner_item, lightController.lightPatterns)
 		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 		spinner.adapter = spinnerAdapter
@@ -67,30 +70,37 @@ class LightFragment : Fragment() {
 			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 				val light: Light = parent!!.selectedItem as Light
 				updateLightParameters(light)
-				updateSelectedPattern(light)
+				updateSelectedPattern(light, position)
 			}
 		}
 	}
 
-	private fun updateSelectedPattern(light: Light) {
+	private fun updateSelectedPattern(light: Light, position: Int) {
 		lightController.selectedPatterns[lightController.currentFace] = light
+		lightController.selectedPatternsIndexes[lightController.currentFace] = position
 	}
 
 	private fun setupFaceSpinner(view: View) {
-		val spinner: Spinner = view.findViewById(R.id.spinner_leds_face)
+		faceSpinner = view.findViewById(R.id.spinner_leds_face)
 		val spinnerAdapter: ArrayAdapter<String> = ArrayAdapter(this.context!!, android.R.layout.simple_spinner_item, lightController.lightFaces)
 		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-		spinner.adapter = spinnerAdapter
+		faceSpinner.adapter = spinnerAdapter
 
-		spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+		faceSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 			override fun onNothingSelected(parent: AdapterView<*>?) {
 			}
 
 			override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 				lightController.currentFace = position
 				updateLightParameters(lightController.selectedPatterns[lightController.currentFace]!!)
+				spinner.setSelection(lightController.selectedPatternsIndexes[position])
+				updatePatternSpinner()
 			}
 		}
+	}
+
+	private fun updatePatternSpinner() {
+
 	}
 
 	private fun setupEditPatternsButton(view: View, savedInstanceState: Bundle?) {
