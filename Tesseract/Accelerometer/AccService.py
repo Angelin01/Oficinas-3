@@ -4,6 +4,7 @@ from Accelerometer.Accelerometer import Accelerometer
 from Accelerometer.AccReading import AccReading
 from Spotify.SpotifyClient import SpotifyClient
 from threading import Thread
+from time import sleep
 
 
 class AccService(multiprocessing.Process):
@@ -63,16 +64,17 @@ class AccService(multiprocessing.Process):
 				self.up_and_down()
 			elif reading == AccReading.AGITATION:
 				self.agitated()
+			sleep(1)
 
 	def inclined_right(self):
-		self.display_queue.put(["right", ""])
+		self.display_queue.put(["Proxima", ""])
 		if self.spotify_client.is_active:
 			if self.spotify_client.next_track():
 				self.update_display()
 				self.send_command_to_app("next")
 
 	def inclined_left(self):
-		self.display_queue.put(["left", ""])
+		self.display_queue.put(["Anterior", ""])
 		if self.spotify_client.is_active:
 			if self.spotify_client.previous_track():
 				self.update_display()
@@ -85,25 +87,21 @@ class AccService(multiprocessing.Process):
 		pass
 
 	def up_and_down(self):
-		self.display_queue.put(["updown", ""])
+		self.display_queue.put(["Pausando", ""])
 		if self.spotify_client.is_active:
 			if self.spotify_client.is_playing():
 				if self.spotify_client.pause():
-					result = True
 					self.send_command_to_app("pause")
 			else:
 				if self.spotify_client.play():
-					result = True
 					self.send_command_to_app("play")
+					self.update_display()
 
-			if result:
-				self.update_display()
 
 	def agitated(self):
-		self.display_queue.put(["agitated", ""])
+		self.display_queue.put(["Shuffle", ""])
 		if self.spotify_client.is_active:
 			if self.spotify_client.shuffle():
-				self.update_display()
 				self.send_command_to_app("shuffle")
 				led_shuffle_command = '''
 					{

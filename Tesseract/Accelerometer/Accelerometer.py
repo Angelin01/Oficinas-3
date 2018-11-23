@@ -42,8 +42,9 @@ class Accelerometer:
 
 	def wait_for_movement(self):
 		#region [ Magic numbers ]
-		agitation_intensity_threshold = 24000
+		agitation_intensity_threshold = 20000
 		agitation_counter_max = 70
+		agitation_timeout = 30
 		tilting_counter_max = 60
 		tilting_angle_detection = 30
 
@@ -55,6 +56,7 @@ class Accelerometer:
 		tilting_right_count = 0
 		tilting_left_count = 0
 		agitation_counter = 0
+		agitation_timer = 0
 		updown_state = 0
 
 		while True:
@@ -68,30 +70,21 @@ class Accelerometer:
 			#y_normalized = y / gravity
 			#z_normalized = z / gravity
 
+			x_rotation = self.get_x_rotation(x, y, z) + 15
+
 			''' UP-DOWN DETECTION '''
-			if z < 10000 and x < 10000:
-				if updown_state == 0 and y > 20000:
-					# going up
-					updown_state = 1
-
-				elif updown_state == 1 and y < 10000:
-					# going back down
-					updown_state = 2
-
-				elif updown_state == 2 and y > 20000:
-					# movement complete
+			if (10 > x_rotation > -10) and (y > 9000) and (x < 0) and (z < 0):
+					print('updown: y ' + str(y) + '  x ' + str(x) + '  z ' + str(z))
 					return AccReading.UP_DOWN
 
-			else:
-				updown_state = 0
-
 			''' ROTATION DETECTION '''
-			x_rotation = self.get_x_rotation(x, y, z)
 			if tilting_right_count > tilting_counter_max or tilting_left_count > tilting_counter_max:
 				if 10 > x_rotation > -10:
 					if tilting_right_count > tilting_counter_max:
+						print('right')
 						return AccReading.INC_RIGHT
 					elif tilting_left_count > tilting_counter_max:
+						print('left')
 						return AccReading.INC_LEFT
 					else:
 						return AccReading.NONE
@@ -99,26 +92,23 @@ class Accelerometer:
 			elif x_rotation > tilting_angle_detection:
 				tilting_right_count = 0
 				tilting_left_count += 1
-				if tilting_right_count > tilting_counter_max:
-					print('Esquerda!')
 
 			elif x_rotation < -tilting_angle_detection:
 				tilting_right_count += 1
 				tilting_left_count = 0
-				if tilting_left_count > tilting_counter_max:
-					print('Direita!')
 
 			else:
 				tilting_right_count = 0
 				tilting_left_count = 0
 
 			''' AGITATION DETECTION '''
-			if math.sqrt((x*x) + (y*y) + (z*z)) > agitation_intensity_threshold:
+			if (math.sqrt((x*x) + (y*y) + (z*z)) > agitation_intensity_threshold) and (x > 0) or (z > 0):
 				agitation_counter += 1
 			else:
-				agitation_counter = 0
-
-			# print('agitation counter: ' + str(agitation_counter))
+				agitation_timer += 1
+				if agitation_timer == agitation_timeout:
+					agitation_counter = 0
 
 			if agitation_counter == agitation_counter_max:
+				print('agitation')
 				return AccReading.AGITATION
