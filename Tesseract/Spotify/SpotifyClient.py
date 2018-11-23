@@ -8,12 +8,15 @@ class SpotifyClient:
 		print('Spotify init')
 		self.is_active = False
 		self.token = ''
-		self.deviceID = ''
+		self.deviceID = '5d5959f8a7e26f1195739478f1cc29dd13162146' #Enjambro
 		self.display_queue = display_queue
 
 	def connect(self, token, deviceID):
 		self.token = token
-		self.deviceID = deviceID
+		if deviceID:
+			self.deviceID = deviceID
+		else:
+			print('usando ID hard-coded')
 		self.is_active = True
 		self.display_queue.put(['Spotify', 'conectado!'])
 		print('Token: ' + self.token)
