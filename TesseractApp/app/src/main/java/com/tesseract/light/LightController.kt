@@ -25,13 +25,14 @@ class LightController() : ViewModel() {
 	private val BACK_FACE = "back"
 	private val FRONT_FACE_INDEX = 0
 	private val LEFT_FACE_INDEX = 1
-
 	private val RIGHT_FACE_INDEX = 2
 	private val BACK_FACE_INDEX = 3
+
 	val lightPatterns: ArrayList<Light>
 	val lightFaces: ArrayList<String> = arrayListOf(FRONT_FACE, LEFT_FACE, RIGHT_FACE, BACK_FACE)
 
 	val selectedPatterns: HashMap<Int, Light> = HashMap()
+	val selectedPatternsIndexes: ArrayList<Int> = ArrayList()
 
 	var currentFace: Int = 0
 
@@ -40,6 +41,7 @@ class LightController() : ViewModel() {
 	init {
 		lightPatterns = getPatterns()
 		initSelectedPatterns()
+		initSelectedPatternsIndexes()
 	}
 
 	fun addUserPatternsFromString(patterns: String) {
@@ -70,15 +72,16 @@ class LightController() : ViewModel() {
 		selectedPatterns[BACK_FACE_INDEX] = lightPatterns[0].copy()
 	}
 
+	private fun initSelectedPatternsIndexes() {
+		selectedPatternsIndexes.add(0)
+		selectedPatternsIndexes.add(0)
+		selectedPatternsIndexes.add(0)
+		selectedPatternsIndexes.add(0)
+	}
+
 	fun getPatterns(): ArrayList<Light> {
 		val light: List<Light> = gson.fromJson(sampleLights, Array<Light>::class.java).toList()
 		return ArrayList(light)
-	}
-
-	fun getLight(index: Int): Light {
-		val gson = Gson()
-		val light: List<Light>? = gson.fromJson(sampleLights, Array<Light>::class.java).toList()
-		return light!![index]
 	}
 
 	fun sendNewLightPattern(editingLight: Light) {
@@ -112,6 +115,19 @@ class LightController() : ViewModel() {
 		lights.add(light_front)
 	}
 
+	public fun getFaceIndexByName(name: String): Int {
+		if (name == FRONT_FACE)
+			return FRONT_FACE_INDEX
+		if (name == LEFT_FACE)
+			return LEFT_FACE_INDEX
+		if (name == RIGHT_FACE)
+			return RIGHT_FACE_INDEX
+		if (name == BACK_FACE)
+			return BACK_FACE_INDEX
+
+		return FRONT_FACE_INDEX
+	}
+
 	companion object {
 		private const val sampleLights: String = """[
 		{
@@ -126,15 +142,48 @@ class LightController() : ViewModel() {
 		  "modifier": "rising"
 		},
 		{
-		  "name": "wave",
-		  "description": "Fast",
-		  "pattern" : "wave",
-		  "colors": ["#43e1ff", "#00574B", "#D81B60"],
-		  "colors_parameters": ["color 1", "color 2", "color 3"],
+		  "name": "breathe",
+		  "description": "",
+		  "pattern" : "breathe",
+		  "colors": [],
+		  "colors_parameters": [],
 		  "speed": 1,
 		  "intensity" : 80,
 		  "face": null,
-		  "modifier": "rising"
+		  "modifier": null
+		},
+		{
+		  "name": "stream",
+		  "description": "",
+		  "pattern" : "stream",
+		  "colors": [],
+		  "colors_parameters": [],
+		  "speed": 1,
+		  "intensity" : 80,
+		  "face": null,
+		  "modifier": null
+		},
+		{
+		  "name": "FFT",
+		  "description": "",
+		  "pattern" : "fft_color",
+		  "colors": ["#43e1ff", "#00574B", "#D81B60"],
+		  "colors_parameters": ["Low", "Medium", "High"],
+		  "speed": 1,
+		  "intensity" : 80,
+		  "face": null,
+		  "modifier": null
+		},
+		{
+		  "name": "FFT Bars",
+		  "description": "",
+		  "pattern" : "fft_bars",
+		  "colors": ["#43e1ff", "#00574B", "#D81B60"],
+		  "colors_parameters": ["Low", "Medium", "High"],
+		  "speed": 1,
+		  "intensity" : 80,
+		  "face": null,
+		  "modifier": null
 		}
 	]"""
 	}

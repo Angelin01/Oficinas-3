@@ -75,9 +75,6 @@ class HomeFragment : Fragment(), BluetoothStatusChangeCallback {
             Log.d("TAG", "button volume pressed")
         }
 
-        val seekBar: SeekBar = view.findViewById(R.id.seekMusicProgress)
-        seekBar.setOnTouchListener { _, _ -> true }
-
         return view
     }
 
