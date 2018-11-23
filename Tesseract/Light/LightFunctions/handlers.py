@@ -139,6 +139,9 @@ def fft_color_handler(args_dict: dict):
 
     fft_result = FftSampleRequester.get_sample()
 
+    # if fft_result.count(0) != 20:
+    #     print(fft_result)
+
     updated_led_sequence = []
 
     for i in range(0, len(fft_result), resolution):
@@ -148,10 +151,6 @@ def fft_color_handler(args_dict: dict):
             norm_sample += fft_result[sample]
 
         norm_sample /= resolution
-
-        if norm_sample > max_sample:
-            max_sample = norm_sample
-
         norm_sample /= max_sample
 
         led_color = color_lerp(min_intensity_color, max_intensity_color, norm_sample)
@@ -174,8 +173,6 @@ def fft_color_handler(args_dict: dict):
 
     # Getting int values.
     updated_led_sequence = [color.get_ws2812_rgb(intensity) for color in updated_led_sequence]
-
-    args_dict['max_fft_sample'] = max_sample
 
     return updated_led_sequence
 
@@ -202,13 +199,6 @@ def fft_bars_handler(args_dict: dict):
     max_low = max(lows)
     max_mid = max(mids)
     max_high = max(highs)
-
-    # Checking if the greatest sample is greater than the one stored.
-    current_max_sample = max(max_low, max_mid, max_high)
-
-    if current_max_sample > max_sample:
-        max_sample = current_max_sample
-        args_dict['max_sample'] = max_sample
 
     # Setting a scale to be proportioned to 3 LEDs fully lit, according to intensity.
     scale = 3 * max_intensity / max_sample

@@ -42,7 +42,11 @@ def calculateFFT(music_samples, chunk_size, using_scipy=True, sample_rate=44100)
 	else:
 		fourier = gpu(samples_windowed)
 
-	bands = customBand(fourier[:chunk_size // 2], sample_rate, bands_intervals)
+	#print('chuck size ', chunk_size)
+	#print('sample rate ', sample_rate)
+	#print('bands intervals ', bands_intervals)
+	#print('fourier ', fourier[:int(chunk_size / 2)])
+	bands = customBand(fourier[:int(chunk_size / 2)], sample_rate, bands_intervals)
 	return bands
 
 
@@ -93,7 +97,6 @@ def customBand(fourier, sample_rate, band_frequencies):
 	levels = []
 	for band in indexes:
 		points_for_band = fourier[band[0]: band[1]]
-
 		level = max(points_for_band)
 		levels.append(level)
 
@@ -103,9 +106,14 @@ def customBand(fourier, sample_rate, band_frequencies):
 def getIndexFromFrequency(sample_size, sample_rate, bands_frequencies):
 	frequency_spacing = (sample_rate / 2) / sample_size
 	indexes = []
+	off_set = 0
 	for band in bands_frequencies:
 		init_index = int(band[0] // frequency_spacing)
 		end_index = int(np.floor(band[1] / frequency_spacing))
-		indexes.append([init_index, end_index])
+		if init_index == end_index:
+			indexes.append([off_set + init_index, off_set + init_index+1])
+			off_set += 1
+		else:
+			indexes.append([off_set + init_index, off_set + end_index])
 
 	return indexes

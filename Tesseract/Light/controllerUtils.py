@@ -14,7 +14,7 @@ def sep_bar_levels(level, max_intensity):
 
     bar = []
 
-    for d in range(div):
+    for d in range(int(div)):
         bar.append(max_intensity)
 
     if div < 3:

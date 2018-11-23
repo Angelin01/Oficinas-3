@@ -3,19 +3,23 @@ import struct
 
 import numpy as np
 
-chunk_size = 1024
+chunk_size = 256 #1024
 data_format = alsa.PCM_FORMAT_S16_LE
 n_channels = 1
 sample_rate = 44100
 
-available_loopbacks = ['hw:Loopback,1,1', 'hw:Loopback,1,0']
+available_loopbacks = ['hw:Loopback,1,0', 'hw:Loopback,1,1']
 
 def tryGetLoopback():
+	print('try get loopback')
 	for device in available_loopbacks:
+		print('device', device)
 		try:
 			stream = alsa.PCM(alsa.PCM_CAPTURE, device=device)
+			print(stream)
 			return stream
 		except Exception as exception:
+			print(exception)
 			pass
 
 

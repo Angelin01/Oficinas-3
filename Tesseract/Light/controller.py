@@ -66,10 +66,11 @@ class TimedLightShow(threading.Thread):
 
         while True:
             msg = self.acc_queue.get()
-            if 'type' not in msg:
+
+            if 'config' not in msg:
                 continue
 
-            if msg['type'] == 'shuffle':
+            if msg['config'] == 'shuffle':
                 with self.acc_lock:
                     self.is_shuffling = True
 
@@ -86,20 +87,20 @@ class TimedLightShow(threading.Thread):
         """
 
         random_sequence_len = 20
-        random_sequence = gen_random(20, random_sequence_len)
+        random_sequence = gen_random(80, random_sequence_len)
 
         sleep_time = 0.015
         step = 0
 
         while step < 40:
-            ws2812.write2812(self.spi, random_sequence[step % random_sequence_len] * 4)
+            ws2812.write2812(self.spi, random_sequence[step % random_sequence_len])
             step += 1
             time.sleep(sleep_time)
-            sleep_time -= 0.0025
+            sleep_time -= 0.00025
 
         for i in range(2):
             time.sleep(0.15)
-            ws2812.write2812(self.spi, random_sequence[step % random_sequence_len] * 4)
+            ws2812.write2812(self.spi, random_sequence[step % random_sequence_len])
             step += 1
 
     def update_face_config(self, **kwargs):

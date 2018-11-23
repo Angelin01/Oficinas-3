@@ -1,9 +1,11 @@
 import threading
 import time
 
+from Light.LightFunctions.color_gen import gen_rainbow_gradient
 from Light.LightFunctions.convert_strip import *
 from Light.LightFunctions.handler_creators import *
 from Light.LightFunctions.handlers import *
+from Light.LightFunctions.modifiers import gen_sine_wave
 from Light.fft_sample_requester import FftSampleRequester
 
 
@@ -45,17 +47,25 @@ class TesseractLightFace:
         Constructor.
         Initializes used attributes to None.
         """
-        self.handler_function = None
-        self.handler_args = None
+        # self.handler_function = None
+        # self.handler_args = None
 
-        #self.handler_args = create_fft_color_handler_args((0, 255, 0), (0, 0, 255), 1, 80, ColorMode.RGB)
-        #self.handler_function = fft_color_handler
+        cs = gen_rainbow_gradient(0, 360, 2, 80)
+        wave = gen_sine_wave(1, 2, 20)
+        #self.handler_args = create_stream_handler_args(cs, 20)
+        #self.handler_function = stream_handler
+
+        # self.handler_args = create_fft_color_handler_args((0, 255, 0), (0, 0, 255), 4, 80, ColorMode.RGB)
+        # self.handler_function = fft_color_handler
+
+        self.handler_args = create_fft_bars_handler_args((255, 0, 0), (0, 255, 0), (0, 0, 255), 80, ColorMode.RGB)
+        self.handler_function = fft_bars_handler
 
         # The final modification to the generated color scheme - rising ring and the sorts.
         self.sequence_modifier = None
 
         # The time it takes for the values in this face to update.
-        self.update_interval = 5
+        self.update_interval = 0.005
         self.next_update = 0
 
         self.generated_sequence = None
@@ -68,7 +78,7 @@ class TesseractLightFace:
         :param modifier_id: The modifier id to be applied to each generated color sequence.
         :return: Nothing.
         """
-        print('new LED handler: ' + handler_name)
+        # print('new LED handler: ' + handler_name)
         self.handler_function = self.handlers[handler_name]
         self.handler_args = self.handler_constructors[handler_name](**config_args)
 
@@ -98,20 +108,13 @@ class TesseractLightFace:
         if self.handler_function is None:
             return
 
-        self.next_update = TesseractLightFace.current_timestamp + self.update_interval
+        if TesseractLightFace.current_timestamp > self.next_update:
 
-        if self.next_update < TesseractLightFace.current_timestamp:
-            if self.next_update:
-                print('next update: ' + str(self.next_update))
-                print('current timestamp:', TesseractLightFace.current_timestamp)
-            return
+            self.next_update = TesseractLightFace.current_timestamp + self.update_interval
 
-        #self.next_update = TesseractLightFace.current_timestamp + self.update_interval
+            step = self.handler_function(self.handler_args)
 
-        step = self.handler_function(self.handler_args)
+            if self.sequence_modifier is not None:
+                step = self.sequence_modifier(step)
 
-        if self.sequence_modifier is not None:
-            step = self.sequence_modifier(step)
-
-        print(step)
-        self.generated_sequence = step
+            self.generated_sequence = step

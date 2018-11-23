@@ -87,7 +87,7 @@ def create_fft_color_handler_args(min_color: tuple, max_color: tuple,
         'resolution': 20 // resolution,
         'intensity': intensity,
         'color_mode': color_mode,
-        'max_fft_sample': 1
+        'max_fft_sample': 15
     }
 
     return handler_args
@@ -110,7 +110,7 @@ def create_fft_bars_handler_args(low_color: tuple, mid_color: tuple, high_color:
         'mid_color': Color(*mid_color, color_mode=color_mode),
         'high_color': Color(*high_color, color_mode=color_mode),
         'intensity': max_intensity,
-        'max_sample': 1
+        'max_sample': 15
     }
 
     return handler_args
