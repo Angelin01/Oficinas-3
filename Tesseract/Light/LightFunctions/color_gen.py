@@ -65,7 +65,7 @@ def gen_color_gradient(speed: float, intensity: int, *colors, color_mode=ColorMo
     """
 
     n_colors = len(colors)
-    color_change_steps = int(10 * speed)
+    color_change_steps = int(50 / speed)
 
     gradient_colors = []
 
@@ -75,7 +75,7 @@ def gen_color_gradient(speed: float, intensity: int, *colors, color_mode=ColorMo
         color_end = colors[(i + 1) % n_colors]
 
         for s in range(color_change_steps):
-            lerp_color = color_lerp(color_start, color_end, s / 10)
+            lerp_color = color_lerp(color_start, color_end, s / color_change_steps)
 
             if color_mode == ColorMode.RGB:
                 norm_lerp_color = [c / 255 for c in lerp_color]

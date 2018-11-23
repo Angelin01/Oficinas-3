@@ -38,6 +38,8 @@ class TesseractLightFace:
         4: rtol_ring,
     }
 
+    current_timestamp = 0
+
     def __init__(self):
         """
         Constructor.
@@ -50,16 +52,10 @@ class TesseractLightFace:
         self.sequence_modifier = None
 
         # The time it takes for the values in this face to update.
-        self.update_interval = None
+        self.update_interval = 0
         self.next_update = 0
 
         self.generated_sequence = None
-
-        self.lock = threading.Lock()
-
-        self.light_updater = threading.Thread(target=self.update)
-
-        self.light_updater.start()
 
     def set_new_config(self, handler_name: str, update_interval: float, config_args: dict, modifier_id: int):
         """
@@ -70,13 +66,12 @@ class TesseractLightFace:
         :return: Nothing.
         """
 
-        with self.lock:
-            self.handler_function = self.handlers[handler_name]
-            self.handler_args = self.handler_constructors[handler_name](**config_args)
+        self.handler_function = self.handlers[handler_name]
+        self.handler_args = self.handler_constructors[handler_name](**config_args)
 
-            self.sequence_modifier = self.modifiers[modifier_id]
+        self.sequence_modifier = self.modifiers[modifier_id]
 
-            self.update_interval = update_interval
+        self.update_interval = update_interval
 
     def get_new_sequence(self):
         """
@@ -86,14 +81,10 @@ class TesseractLightFace:
 
         FftSampleRequester.set_is_sample_updated(False)
 
-        with self.lock:
+        if self.generated_sequence is None:
+            return [(0, 0, 0)] * 20
 
-            if self.generated_sequence is None:
-                return [[0,0,0]] * 20
-
-            generated_sequence = self.generated_sequence
-
-        return generated_sequence
+        return self.generated_sequence
 
     def update(self):
         """
@@ -101,21 +92,17 @@ class TesseractLightFace:
         :return:
         """
 
-        while True:
+        if self.handler_function is None:
+            return
 
-            with self.lock:
-                update_interval = self.update_interval
+        if self.next_update < TesseractLightFace.current_timestamp:
+            return
 
-            time.sleep(update_interval or 0)
+        self.next_update = TesseractLightFace.current_timestamp + self.update_interval
 
-            with self.lock:
+        step = self.handler_function(self.handler_args)
 
-                if self.handler_function is None:
-                    continue
+        if self.sequence_modifier is not None:
+            step = self.sequence_modifier(step)
 
-                step = self.handler_function(self.handler_args)
-
-                if self.sequence_modifier is not None:
-                    step = self.sequence_modifier(step)
-
-                self.generated_sequence = step
+        self.generated_sequence = step
