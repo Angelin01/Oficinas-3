@@ -2,6 +2,7 @@
 Description=The Tesseract Project
 Wants=network-online.target bluetooth.target
 After=network-online.target bluetooth.target
+TimeoutStopSpec=5
 
 [Service]
 Restart=on-failure

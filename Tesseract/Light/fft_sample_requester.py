@@ -8,6 +8,8 @@ class FftSampleRequester:
 
     lock = threading.Lock()
 
+
+
     _fft_sample = None
     _sample_updated = False
 
@@ -15,9 +17,9 @@ class FftSampleRequester:
     def request_new_sample():
 
         data = getLoopbackAudioData()
-
+        soundAnalyzer = SoundAnalyzer(data)
         with FftSampleRequester.lock:
-            FftSampleRequester._fft_sample = SoundAnalyzer.getAmplitudes(data)
+            FftSampleRequester._fft_sample = soundAnalyzer.getAmplitudes(data)
             _sample_updated = True
 
     @staticmethod

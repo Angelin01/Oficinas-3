@@ -48,11 +48,14 @@ class TesseractLightFace:
         self.handler_function = None
         self.handler_args = None
 
+        #self.handler_args = create_fft_color_handler_args((0, 255, 0), (0, 0, 255), 1, 80, ColorMode.RGB)
+        #self.handler_function = fft_color_handler
+
         # The final modification to the generated color scheme - rising ring and the sorts.
         self.sequence_modifier = None
 
         # The time it takes for the values in this face to update.
-        self.update_interval = 0
+        self.update_interval = 5
         self.next_update = 0
 
         self.generated_sequence = None
@@ -65,7 +68,7 @@ class TesseractLightFace:
         :param modifier_id: The modifier id to be applied to each generated color sequence.
         :return: Nothing.
         """
-
+        print('new LED handler: ' + handler_name)
         self.handler_function = self.handlers[handler_name]
         self.handler_args = self.handler_constructors[handler_name](**config_args)
 
@@ -95,14 +98,20 @@ class TesseractLightFace:
         if self.handler_function is None:
             return
 
+        self.next_update = TesseractLightFace.current_timestamp + self.update_interval
+
         if self.next_update < TesseractLightFace.current_timestamp:
+            if self.next_update:
+                print('next update: ' + str(self.next_update))
+                print('current timestamp:', TesseractLightFace.current_timestamp)
             return
 
-        self.next_update = TesseractLightFace.current_timestamp + self.update_interval
+        #self.next_update = TesseractLightFace.current_timestamp + self.update_interval
 
         step = self.handler_function(self.handler_args)
 
         if self.sequence_modifier is not None:
             step = self.sequence_modifier(step)
 
+        print(step)
         self.generated_sequence = step
