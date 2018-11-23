@@ -1,8 +1,5 @@
-import numpy as np
-# import matplotlib.pyplot as plt
-
-from FrequencyAnalyzer import FrequencyAnalyzer
 from Audio import Audio
+from FrequencyAnalyzer import FrequencyAnalyzer
 
 
 class SoundAnalyzer():
@@ -14,10 +11,8 @@ class SoundAnalyzer():
 		self.sample_rate = Audio.sample_rate
 		self.sample_spacing = 1 / self.sample_rate
 
-	def getAmplitudes(self, music_data, plot=False):
-		n_bands = 20
+	def getAmplitudes(self, music_data):
 		fourier_amplitudes = FrequencyAnalyzer.calculateFFT(music_data, self.chunk_size,
-		                                                    n_bands=n_bands,
 		                                                    using_scipy=False,
 		                                                    sample_rate=self.sample_rate)
 		return fourier_amplitudes

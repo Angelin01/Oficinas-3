@@ -1,7 +1,8 @@
+from time import sleep
+
 import scipy.fftpack
 from rpi_audio_levels import AudioLevels
 import numpy as np
-from Audio import Audio
 
 bands_intervals = [
 	[0, 31],
@@ -25,51 +26,79 @@ bands_intervals = [
 	[11300, 16000],
 	[16000, 22000]]
 
-def calculateFFT(music_samples, chunk_size, n_bands=20, using_scipy=True,
-                 sample_rate=Audio.sample_rate):
-	window = np.hanning(0)
+
+def calculateFFT(music_samples, chunk_size, using_scipy=True, sample_rate=44100):
+	window = np.blackman(0)
 
 	if len(music_samples) != len(window):
-		window = np.hanning(len(music_samples)).astype(np.float32)
+		window = np.blackman(len(music_samples)).astype(np.float32)
 
 	samples_windowed = music_samples * window
 
 	if using_scipy:
 		fourier = scipy.fftpack.fft(samples_windowed)
+		fourier = np.abs(fourier[:chunk_size])
+		fourier = fourier * 2 / chunk_size
 	else:
 		fourier = gpu(samples_windowed)
 
-	fourier = np.abs(fourier[:chunk_size // 2])
-	fourier = fourier * 2 / chunk_size
-	n_bands = bands(fourier, chunk_size // 2, sample_rate, bands_intervals)
+	bands = customBand(fourier[:chunk_size // 2], sample_rate, bands_intervals)
+	return bands
 
-	return n_bands
+
+def filterInvalidNumbers(levels):
+	for index, value in enumerate(levels):
+		if np.isinf(value):
+			levels[index] = 0
 
 
 def gpu(data):
-	DATA_SIZE = 11
-	BANDS_COUNT = len(data)
-	audio_levels = AudioLevels(DATA_SIZE, BANDS_COUNT)
+	data_size = int(np.log2(len(data)))  # 2**10 = 1024
 
-	bands_indexes = [[i, i + 1] for i in range(Audio.chunk_size*2)]
-	new_data = []
-	for i in data:
-		new_data.append(float(i))
+	last_index = int(2 ** (data_size - 1))
 
+	bands_indexes = [[i, i + 1] for i in range(last_index)]  # maximum index is 2**(10-1)
+
+	audio_levels = AudioLevels(data_size, len(bands_indexes))
+
+	new_data = [float(i) for i in data]
 	data = np.array(new_data, dtype=np.float32)
+
 	levels, _, _ = audio_levels.compute(data, bands_indexes)
+	filterInvalidNumbers(levels)
 	return levels
 
-def bands(fourier, sample_size, sample_rate, bands_intervals):
-	indexes = getIndexFromFrequency(sample_size, sample_rate, bands_intervals)
+
+def bands(fourier, n_bands, sample_rate):
+	frequencies = []
+	levels = []
+	max_frequency = sample_rate // 2
+	bandwidth = max_frequency // n_bands
+	points = int(np.floor(len(fourier) // n_bands))
+	for band in range(n_bands):
+		low_frequency = band * bandwidth
+		high_frequency = low_frequency + bandwidth
+
+		frequencies.append((high_frequency + low_frequency) // 2)
+		points_for_band = fourier[band * points: band * points + points]
+
+		level = max(points_for_band)
+		levels.append(level)
+
+	return levels, frequencies
+
+
+def customBand(fourier, sample_rate, band_frequencies):
+	indexes = getIndexFromFrequency(len(fourier), sample_rate, band_frequencies)
 	levels = []
 	for band in indexes:
-		points_for_band = max(fourier[band[0]: band[1]])
+		points_for_band = fourier[band[0]: band[1]]
 
-		level = sum(points_for_band)
+		level = max(points_for_band)
 		levels.append(level)
 
 	return levels
+
 
 def getIndexFromFrequency(sample_size, sample_rate, bands_frequencies):
 	frequency_spacing = (sample_rate / 2) / sample_size
