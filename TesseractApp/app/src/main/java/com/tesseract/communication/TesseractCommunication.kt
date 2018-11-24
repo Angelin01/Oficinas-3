@@ -2,6 +2,7 @@ package com.tesseract.communication
 
 import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.tesseract.bluetooth.BluetoothController
 import com.tesseract.bluetooth.BluetoothMessageCallback
 import com.tesseract.spotify.SpotifyController
@@ -28,7 +29,7 @@ object TesseractCommunication: BluetoothMessageCallback {
 
 	fun sendRequest(type: String, subtype: String, values: Any) {
 		val newRequest = Request(type, subtype, values)
-		val gson = Gson()
+		val gson: Gson = GsonBuilder().serializeNulls().create()
 		val request: String = gson.toJson(newRequest)
 		Log.d("TAG", "Request: $request")
 		TesseractCommunication.sendCommand(request)

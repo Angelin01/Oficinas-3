@@ -104,7 +104,7 @@ def breathe_handler(args_dict: dict):
 
     color_seq_len = args_dict['color_seq_len']
 
-    step_sequence = [int(color_sequence[color_itr][channel] * wave[0]) for channel in range(3)] * n_leds
+    step_sequence = [[int(color_sequence[color_itr][channel] * wave[0]) for channel in range(3)]] * n_leds
 
     delay_itr += 1
 

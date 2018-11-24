@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.tesseract.communication.TesseractCommunication
 import com.google.gson.reflect.TypeToken
+import com.google.gson.GsonBuilder
 
 
 
@@ -36,7 +37,7 @@ class LightController() : ViewModel() {
 
 	var currentFace: Int = 0
 
-	val gson = Gson()
+	private val gson: Gson = GsonBuilder().serializeNulls().create()
 
 	init {
 		lightPatterns = getPatterns()
@@ -150,7 +151,7 @@ class LightController() : ViewModel() {
 		  "speed": 1,
 		  "intensity" : 80,
 		  "face": null,
-		  "modifier": null
+		  "modifier": "none"
 		},
 		{
 		  "name": "stream",
@@ -161,7 +162,7 @@ class LightController() : ViewModel() {
 		  "speed": 1,
 		  "intensity" : 80,
 		  "face": null,
-		  "modifier": null
+		  "modifier": "none"
 		},
 		{
 		  "name": "FFT",
@@ -172,7 +173,7 @@ class LightController() : ViewModel() {
 		  "speed": 1,
 		  "intensity" : 80,
 		  "face": null,
-		  "modifier": null
+		  "modifier": "none"
 		},
 		{
 		  "name": "FFT Bars",
@@ -183,7 +184,7 @@ class LightController() : ViewModel() {
 		  "speed": 1,
 		  "intensity" : 80,
 		  "face": null,
-		  "modifier": null
+		  "modifier": "none"
 		}
 	]"""
 	}
