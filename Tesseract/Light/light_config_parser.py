@@ -130,7 +130,7 @@ def complete_fft_bars(light_config: dict):
         'low_color': light_config['colors'][0],
         'mid_color': light_config['colors'][1],
         'high_color': light_config['colors'][2],
-        'intensity': light_config['intensity'],
+        'max_intensity': light_config['intensity'],
         'color_mode': ColorMode.RGB
     }
 
