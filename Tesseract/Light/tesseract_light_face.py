@@ -78,7 +78,7 @@ class TesseractLightFace:
         :param modifier_id: The modifier id to be applied to each generated color sequence.
         :return: Nothing.
         """
-        # print('new LED handler: ' + handler_name)
+
         self.handler_function = self.handlers[handler_name]
         self.handler_args = self.handler_constructors[handler_name](**config_args)
 

@@ -8,6 +8,8 @@ from Light.color import ColorMode, Color
 from Light.controllerUtils import sep_bar_levels
 from Light.fft_sample_requester import FftSampleRequester
 
+from Tesseract.Light.controllerUtils import norm, value_map
+
 
 def standard_handler(args_dict: dict):
     """
@@ -129,7 +131,6 @@ def fft_color_handler(args_dict: dict):
     max_intensity_color = args_dict['max_color']
     resolution = args_dict['resolution']
     intensity = args_dict['intensity']
-    max_sample = args_dict['max_fft_sample']
     color_mode = args_dict['color_mode']
 
     # Checking if must update the fft samples.
@@ -148,7 +149,10 @@ def fft_color_handler(args_dict: dict):
             norm_sample += fft_result[sample]
 
         norm_sample /= resolution
-        norm_sample /= max_sample
+        norm_sample = norm(norm_sample, 5, 15)
+
+        if norm_sample < 0:
+            norm_sample = 0
 
         led_color = color_lerp(min_intensity_color, max_intensity_color, norm_sample)
 
@@ -180,7 +184,6 @@ def fft_bars_handler(args_dict: dict):
     mid_freq_color = args_dict['mid_color']
     high_freq_color = args_dict['high_color']
     max_intensity = args_dict['intensity']
-    max_sample = args_dict['max_sample']
 
     if not FftSampleRequester.is_sample_updated():
         FftSampleRequester.request_new_sample()
@@ -197,13 +200,21 @@ def fft_bars_handler(args_dict: dict):
     max_mid = max(mids)
     max_high = max(highs)
 
-    # Setting a scale to be proportioned to 3 LEDs fully lit, according to intensity.
-    scale = 3 * max_intensity / max_sample
+    scale = 3 * max_intensity
 
     # Getting the levels according the scale.
-    low_bar_level = max_low * scale
-    mid_bar_level = max_mid * scale
-    high_bar_level = max_high * scale
+    low_bar_level = value_map(max_low, 5, 15, 0, scale)
+    mid_bar_level = value_map(max_mid, 5, 15, 0, scale)
+    high_bar_level = value_map(max_high, 5, 15, 0, scale)
+
+    if low_bar_level < 0:
+        low_bar_level = 0
+
+    if mid_bar_level < 0:
+        mid_bar_level = 0
+
+    if high_bar_level < 0:
+        high_bar_level = 0
 
     # Getting the intensities for each of the 3 LEDs.
     lows_bar_intensities = sep_bar_levels(low_bar_level, max_intensity)
