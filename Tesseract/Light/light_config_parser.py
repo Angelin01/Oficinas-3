@@ -5,8 +5,8 @@ from Light.color import ColorMode
 
 face_name_to_id = {
     'front': 0,
-    'right': 1,
-    'left': 2,
+    'left': 1,
+    'right': 2,
     'back': 3
 }
 

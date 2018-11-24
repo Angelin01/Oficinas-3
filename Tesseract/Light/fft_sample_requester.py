@@ -11,9 +11,9 @@ class FftSampleRequester:
     def request_new_sample():
 
         data = getLoopbackAudioData()
-        soundAnalyzer = SoundAnalyzer(512) #2048)
-        FftSampleRequester._fft_sample = soundAnalyzer.getAmplitudes(data)
-        _sample_updated = True
+        sound_analyzer = SoundAnalyzer(512) # 2048)
+        FftSampleRequester._fft_sample = sound_analyzer.getAmplitudes(data)
+        FftSampleRequester._sample_updated = True
 
     @staticmethod
     def get_sample():

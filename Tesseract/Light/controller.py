@@ -47,7 +47,6 @@ class TimedLightShow(threading.Thread):
 
         self.acc_lock = threading.Lock()
         self.blue_lock = threading.Lock()
-        print('led process started')
 
     def bluetooth_queue_msg_watcher(self):
 
@@ -89,7 +88,7 @@ class TimedLightShow(threading.Thread):
         random_sequence_len = 20
         random_sequence = gen_random(80, random_sequence_len)
 
-        sleep_time = 0.015
+        sleep_time = 0.030
         step = 0
 
         while step < 40:
@@ -149,7 +148,6 @@ class TimedLightShow(threading.Thread):
             result = (self.light_faces[0].get_new_sequence() + self.light_faces[1].get_new_sequence() +
                       self.light_faces[2].get_new_sequence() + self.light_faces[3].get_new_sequence())
 
-            #print(result)
             # Sending results to the strip.
             ws2812.write2812(self.spi, result)
 

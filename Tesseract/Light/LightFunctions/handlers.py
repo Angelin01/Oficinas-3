@@ -139,9 +139,6 @@ def fft_color_handler(args_dict: dict):
 
     fft_result = FftSampleRequester.get_sample()
 
-    # if fft_result.count(0) != 20:
-    #     print(fft_result)
-
     updated_led_sequence = []
 
     for i in range(0, len(fft_result), resolution):
