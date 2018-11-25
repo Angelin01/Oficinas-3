@@ -12,23 +12,27 @@ available_loopbacks = ['hw:Loopback,1,0', 'hw:Loopback,1,1']
 
 def tryGetLoopback():
 	print('try get loopback')
+
+	slist = []
 	for device in available_loopbacks:
 		print('device', device)
 		try:
 			stream = alsa.PCM(alsa.PCM_CAPTURE, device=device)
-			print(stream)
-			return stream
+			stream.setchannels(n_channels)
+			stream.setrate(sample_rate)
+			stream.setperiodsize(chunk_size)
+			stream.setformat(data_format)
+
+			slist.append(stream)
 		except Exception as exception:
 			print(exception)
 			pass
 
+	return slist
 
-stream = tryGetLoopback()
 
-stream.setchannels(n_channels)
-stream.setrate(sample_rate)
-stream.setperiodsize(chunk_size)
-stream.setformat(data_format)
+stream_list = tryGetLoopback()
+
 
 def getLoopbackAudioData():
 	music_sample_1 = getSampleAudio()
@@ -37,16 +41,23 @@ def getLoopbackAudioData():
 
 
 def getSampleAudio():
-	length = 0
-	while length < chunk_size:
-		length, raw_data = stream.read()
+	for stream in stream_list:
+		length = 0
+		while length < chunk_size:
+			length, raw_data = stream.read()
 
-	# Convert raw sound data to Numpy array
-	fmt = "%dH" % (len(raw_data) / 2)
-	data = struct.unpack(fmt, raw_data)
-	data = np.array(data, dtype='h')
-	return data
+		# Convert raw sound data to Numpy array
+		fmt = "%dH" % (len(raw_data) / 2)
+		data = struct.unpack(fmt, raw_data)
+		data = np.array(data, dtype='h')
+
+		if np.count_nonzero(data) > 0:
+			return data
+		empty_return = data
+
+	return empty_return
 
 
 def stopLoopbackAudioStream():
-	stream.close()
+	for stream in stream_list:
+		stream.close()
