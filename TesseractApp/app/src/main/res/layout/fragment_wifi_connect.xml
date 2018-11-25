@@ -4,39 +4,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".wifi.WifiConnect">
+    tools:context=".wifi.WifiConnect"
+    android:screenOrientation="portrait">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.constraint.ConstraintLayout
-            android:layout_width="248dp"
-            android:layout_height="260dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/relativeLayout5"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/guideline152"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Connect Wi-fi"
+                android:textAlignment="textStart"
+                android:textColor="@color/Commands"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline141"
+            app:layout_constraintEnd_toStartOf="@+id/guideline143"
+            app:layout_constraintStart_toStartOf="@+id/guideline142"
+            app:layout_constraintTop_toTopOf="@+id/guideline140"
+            app:layout_constraintVertical_bias="0.0">
+
+            <TextView
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
                 android:text="WIFI Name"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="@+id/guideline145"
+                app:layout_constraintTop_toTopOf="@+id/guideline144" />
 
             <TextView
                 android:id="@+id/textViewWifiName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="TextView"
                 android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/textView8"
-                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+                app:layout_constraintStart_toStartOf="@+id/guideline145"
+                app:layout_constraintTop_toTopOf="@+id/guideline146" />
 
             <TextView
                 android:id="@+id/textView11"
@@ -44,36 +69,128 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewWifiName"
                 android:layout_alignStart="@+id/textViewWifiName"
-                android:layout_marginTop="16dp"
                 android:text="Password"
-                app:layout_constraintStart_toStartOf="@+id/textViewWifiName"
-                app:layout_constraintTop_toBottomOf="@+id/textViewWifiName" />
+                app:layout_constraintStart_toStartOf="@+id/guideline145"
+                app:layout_constraintTop_toTopOf="@+id/guideline147" />
 
             <EditText
                 android:id="@+id/editTextWifiPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="53dp"
-                android:layout_marginTop="8dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="8dp"
                 android:ems="10"
                 android:inputType="textPassword"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/guideline150"
+                app:layout_constraintEnd_toStartOf="@+id/guideline149"
                 app:layout_constraintHorizontal_bias="0.058"
-                app:layout_constraintStart_toStartOf="@+id/textView11"
-                app:layout_constraintTop_toBottomOf="@+id/textView11" />
+                app:layout_constraintStart_toStartOf="@+id/guideline145"
+                app:layout_constraintTop_toTopOf="@+id/guideline148" />
 
             <Button
                 android:id="@+id/buttonWifiConnect"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
+                android:background="@color/colorPrimaryDark"
                 android:text="Connect"
+                android:textColor="@color/Commands"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextWifiPassword"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toTopOf="@+id/guideline151" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline144"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.06" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline146"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.16" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline147"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.32" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline148"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.42" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline150"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.63" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline151"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.7" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline145"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.06" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline149"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.94" />
 
         </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline140"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline152"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.07" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline141"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.7" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline142"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline143"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.9" />
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>

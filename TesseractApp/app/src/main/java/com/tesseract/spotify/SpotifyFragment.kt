@@ -1,6 +1,7 @@
 package com.tesseract
 
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.view.LayoutInflater
@@ -29,7 +30,7 @@ class SpotifyFragment : Fragment() {
 		if (SpotifyController.isActive) {
 			changeFragment(R.id.home_view_frame, SpotifyList())
 		} else {
-			val buttonSpotifyConnect: RelativeLayout = view.findViewById(R.id.buttonSpotifyConnect)
+			val buttonSpotifyConnect: ConstraintLayout = view.findViewById(R.id.buttonSpotifyConnect)
 			buttonSpotifyConnect.setOnClickListener { SpotifyController.requestSpotifyToken(this.activity) }
 		}
 	}

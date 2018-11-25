@@ -8,10 +8,19 @@ import com.tesseract.bluetooth.BluetoothMessageCallback
 import com.tesseract.communication.TesseractCommunication
 
 class WifiController : ViewModel(), BluetoothMessageCallback {
+	private val REQUEST_SUBTYPE_LIST_WIFI = "list"
+	private val REQUEST_TYPE_WIFI = "wifi"
+	private val REQUEST_SUBTYPE_REQUEST_LIST_WIFI = "request-list"
+	private val REQUEST_SUBTYPE_CONNECT = "connect"
+	private val REQUEST_SUBTYPE_CONNECTION = "connection"
+
 	override fun callbackMessageReceiver(values: Any, subtype: String?) {
-		val gson = Gson()
+		Gson()
 		when (subtype) {
-			"list" -> {
+			REQUEST_SUBTYPE_LIST_WIFI -> {
+				this.wifiList.postValue(getAvailableWifi(values as ArrayList<String>))
+			}
+			REQUEST_SUBTYPE_CONNECTION -> {
 				this.wifiList.postValue(getAvailableWifi(values as ArrayList<String>))
 			}
 
@@ -26,42 +35,23 @@ class WifiController : ViewModel(), BluetoothMessageCallback {
 	}
 
 
+
 	fun connectToWifi(wifi: Wifi) {
 		val gson = Gson()
 		val wifiJsonLog: String = gson.toJson(wifi)
 		Log.d("TAG", wifiJsonLog)
 
 		val wifiJson = gson.toJsonTree(wifi)
-		TesseractCommunication.sendRequest("wifi", "connect", wifiJson)
+		TesseractCommunication.sendRequest(REQUEST_TYPE_WIFI, REQUEST_SUBTYPE_CONNECT, wifiJson)
 	}
 
 	fun requestAvailableWifi() {
-		wifiList.value = availableWifi()
-	}
-
-
-	private val sampleWifiList: String = """[
-    {
-      "signal":-45,
-      "ssid":"OURHOMEWIFI",
-      "encryption_type":"wpa2"
-    },
-    {
-      "signal":-90,
-      "ssid":"Boberg",
-      "encryption_type":"wpa2"
-    }
-]"""
-
-	private fun availableWifi(): List<Wifi> {
 		this.requestWifiList()
-		val gson = Gson()
-		val wifiList: List<Wifi> = gson.fromJson(sampleWifiList, Array<Wifi>::class.java).toList()
-		return wifiList
 	}
+
 
 	private fun requestWifiList() {
-		TesseractCommunication.sendRequest("wifi", "request-list", "null")
+		TesseractCommunication.sendRequest(REQUEST_TYPE_WIFI, REQUEST_SUBTYPE_REQUEST_LIST_WIFI, "null")
 	}
 
 

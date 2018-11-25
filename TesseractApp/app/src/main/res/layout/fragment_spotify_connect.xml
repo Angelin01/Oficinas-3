@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".spotify.SpotifyConnectFragment">
+    tools:context=".spotify.SpotifyConnectFragment"
+    android:screenOrientation="portrait">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/temp"
@@ -34,43 +35,107 @@
                 android:textSize="24sp" />
         </RelativeLayout>
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/buttonSpotifyConnect"
-            android:layout_width="255dp"
-            android:layout_height="153dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@drawable/border"
             android:clickable="true"
             android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintBottom_toTopOf="@+id/guideline122"
+            app:layout_constraintEnd_toStartOf="@+id/guideline123"
+            app:layout_constraintHorizontal_bias="0.733"
+            app:layout_constraintStart_toStartOf="@+id/guideline111"
+            app:layout_constraintTop_toTopOf="@+id/guideline121"
+            app:layout_constraintVertical_bias="0.0">
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView2"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="19dp"
-                android:layout_marginBottom="30dp"
                 android:text="Connect To Spotify"
                 android:textColor="@color/Commands"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline128" />
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="36dp"
-                android:layout_height="34dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="18dp"
-                android:src="@drawable/ic_spotify_light" />
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_spotify_light"
+                app:layout_constraintBottom_toTopOf="@+id/guideline126"
+                app:layout_constraintEnd_toStartOf="@+id/guideline127"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline124"
+                app:layout_constraintTop_toTopOf="@+id/guideline125" />
 
-        </RelativeLayout>
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline124"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.4" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline127"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.6" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline125"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.15" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline126"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.4" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline128"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.55" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline111"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.15" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline123"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.85" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline121"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.35" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline122"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.6" />
 
     </android.support.constraint.ConstraintLayout>
 

@@ -2,18 +2,18 @@ package com.tesseract.communication
 
 
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import com.tesseract.R
-import com.tesseract.bluetooth.BluetoothStatusChangeCallback
 import com.tesseract.bluetooth.BluetoothController
-import com.tesseract.wifi.WifiFragment
 import com.tesseract.bluetooth.BluetoothDeviceList
 import com.tesseract.bluetooth.BluetoothService
+import com.tesseract.bluetooth.BluetoothStatusChangeCallback
+import com.tesseract.wifi.WifiFragment
 import kotlinx.android.synthetic.main.fragment_connections.*
 
 
@@ -27,12 +27,12 @@ class ConnectionsFragment : Fragment(), BluetoothStatusChangeCallback {
 		// Inflate the layout for this fragment
 		val view: View = inflater.inflate(R.layout.fragment_connections, container, false)
 
-		val buttonConnectBluetooth: RelativeLayout = view.findViewById(R.id.buttonConnectTesseract)
+		val buttonConnectBluetooth: ConstraintLayout = view.findViewById(R.id.buttonConnectTesseract)
 		buttonConnectBluetooth.setOnClickListener {
 			changeToFragment(R.id.home_view_frame, BluetoothDeviceList())
 		}
 
-		val buttonConnectWifi: RelativeLayout = view.findViewById(R.id.buttonConnectTesseractWifi)
+		val buttonConnectWifi: ConstraintLayout = view.findViewById(R.id.buttonConnectTesseractWifi)
 		buttonConnectWifi.setOnClickListener {
 			changeToFragment(R.id.home_view_frame, WifiFragment())
 		}

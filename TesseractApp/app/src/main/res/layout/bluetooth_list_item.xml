@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -8,33 +9,62 @@
         android:id="@+id/textViewBluetoothName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/imageViewWifiStrength"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/guideline98"
+        app:layout_constraintTop_toTopOf="@+id/guideline99" />
 
     <TextView
         android:id="@+id/textViewBluetoothAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="TextView"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/textViewBluetoothName"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/textViewBluetoothName"
+        app:layout_constraintStart_toStartOf="@+id/guideline98"
         app:layout_constraintTop_toBottomOf="@+id/textViewBluetoothName" />
 
     <ImageView
         android:id="@+id/imageViewWifiStrength"
-        android:layout_width="44dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline100"
+        app:layout_constraintEnd_toStartOf="@+id/guideline97"
+        app:layout_constraintStart_toStartOf="@+id/guideline96"
+        app:layout_constraintTop_toTopOf="@+id/guideline99"
         app:srcCompat="@drawable/ic_bluetooth" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline96"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline97"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline98"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline99"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline100"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
 </android.support.constraint.ConstraintLayout>
