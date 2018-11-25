@@ -15,7 +15,7 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/relativeLayout5"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="0dp"
             android:background="@color/colorPrimary"
             app:layout_constraintBottom_toTopOf="@+id/guideline26"
             app:layout_constraintEnd_toEndOf="parent"
@@ -76,17 +76,7 @@
             android:layout_marginEnd="39dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@+id/imageViewMusicCover"
-            app:layout_constraintGuide_percent="0.15"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guideline23"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="39dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toStartOf="@+id/imageViewMusicCover"
-            app:layout_constraintGuide_percent="0.15"
+            app:layout_constraintGuide_percent="0.14"
             app:layout_constraintStart_toStartOf="parent" />
 
         <android.support.constraint.Guideline
@@ -96,7 +86,17 @@
             android:layout_marginEnd="39dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@+id/imageViewMusicCover"
-            app:layout_constraintGuide_percent="0.12"
+            app:layout_constraintGuide_percent="0.18"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="39dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@+id/imageViewMusicCover"
+            app:layout_constraintGuide_percent="0.3"
             app:layout_constraintStart_toStartOf="parent" />
 
         <android.support.constraint.Guideline
@@ -106,7 +106,7 @@
             android:layout_marginEnd="39dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@+id/imageViewMusicCover"
-            app:layout_constraintGuide_percent="0.7"
+            app:layout_constraintGuide_percent="0.87"
             app:layout_constraintStart_toStartOf="parent" />
 
         <android.support.constraint.Guideline
@@ -116,7 +116,7 @@
             android:layout_marginEnd="39dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toStartOf="@+id/imageViewMusicCover"
-            app:layout_constraintGuide_percent="0.75"
+            app:layout_constraintGuide_percent="0.70"
             app:layout_constraintStart_toStartOf="parent" />
 
         <android.support.constraint.Guideline
@@ -135,9 +135,10 @@
             android:layout_height="0dp"
             android:background="@color/colorAccent"
             app:layout_constraintBottom_toTopOf="@+id/guideline28"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout5">
+            app:layout_constraintTop_toTopOf="@+id/guideline26">
 
             <ImageView
                 android:id="@+id/imageVIewBluetoothConnection"
@@ -178,11 +179,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/guideline30"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline30">
+            app:layout_constraintTop_toTopOf="@+id/guideline11">
 
             <ImageButton
                 android:id="@+id/buttonPlayShuffle"
@@ -319,19 +320,20 @@
             android:text="@string/music_name"
             android:textColor="@color/Commands"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline11" />
+            app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
         <TextView
             android:id="@+id/textViewMusicBand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/music_artist"
             android:textColor="@color/Commands"
             android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewMusicName" />
@@ -340,16 +342,13 @@
             android:id="@+id/frameLayout2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/guideline30"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/textViewMusicName"
+            app:layout_constraintBottom_toTopOf="@+id/guideline11"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="@+id/guideline31"
-            app:layout_constraintTop_toTopOf="@+id/guideline5">
+            app:layout_constraintTop_toTopOf="@+id/guideline6">
 
             <SeekBar
                 android:id="@+id/seekVolume"
@@ -368,7 +367,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.05" />
+            app:layout_constraintGuide_percent="0.53" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.48" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline10"
@@ -382,14 +388,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.82" />
+            app:layout_constraintGuide_percent="0.4" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.50" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline26"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.07" />
+            app:layout_constraintGuide_percent="0.11" />
 
     </android.support.constraint.ConstraintLayout>
 
