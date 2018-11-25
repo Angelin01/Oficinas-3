@@ -76,7 +76,7 @@ class LightFragment : Fragment() {
 	}
 
 	private fun updateSelectedPattern(light: Light, position: Int) {
-		lightController.selectedPatterns[lightController.currentFace] = light
+		lightController.selectedPatterns[lightController.currentFace] = light.copy()
 		lightController.selectedPatternsIndexes[lightController.currentFace] = position
 	}
 

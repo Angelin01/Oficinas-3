@@ -8,7 +8,7 @@ from Light.color import ColorMode, Color
 from Light.controllerUtils import sep_bar_levels
 from Light.fft_sample_requester import FftSampleRequester
 
-from Tesseract.Light.controllerUtils import norm, value_map
+from Light.controllerUtils import norm, value_map
 
 
 def standard_handler(args_dict: dict):
