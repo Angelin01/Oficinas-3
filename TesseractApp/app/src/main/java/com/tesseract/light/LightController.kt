@@ -87,9 +87,9 @@ class LightController() : ViewModel() {
 
 	fun sendNewLightPattern(editingLight: Light) {
 		addUserPattern(editingLight)
-		val lightJson: JsonElement = gson.toJsonTree(editingLight)
-		Log.d("TAG", lightJson.toString())
-		TesseractCommunication.sendRequest(REQUEST_TYPE, REQUEST_SUBTYPE_NEW_PATTERN, lightJson)
+		//val lightJson: JsonElement = gson.toJsonTree(editingLight)
+		//Log.d("TAG", lightJson.toString())
+		//TesseractCommunication.sendRequest(REQUEST_TYPE, REQUEST_SUBTYPE_NEW_PATTERN, lightJson)
 	}
 
 	fun setConfigurationOnTesseract() {
@@ -168,8 +168,8 @@ class LightController() : ViewModel() {
 		  "name": "FFT",
 		  "description": "",
 		  "pattern" : "fft_color",
-		  "colors": ["#43e1ff", "#00574B", "#D81B60"],
-		  "colors_parameters": ["Low", "Medium", "High"],
+		  "colors": ["#ff0000", "#0000ff"],
+		  "colors_parameters": ["Min", "Max"],
 		  "speed": 1,
 		  "intensity" : 80,
 		  "face": null,
@@ -179,7 +179,7 @@ class LightController() : ViewModel() {
 		  "name": "FFT Bars",
 		  "description": "",
 		  "pattern" : "fft_bars",
-		  "colors": ["#43e1ff", "#00574B", "#D81B60"],
+		  "colors": ["#00ff00", "#ff0000", "#0000ff"],
 		  "colors_parameters": ["Low", "Medium", "High"],
 		  "speed": 1,
 		  "intensity" : 80,
