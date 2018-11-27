@@ -1,5 +1,6 @@
 import requests
 import json
+from time import sleep
 
 
 class SpotifyClient:
@@ -65,6 +66,15 @@ class SpotifyClient:
 		r = requests.put('https://api.spotify.com/v1/me/player/shuffle', headers=self.make_header(), params=payloads)
 		return r.status_code in [200, 204]
 
+	def select_playlist(self, playlist_uri):
+		print('spotify select playlist ' + playlist_uri)
+		playlist_json = '''
+					{
+						"context_uri": "spotify:playlist:''' + playlist_uri + '''"
+					}'''
+		r = requests.put('https://api.spotify.com/v1/me/player/play', headers=self.make_header(), data=playlist_json)
+		return r.status_code in [200, 204]
+
 	def shuffle_state(self):
 		response_json = self.playback_info()
 		try:
@@ -80,6 +90,7 @@ class SpotifyClient:
 			return None
 
 	def playback_info(self):
+		sleep(0.6)
 		r = requests.get('https://api.spotify.com/v1/me/player', headers=self.make_header())
 
 		if r.status_code != 200:

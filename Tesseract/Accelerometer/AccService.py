@@ -39,6 +39,11 @@ class AccService(multiprocessing.Process):
 					elif msg["subtype"] == "connect":
 						spotify_client.connect(msg["value"]["token"], msg["value"]["deviceID"])
 
+					elif msg["subtype"] == "playlist-start":
+						spotify_client.select_playlist(msg["value"])
+						self.send_command_to_app("play")
+						self.update_display()
+
 					elif msg["subtype"] == "command":
 						self.update_display()
 
@@ -93,11 +98,12 @@ class AccService(multiprocessing.Process):
 		pass
 
 	def up_and_down(self):
-		self.display_queue.put(["Pausando", ""])
+		self.display_queue.put(["Pause/play", ""])
 		if self.spotify_client.is_active:
 			if self.spotify_client.is_playing():
 				if self.spotify_client.pause():
 					self.send_command_to_app("pause")
+					self.display_queue.put(["Pausando", ""])
 			else:
 				if self.spotify_client.play():
 					self.send_command_to_app("play")
