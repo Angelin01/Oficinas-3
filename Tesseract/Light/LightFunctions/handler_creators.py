@@ -84,7 +84,7 @@ def create_fft_color_handler_args(min_color: tuple, max_color: tuple,
     handler_args = {
         'min_color': min_color,  # RGB or HSL.
         'max_color': max_color,  # RGB or HSL.
-        'resolution': 20 // resolution,
+        'resolution': resolution,
         'intensity': intensity,
         'color_mode': color_mode
     }

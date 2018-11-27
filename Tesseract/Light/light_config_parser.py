@@ -116,7 +116,7 @@ def complete_fft_color(light_config: dict):
     config_args = {
         'min_color': light_config['colors'][0],
         'max_color': light_config['colors'][1],
-        'resolution': 20,
+        'resolution': 1,
         'intensity': light_config['intensity'],
         'color_mode': ColorMode.RGB
     }

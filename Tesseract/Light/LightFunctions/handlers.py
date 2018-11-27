@@ -10,6 +10,8 @@ from Light.fft_sample_requester import FftSampleRequester
 
 from Light.controllerUtils import norm, value_map
 
+from Tesseract.Light.controllerUtils import value_clamp
+
 
 def standard_handler(args_dict: dict):
     """
@@ -149,10 +151,9 @@ def fft_color_handler(args_dict: dict):
             norm_sample += fft_result[sample]
 
         norm_sample /= resolution
-        norm_sample = norm(norm_sample, 5, 15)
+        norm_sample = norm(norm_sample, 5, 12)
 
-        if norm_sample < 0:
-            norm_sample = 0
+        norm_sample = value_clamp(norm_sample, 0, 1)
 
         led_color = color_lerp(min_intensity_color, max_intensity_color, norm_sample)
 
@@ -207,14 +208,10 @@ def fft_bars_handler(args_dict: dict):
     mid_bar_level = value_map(max_mid, 5, 12, 0, scale)
     high_bar_level = value_map(max_high, 5, 12, 0, scale)
 
-    if low_bar_level < 0:
-        low_bar_level = 0
-
-    if mid_bar_level < 0:
-        mid_bar_level = 0
-
-    if high_bar_level < 0:
-        high_bar_level = 0
+    # Clamping levels between 0 and scale.
+    low_bar_level = value_clamp(low_bar_level, 0, scale)
+    mid_bar_level = value_clamp(mid_bar_level, 0, scale)
+    high_bar_level = value_clamp(high_bar_level, 0, scale)
 
     # Getting the intensities for each of the 3 LEDs.
     lows_bar_intensities = sep_bar_levels(low_bar_level, max_intensity)

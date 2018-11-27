@@ -35,3 +35,12 @@ def norm(value, source_min, source_max):
 def value_map(value, source_min, source_max, target_min, target_max):
     t = (value - source_min) / (source_max - source_min)
     return (1 - t) * target_min + t * target_max
+
+def value_clamp(value, c_min, c_max):
+    if value < c_min:
+        return c_min
+
+    if value > c_max:
+        return c_max
+
+    return value
