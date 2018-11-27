@@ -8,7 +8,7 @@ data_format = alsa.PCM_FORMAT_S16_LE
 n_channels = 1
 sample_rate = 44100
 
-available_loopbacks = ['hw:Loopback,1,0', 'hw:Loopback,1,1']
+available_loopbacks = ['hw:Loopback,1,0', 'hw:Loopback,1,1', 'hw:Loopback,1,2', 'hw:Loopback,1,3']
 
 def tryGetLoopback():
 	print('try get loopback')
