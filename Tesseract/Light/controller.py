@@ -51,32 +51,38 @@ class TimedLightShow(threading.Thread):
     def bluetooth_queue_msg_watcher(self):
 
         while True:
-            msg = self.bluetooth_queue.get()
+            try:
+                msg = self.bluetooth_queue.get()
 
-            print(msg)
+                print(msg)
 
-            parsed_configs = parse_light_config(msg)
+                parsed_configs = parse_light_config(msg)
 
-            with self.blue_lock:
-                for config in parsed_configs:
-                    self.update_face_config(**config)
+                with self.blue_lock:
+                    for config in parsed_configs:
+                        self.update_face_config(**config)
+            except Exception as exception:
+                print('invalid message sent from bluetooth process to light process: ', exception)
 
     def acc_queue_msg_watcher(self):
 
         while True:
-            msg = self.acc_queue.get()
+            try:
+                msg = self.acc_queue.get()
 
-            if 'config' not in msg:
-                continue
+                if 'config' not in msg:
+                    continue
 
-            if msg['config'] == 'shuffle':
-                with self.acc_lock:
-                    self.is_shuffling = True
+                if msg['config'] == 'shuffle':
+                    with self.acc_lock:
+                        self.is_shuffling = True
 
-                self.handle_shuffle_effect()
+                    self.handle_shuffle_effect()
 
-                with self.acc_lock:
-                    self.is_shuffling = False
+                    with self.acc_lock:
+                        self.is_shuffling = False
+            except Exception as exception:
+                print('invalid message sent from accelerometer process to light process: ', exception)
 
     def handle_shuffle_effect(self):
         """

@@ -25,24 +25,27 @@ class AccService(multiprocessing.Process):
 
 	def read_queue(self):
 		while True:
-			msg = self.from_bluetooth_queue.get()
+			try:
+				msg = self.from_bluetooth_queue.get()
 
-			print("spotify message received!")
+				print("spotify message received!")
 
-			if msg["type"] == "spotify":
-				spotify_client = self.thread_communication_list[0]
+				if msg["type"] == "spotify":
+					spotify_client = self.thread_communication_list[0]
 
-				if msg["subtype"] == "disconnect":
-					spotify_client.is_active = False
+					if msg["subtype"] == "disconnect":
+						spotify_client.is_active = False
 
-				elif msg["subtype"] == "connect":
-					spotify_client.connect(msg["value"]["token"], msg["value"]["deviceID"])
+					elif msg["subtype"] == "connect":
+						spotify_client.connect(msg["value"]["token"], msg["value"]["deviceID"])
 
-				elif msg["subtype"] == "command":
-					self.update_display()
+					elif msg["subtype"] == "command":
+						self.update_display()
 
-			else:
-				print("invalid message received by spotify process")
+				else:
+					print("invalid message received by spotify process")
+			except Exception as exception:
+				print("invalid message received by spotify process: ", exception)
 
 	def stop_service(self):
 		self._stop_service = True

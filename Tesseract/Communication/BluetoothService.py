@@ -68,8 +68,8 @@ class BluetoothService(multiprocessing.Process):
 					if spotify_command["subtype"] == "command":
 						print('command: ' + spotify_command["value"])
 						self.bluetooth_send(conn, json.dumps(spotify_command, separators=(',', ':')).encode('utf-8'))
-			except:
-				pass
+			except Exception as exception:
+				print('invalid command being sent through bluetooth: ', exception)
 
 	def answer_client(self, conn):
 		while True:
