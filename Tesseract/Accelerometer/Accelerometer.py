@@ -42,33 +42,22 @@ class Accelerometer:
 
 	def wait_for_movement(self):
 		#region [ Magic numbers ]
-		agitation_intensity_threshold = 40000
-		agitation_counter_max = 70
-		agitation_timeout = 30
+		agitation_intensity_threshold = 20000
+		agitation_counter_max = 15
+		agitation_timeout = 50
 		tilting_counter_max = 60
 		tilting_angle_detection = 30
-
-		axis_movement = 10000
-		gravity = 16384.0
-		updown_tolerance = 4000
-		#endregion
 
 		tilting_right_count = 0
 		tilting_left_count = 0
 		agitation_counter = 0
 		agitation_timer = 0
-		updown_state = 0
+		#endregion
 
 		while True:
-			#gyro_xout = read_word_2c(0x43)
-			#gyro_yout = read_word_2c(0x45)
-			#gyro_zout = read_word_2c(0x47)
 			x = self.read_word_2c(0x3b)
 			y = self.read_word_2c(0x3d)
 			z = self.read_word_2c(0x3f)
-			#x_normalized = x / gravity
-			#y_normalized = y / gravity
-			#z_normalized = z / gravity
 
 			x_rotation = self.get_x_rotation(x, y, z) + 15
 
@@ -102,12 +91,13 @@ class Accelerometer:
 				tilting_left_count = 0
 
 			''' AGITATION DETECTION '''
-			if (math.sqrt((x*x) + (y*y) + (z*z)) > agitation_intensity_threshold) and (x > 0) or (z > 0):
+			if (math.sqrt((x*x) + (y*y) + (z*z)) > agitation_intensity_threshold) and ((x > 0) or (z > 0)):
 				agitation_counter += 1
-			else:
-				agitation_timer += 1
-				if agitation_timer == agitation_timeout:
-					agitation_counter = 0
+
+			agitation_timer += 1
+			if agitation_timer == agitation_timeout:
+				agitation_timer = 0
+				agitation_counter = 0
 
 			if agitation_counter == agitation_counter_max:
 				print('agitation')
