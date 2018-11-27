@@ -191,21 +191,21 @@ def fft_bars_handler(args_dict: dict):
     fft_result = FftSampleRequester.get_sample()
 
     # Separating frequencies.
-    lows = fft_result[0:6]
-    mids = fft_result[6:14]
-    highs = fft_result[14:20]
+    lows = fft_result[0:7]
+    mids = fft_result[7:10]
+    highs = fft_result[10:20]
 
     # Getting greatest sample.
-    max_low = max(lows)
-    max_mid = max(mids)
-    max_high = max(highs)
+    max_low = sum(lows) / len(lows)
+    max_mid = sum(mids) / len(mids)
+    max_high = sum(highs) / len(highs)
 
     scale = 3 * max_intensity
 
     # Getting the levels according the scale.
-    low_bar_level = value_map(max_low, 5, 15, 0, scale)
-    mid_bar_level = value_map(max_mid, 5, 15, 0, scale)
-    high_bar_level = value_map(max_high, 5, 15, 0, scale)
+    low_bar_level = value_map(max_low, 5, 12, 0, scale)
+    mid_bar_level = value_map(max_mid, 5, 12, 0, scale)
+    high_bar_level = value_map(max_high, 5, 12, 0, scale)
 
     if low_bar_level < 0:
         low_bar_level = 0
