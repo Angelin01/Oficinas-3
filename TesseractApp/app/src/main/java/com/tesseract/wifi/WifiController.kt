@@ -59,9 +59,16 @@ class WifiController : ViewModel(), BluetoothMessageCallback {
 		val gson = Gson()
 		val wifiList: ArrayList<Wifi> = ArrayList()
 		for (wifi_available: Any in values) {
-			wifiList.add(gson.fromJson(gson.toJson(wifi_available), Wifi::class.java))
+			val wifiElement = gson.fromJson(gson.toJson(wifi_available), Wifi::class.java)
+			if (wifiElementAlreadyListed(wifiList, wifiElement)) {
+				continue
+			}
+
+			wifiList.add(wifiElement)
 		}
 		return wifiList
 	}
+
+	private fun wifiElementAlreadyListed(wifiList: ArrayList<Wifi>, wifiElement: Wifi) = wifiList.any { wifi -> wifi.ssid == wifiElement.ssid }
 
 }

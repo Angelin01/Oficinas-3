@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.tesseract.R
 import com.tesseract.wifi.WifiListAdapter.OnWifiItemClickListener
 
@@ -45,8 +46,14 @@ class WifiFragment : Fragment(), OnWifiItemClickListener {
 
 		wifiController = activity?.run { ViewModelProviders.of(this).get(WifiController::class.java) }!!
 
-		recyclerViewWifi = view.findViewById(R.id.recyclerViewListWifi)
+		configureWifiDeviceList(view)
+		configureRefreshButton(view)
 
+		return view
+	}
+
+	private fun configureWifiDeviceList(view: View) {
+		recyclerViewWifi = view.findViewById(R.id.recyclerViewListWifi)
 		wifiListAdapter = WifiListAdapter(wifiController.wifiList.value as ArrayList<Wifi>, clickListener)
 		recyclerViewWifi.adapter = wifiListAdapter
 
@@ -57,10 +64,14 @@ class WifiFragment : Fragment(), OnWifiItemClickListener {
 
 		val layoutManager = LinearLayoutManager(this.context)
 		recyclerViewWifi.layoutManager = layoutManager
-
 		recyclerViewWifi.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+	}
 
-		return view
+	private fun configureRefreshButton(view: View) {
+		val refreshButton: Button = view.findViewById(R.id.buttonRefreshWifi)
+		refreshButton.setOnClickListener {
+			wifiController.requestAvailableWifi()
+		}
 	}
 
 }
