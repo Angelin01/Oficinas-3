@@ -4,8 +4,6 @@ import android.os.AsyncTask
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.OutputStreamWriter
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
@@ -65,8 +63,8 @@ class SpotifyHTTPRequests {
                     urlConnection.setRequestProperty("Content-Type", "application/json")
                     urlConnection.doOutput = true
 
-                    val writer = BufferedWriter(OutputStreamWriter(urlConnection.outputStream, "UTF-8"))
-                    writer.write("device_id=" + SpotifyController.deviceID)
+                    /*val writer = BufferedWriter(OutputStreamWriter(urlConnection.outputStream, "UTF-8"))
+                    writer.write("device_id=" + SpotifyController.deviceID)*/
 
                     urlConnection.requestMethod = "POST"
                     val responseCode = urlConnection.responseCode

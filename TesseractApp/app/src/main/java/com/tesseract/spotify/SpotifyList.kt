@@ -23,7 +23,7 @@ class SpotifyList : Fragment(), SpotifyListAdapter.OnSpotifyPlaylistItemClickLis
 
 	override fun onItemClick(item: SpotifyPlaylist) {
 		Toast.makeText(this.context, "Spotify Playlist clicked", Toast.LENGTH_SHORT).show()
-		spotifyController.selectPlaylist(item.name)
+		spotifyController.selectPlaylist(item.uri)
 	}
 
 	private fun updateSpotifyPlaylistList(spotifyPlaylist: ArrayList<SpotifyPlaylist>) {

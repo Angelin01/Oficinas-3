@@ -37,6 +37,7 @@ class SpotifyController: ViewModel() {
                 val userPlaylistJson = element.asJsonObject
 
                 var userPlaylistName = userPlaylistJson.get("name").asString
+				var userPlaylistUri = userPlaylistJson.get("id").asString
                 var musicQuantity = userPlaylistJson.get("tracks").asJsonObject.get("total").asInt
                 var userPlaylistCoverUri = ""
 
@@ -54,7 +55,7 @@ class SpotifyController: ViewModel() {
 
                 if (search == null || search == "" || search in userPlaylistName)
                 {
-                    val spotifyPlaylist = SpotifyPlaylist(name = userPlaylistName, playlist_cover_URI = userPlaylistCoverUri, music_quantity = musicQuantity)
+                    val spotifyPlaylist = SpotifyPlaylist(name = userPlaylistName, uri = userPlaylistUri, playlist_cover_URI = userPlaylistCoverUri, music_quantity = musicQuantity)
                     spotifyPlaylists.add(spotifyPlaylist)
                 }
             }
@@ -67,8 +68,8 @@ class SpotifyController: ViewModel() {
         return spotifyPlaylists
 	}
 
-	fun selectPlaylist(playListName: String) {
-		// spotify.playPlaylist(playListName)
+	fun selectPlaylist(playlistUri: String) {
+		TesseractCommunication.sendRequest("spotify", "playlist-start", playlistUri)
 	}
 
 	companion object {
