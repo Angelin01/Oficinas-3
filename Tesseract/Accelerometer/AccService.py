@@ -51,20 +51,23 @@ class AccService(multiprocessing.Process):
 		self.queue_thread.start()
 
 		while not self._stop_service:
-			reading = self.accelerometer.wait_for_movement()
-			if reading == AccReading.INC_RIGHT:
-				self.inclined_right()
-			elif reading == AccReading.INC_LEFT:
-				self.inclined_left()
-			elif reading == AccReading.INC_FRONT:
-				self.inclined_front()
-			elif reading == AccReading.INC_BACK:
-				self.inclined_back()
-			elif reading == AccReading.UP_DOWN:
-				self.up_and_down()
-			elif reading == AccReading.AGITATION:
-				self.agitated()
-			sleep(1)
+			try:
+				reading = self.accelerometer.wait_for_movement()
+				if reading == AccReading.INC_RIGHT:
+					self.inclined_right()
+				elif reading == AccReading.INC_LEFT:
+					self.inclined_left()
+				elif reading == AccReading.INC_FRONT:
+					self.inclined_front()
+				elif reading == AccReading.INC_BACK:
+					self.inclined_back()
+				elif reading == AccReading.UP_DOWN:
+					self.up_and_down()
+				elif reading == AccReading.AGITATION:
+					self.agitated()
+				sleep(1)
+			except Exception as exception:
+				print('AccService exception: ', exception)
 
 	def inclined_right(self):
 		self.display_queue.put(["Proxima", ""])

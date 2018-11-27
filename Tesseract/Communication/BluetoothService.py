@@ -100,8 +100,7 @@ class BluetoothService(multiprocessing.Process):
 					print('Light command')
 					self.leds_queue.put(msg["value"])
 			except Exception as exception:
-				print(exception)
-				pass
+				print('Bluetooth service exception: ', exception)
 
 	def bluetooth_send(self, conn, wifi_status):
 		msg = wifi_status + b'--end_of_message'
