@@ -76,7 +76,7 @@ class SpotifyController: ViewModel() {
 		val redirectURI = "com.tesseract.app://callback"
 		val deviceName = "tesseract"
 
-		var deviceID: String = ""
+		var deviceID: String = "5d5959f8a7e26f1195739478f1cc29dd13162146"
 		var token: String = ""
 
 		var isActive: Boolean = false
@@ -85,7 +85,9 @@ class SpotifyController: ViewModel() {
 		fun setSpotifyConnection(token: String)
 		{
 			this.token = token
-			deviceID = SpotifyHTTPRequests.getDeviceID()
+			val foundDeviceID = SpotifyHTTPRequests.getDeviceID()
+			if (foundDeviceID != "")
+				deviceID = foundDeviceID
 			TesseractCommunication.sendRequest("spotify", "connect", Gson().toJsonTree(SpotifyConnectionValues(this.token, this.deviceID)))
 
 			isActive = true
@@ -99,10 +101,13 @@ class SpotifyController: ViewModel() {
 			AuthenticationClient.openLoginActivity(activity, MainActivity.spotifyRequestCode, request)
 		}
 
-		private fun getCurrentMusic(): Music {
+		private fun getCurrentMusic(): Music? {
 			val playbackInfoJson = SpotifyHTTPRequests.getPlaybackInfo()
-			if (playbackInfoJson.get("device").asJsonObject.get("id").asString != deviceID)
-				throw DeviceDisconnectedException("Tesseract not connected")
+
+			if (playbackInfoJson == null)
+				return null
+			/*if (playbackInfoJson.get("device").asJsonObject.get("id").asString != deviceID)
+				throw DeviceDisconnectedException("Tesseract not connected")*/
 
 			val musicInfoJson = playbackInfoJson.get("item").asJsonObject
 			val musicName = musicInfoJson.get("name").asString
@@ -149,12 +154,14 @@ class SpotifyController: ViewModel() {
 
 			when (command)
 			{
-				"next", "previous" ->
+				"next", "previous", "play" ->
 				{
 					try
 					{
 						Thread.sleep(500) //TODO: Find better solution to wait for server to update information.
-						val music: Music = getCurrentMusic()
+                        val music: Music? = getCurrentMusic()
+                        if (music == null)
+                            return
 						musicControllerListener.callbackMusisChange(music)
 					}
 					catch (e: DeviceDisconnectedException)
@@ -175,7 +182,9 @@ class SpotifyController: ViewModel() {
 					{
 						try
 						{
-							val music: Music = getCurrentMusic()
+							val music: Music? = getCurrentMusic()
+                            if (music == null)
+                                return
 							musicControllerListener.callbackMusisChange(music)
 						}
 						catch (e: DeviceDisconnectedException)

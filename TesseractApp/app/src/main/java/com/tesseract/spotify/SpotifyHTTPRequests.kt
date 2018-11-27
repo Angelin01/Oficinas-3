@@ -126,7 +126,7 @@ class SpotifyHTTPRequests {
                     urlConnection.setRequestProperty("Content-Type", "application/json")
 
                     val responseCode = urlConnection.responseCode
-                    if (responseCode == HttpURLConnection.HTTP_OK)
+                    if (responseCode == HttpURLConnection.HTTP_NO_CONTENT || responseCode == HttpURLConnection.HTTP_OK)
                         playbackInfo = urlConnection.inputStream.bufferedReader().use(BufferedReader::readText).toString()
                     else
                     {
@@ -187,9 +187,13 @@ class SpotifyHTTPRequests {
             PlaylistNavigationPutRequest().execute("https://api.spotify.com/v1/me/player/" + command).get()
         }
 
-        fun getPlaybackInfo(): JsonObject
+        fun getPlaybackInfo(): JsonObject?
         {
             val playbackInfo = PlaybackInfoRequest().execute("https://api.spotify.com/v1/me/player").get()
+
+            if (playbackInfo == "")
+                return null
+
             return JsonParser().parse(playbackInfo).asJsonObject
         }
 
