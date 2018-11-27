@@ -159,7 +159,7 @@ class LightController() : ViewModel() {
 		  "pattern" : "stream",
 		  "colors": [],
 		  "colors_parameters": [],
-		  "speed": 1,
+		  "speed": 4,
 		  "intensity" : 80,
 		  "face": null,
 		  "modifier": "none"
@@ -168,18 +168,18 @@ class LightController() : ViewModel() {
 		  "name": "FFT",
 		  "description": "",
 		  "pattern" : "fft_color",
-		  "colors": ["#ff0000", "#0000ff"],
+		  "colors": ["#00ff00", "#ff0000"],
 		  "colors_parameters": ["Min", "Max"],
 		  "speed": 1,
 		  "intensity" : 80,
 		  "face": null,
-		  "modifier": "none"
+		  "modifier": "rising"
 		},
 		{
 		  "name": "FFT Bars",
 		  "description": "",
 		  "pattern" : "fft_bars",
-		  "colors": ["#00ff00", "#ff0000", "#0000ff"],
+		  "colors": ["#ff0000", "#00ff00", "#0000ff"],
 		  "colors_parameters": ["Low", "Medium", "High"],
 		  "speed": 1,
 		  "intensity" : 80,
