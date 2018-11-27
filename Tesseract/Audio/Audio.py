@@ -41,6 +41,9 @@ def getLoopbackAudioData():
 
 
 def getSampleAudio():
+	if stream_list is None:
+		return None
+
 	for stream in stream_list:
 		length = 0
 		while length < chunk_size:

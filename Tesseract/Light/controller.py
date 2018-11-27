@@ -51,32 +51,38 @@ class TimedLightShow(threading.Thread):
     def bluetooth_queue_msg_watcher(self):
 
         while True:
-            msg = self.bluetooth_queue.get()
+            try:
+                msg = self.bluetooth_queue.get()
 
-            print(msg)
+                print(msg)
 
-            parsed_configs = parse_light_config(msg)
+                parsed_configs = parse_light_config(msg)
 
-            with self.blue_lock:
-                for config in parsed_configs:
-                    self.update_face_config(**config)
+                with self.blue_lock:
+                    for config in parsed_configs:
+                        self.update_face_config(**config)
+            except Exception as exception:
+                print('invalid message sent from bluetooth process to light process: ', exception)
 
     def acc_queue_msg_watcher(self):
 
         while True:
-            msg = self.acc_queue.get()
+            try:
+                msg = self.acc_queue.get()
 
-            if 'config' not in msg:
-                continue
+                if 'config' not in msg:
+                    continue
 
-            if msg['config'] == 'shuffle':
-                with self.acc_lock:
-                    self.is_shuffling = True
+                if msg['config'] == 'shuffle':
+                    with self.acc_lock:
+                        self.is_shuffling = True
 
-                self.handle_shuffle_effect()
+                    self.handle_shuffle_effect()
 
-                with self.acc_lock:
-                    self.is_shuffling = False
+                    with self.acc_lock:
+                        self.is_shuffling = False
+            except Exception as exception:
+                print('invalid message sent from accelerometer process to light process: ', exception)
 
     def handle_shuffle_effect(self):
         """
@@ -126,37 +132,39 @@ class TimedLightShow(threading.Thread):
         self.bluetooth_queue_watcher.start()
 
         while True:
+            try:
+                with self.acc_lock:
+                    is_shuffling = self.is_shuffling
 
-            with self.acc_lock:
-                is_shuffling = self.is_shuffling
+                if is_shuffling:
+                    time.sleep(self.controller_interval)
+                    continue
 
-            if is_shuffling:
-                time.sleep(self.controller_interval)
-                continue
+                update_start = time.time()
+                TesseractLightFace.current_timestamp = update_start
 
-            update_start = time.time()
-            TesseractLightFace.current_timestamp = update_start
+                with self.blue_lock:
+                    for i in range(4):
+                        self.light_faces[i].update()
 
-            with self.blue_lock:
-                for i in range(4):
-                    self.light_faces[i].update()
+                update_time = time.time() - update_start
 
-            update_time = time.time() - update_start
+                iteration_sleep_time = self.controller_interval - update_time
 
-            iteration_sleep_time = self.controller_interval - update_time
+                result = (self.light_faces[0].get_new_sequence() + self.light_faces[1].get_new_sequence() +
+                          self.light_faces[2].get_new_sequence() + self.light_faces[3].get_new_sequence())
 
-            result = (self.light_faces[0].get_new_sequence() + self.light_faces[1].get_new_sequence() +
-                      self.light_faces[2].get_new_sequence() + self.light_faces[3].get_new_sequence())
+                # Sending results to the strip.
+                ws2812.write2812(self.spi, result)
 
-            # Sending results to the strip.
-            ws2812.write2812(self.spi, result)
+                if iteration_sleep_time > 0:
+                    # Sleeps the thread for a moment.
+                    time.sleep(iteration_sleep_time)
 
-            if iteration_sleep_time > 0:
-                # Sleeps the thread for a moment.
-                time.sleep(iteration_sleep_time)
-
-            if self.stop_event.is_set():
-                break
+                if self.stop_event.is_set():
+                    break
+            except Exception as exception:
+                print('LightService exception: ', exception)
 
     def stop(self):
         self.stop_event.set()

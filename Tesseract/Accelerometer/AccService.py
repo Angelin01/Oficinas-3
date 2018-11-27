@@ -25,24 +25,32 @@ class AccService(multiprocessing.Process):
 
 	def read_queue(self):
 		while True:
-			msg = self.from_bluetooth_queue.get()
+			try:
+				msg = self.from_bluetooth_queue.get()
 
-			print("spotify message received!")
+				print("spotify message received!")
 
-			if msg["type"] == "spotify":
-				spotify_client = self.thread_communication_list[0]
+				if msg["type"] == "spotify":
+					spotify_client = self.thread_communication_list[0]
 
-				if msg["subtype"] == "disconnect":
-					spotify_client.is_active = False
+					if msg["subtype"] == "disconnect":
+						spotify_client.is_active = False
 
-				elif msg["subtype"] == "connect":
-					spotify_client.connect(msg["value"]["token"], msg["value"]["deviceID"])
+					elif msg["subtype"] == "connect":
+						spotify_client.connect(msg["value"]["token"], msg["value"]["deviceID"])
 
-				elif msg["subtype"] == "command":
-					self.update_display()
+					elif msg["subtype"] == "playlist-start":
+						spotify_client.select_playlist(msg["value"])
+						self.send_command_to_app("play")
+						self.update_display()
 
-			else:
-				print("invalid message received by spotify process")
+					elif msg["subtype"] == "command":
+						self.update_display()
+
+				else:
+					print("invalid message received by spotify process")
+			except Exception as exception:
+				print("invalid message received by spotify process: ", exception)
 
 	def stop_service(self):
 		self._stop_service = True
@@ -51,20 +59,23 @@ class AccService(multiprocessing.Process):
 		self.queue_thread.start()
 
 		while not self._stop_service:
-			reading = self.accelerometer.wait_for_movement()
-			if reading == AccReading.INC_RIGHT:
-				self.inclined_right()
-			elif reading == AccReading.INC_LEFT:
-				self.inclined_left()
-			elif reading == AccReading.INC_FRONT:
-				self.inclined_front()
-			elif reading == AccReading.INC_BACK:
-				self.inclined_back()
-			elif reading == AccReading.UP_DOWN:
-				self.up_and_down()
-			elif reading == AccReading.AGITATION:
-				self.agitated()
-			sleep(1)
+			try:
+				reading = self.accelerometer.wait_for_movement()
+				if reading == AccReading.INC_RIGHT:
+					self.inclined_right()
+				elif reading == AccReading.INC_LEFT:
+					self.inclined_left()
+				elif reading == AccReading.INC_FRONT:
+					self.inclined_front()
+				elif reading == AccReading.INC_BACK:
+					self.inclined_back()
+				elif reading == AccReading.UP_DOWN:
+					self.up_and_down()
+				elif reading == AccReading.AGITATION:
+					self.agitated()
+				sleep(1)
+			except Exception as exception:
+				print('AccService exception: ', exception)
 
 	def inclined_right(self):
 		self.display_queue.put(["Proxima", ""])
@@ -87,11 +98,12 @@ class AccService(multiprocessing.Process):
 		pass
 
 	def up_and_down(self):
-		self.display_queue.put(["Pausando", ""])
+		self.display_queue.put(["Pause/play", ""])
 		if self.spotify_client.is_active:
 			if self.spotify_client.is_playing():
 				if self.spotify_client.pause():
 					self.send_command_to_app("pause")
+					self.display_queue.put(["Pausando", ""])
 			else:
 				if self.spotify_client.play():
 					self.send_command_to_app("play")

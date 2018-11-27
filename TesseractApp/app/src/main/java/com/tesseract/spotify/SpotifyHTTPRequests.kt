@@ -4,8 +4,6 @@ import android.os.AsyncTask
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.OutputStreamWriter
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
@@ -65,8 +63,8 @@ class SpotifyHTTPRequests {
                     urlConnection.setRequestProperty("Content-Type", "application/json")
                     urlConnection.doOutput = true
 
-                    val writer = BufferedWriter(OutputStreamWriter(urlConnection.outputStream, "UTF-8"))
-                    writer.write("device_id=" + SpotifyController.deviceID)
+                    /*val writer = BufferedWriter(OutputStreamWriter(urlConnection.outputStream, "UTF-8"))
+                    writer.write("device_id=" + SpotifyController.deviceID)*/
 
                     urlConnection.requestMethod = "POST"
                     val responseCode = urlConnection.responseCode
@@ -126,7 +124,7 @@ class SpotifyHTTPRequests {
                     urlConnection.setRequestProperty("Content-Type", "application/json")
 
                     val responseCode = urlConnection.responseCode
-                    if (responseCode == HttpURLConnection.HTTP_OK)
+                    if (responseCode == HttpURLConnection.HTTP_NO_CONTENT || responseCode == HttpURLConnection.HTTP_OK)
                         playbackInfo = urlConnection.inputStream.bufferedReader().use(BufferedReader::readText).toString()
                     else
                     {
@@ -187,9 +185,13 @@ class SpotifyHTTPRequests {
             PlaylistNavigationPutRequest().execute("https://api.spotify.com/v1/me/player/" + command).get()
         }
 
-        fun getPlaybackInfo(): JsonObject
+        fun getPlaybackInfo(): JsonObject?
         {
             val playbackInfo = PlaybackInfoRequest().execute("https://api.spotify.com/v1/me/player").get()
+
+            if (playbackInfo == "")
+                return null
+
             return JsonParser().parse(playbackInfo).asJsonObject
         }
 
