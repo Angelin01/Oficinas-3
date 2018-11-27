@@ -10,7 +10,7 @@ from Light.fft_sample_requester import FftSampleRequester
 
 from Light.controllerUtils import norm, value_map
 
-from Tesseract.Light.controllerUtils import value_clamp
+from Light.controllerUtils import value_clamp
 
 
 def standard_handler(args_dict: dict):
