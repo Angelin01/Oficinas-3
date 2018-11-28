@@ -6,13 +6,18 @@ import android.util.Log
 import com.google.gson.Gson
 import com.tesseract.bluetooth.BluetoothMessageCallback
 import com.tesseract.communication.TesseractCommunication
+import com.google.gson.reflect.TypeToken
+
+
 
 class WifiController : ViewModel(), BluetoothMessageCallback {
+
 	private val REQUEST_SUBTYPE_LIST_WIFI = "list"
 	private val REQUEST_TYPE_WIFI = "wifi"
 	private val REQUEST_SUBTYPE_REQUEST_LIST_WIFI = "request-list"
 	private val REQUEST_SUBTYPE_CONNECT = "connect"
 	private val REQUEST_SUBTYPE_CONNECTION = "connection"
+	private val REQUEST_SUBTYPE_CONNECTION_STATUS = "connection-status"
 
 	override fun callbackMessageReceiver(values: Any, subtype: String?) {
 		Gson()
@@ -23,11 +28,17 @@ class WifiController : ViewModel(), BluetoothMessageCallback {
 			REQUEST_SUBTYPE_CONNECTION -> {
 				this.wifiList.postValue(getAvailableWifi(values as ArrayList<String>))
 			}
+			REQUEST_SUBTYPE_CONNECTION_STATUS -> {
+				updateWifiStatus(values)
+			}
 
 		}
 	}
 
+
 	var wifiList: MutableLiveData<List<Wifi>> = MutableLiveData()
+	var wifiCallback: WifiStatusChangeCallback? = null
+	var wifiConnectCallback: WifiStatusChangeCallback? = null
 
 	init {
 		wifiList.value = ArrayList()
@@ -71,4 +82,28 @@ class WifiController : ViewModel(), BluetoothMessageCallback {
 
 	private fun wifiElementAlreadyListed(wifiList: ArrayList<Wifi>, wifiElement: Wifi) = wifiList.any { wifi -> wifi.ssid == wifiElement.ssid }
 
+	companion object {
+		var connected: Boolean = false
+		var connectedSSID: String? = null
+	}
+
+	private fun updateWifiStatus(values: Any) {
+		val gson = Gson()
+		val type = object : TypeToken<HashMap<String, String>>() {}.type
+		val value: HashMap<String, String> = gson.fromJson(values.toString(), type)
+
+		WifiController.connected = false
+		WifiController.connectedSSID = null
+
+		if (value.isEmpty()) {
+			return
+		}
+
+		WifiController.connected = true
+		val ssid = value["ssid"]
+		WifiController.connectedSSID = ssid
+
+		wifiCallback?.onWifiStatusChange(true, ssid)
+		wifiConnectCallback?.onWifiStatusChange(true, ssid)
+	}
 }

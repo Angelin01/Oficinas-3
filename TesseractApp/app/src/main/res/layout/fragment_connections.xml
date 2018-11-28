@@ -83,7 +83,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/relativeLayout3"
+        android:id="@+id/relativeConnectionWifiStatus"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_alignParentStart="true"
@@ -94,7 +94,7 @@
         app:layout_constraintTop_toBottomOf="@+id/guideline4">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textViewWifiStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/not_connected"

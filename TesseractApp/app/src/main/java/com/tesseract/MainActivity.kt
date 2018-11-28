@@ -22,9 +22,6 @@ import com.tesseract.light.LightFragment
 import com.tesseract.communication.ConnectionsFragment
 import com.tesseract.communication.TesseractCommunication
 import com.tesseract.spotify.SpotifyController
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 
 class MainActivity : AppCompatActivity() {
 
@@ -208,7 +205,7 @@ class MainActivity : AppCompatActivity() {
 
 	fun updateStatusBluetoothView(connected: Boolean) {
 	    notifyHomeFragment(connected)
-	    notifyConnectinoFragment(connected)
+	    notifyConnectionFragment(connected)
     }
 
 	private fun notifyHomeFragment(connected: Boolean) {
@@ -218,7 +215,7 @@ class MainActivity : AppCompatActivity() {
 		(mCallback as HomeFragment).onStatusChange(connected)
 	}
 
-	private fun notifyConnectinoFragment(connected: Boolean) {
+	private fun notifyConnectionFragment(connected: Boolean) {
 		val connectionFragment = this.supportFragmentManager.findFragmentByTag("connection") ?: return
 
 		mCallback = connectionFragment as BluetoothStatusChangeCallback

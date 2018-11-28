@@ -12,10 +12,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import com.tesseract.R
 import com.tesseract.wifi.WifiListAdapter.OnWifiItemClickListener
 
-class WifiFragment : Fragment(), OnWifiItemClickListener {
+class WifiFragment : Fragment(), OnWifiItemClickListener, WifiStatusChangeCallback {
 
 	private fun updateWifiList(wifiList: ArrayList<Wifi>) {
 		if (activity != null) {
@@ -45,6 +46,7 @@ class WifiFragment : Fragment(), OnWifiItemClickListener {
 		val view: View = inflater.inflate(R.layout.fragment_wifi, container, false)
 
 		wifiController = activity?.run { ViewModelProviders.of(this).get(WifiController::class.java) }!!
+		wifiController.wifiConnectCallback = this
 
 		configureWifiDeviceList(view)
 		configureRefreshButton(view)
@@ -71,6 +73,20 @@ class WifiFragment : Fragment(), OnWifiItemClickListener {
 		val refreshButton: Button = view.findViewById(R.id.buttonRefreshWifi)
 		refreshButton.setOnClickListener {
 			wifiController.requestAvailableWifi()
+		}
+	}
+
+	override fun onWifiStatusChange(connected: Boolean, ssid: String?) {
+		if (activity == null) {
+			return
+		}
+
+		var message = "Wifi Connected with $ssid"
+		if (!connected) {
+			message = "Wifi Disconnected"
+		}
+		activity!!.runOnUiThread {
+			Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 		}
 	}
 
