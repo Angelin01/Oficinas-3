@@ -81,7 +81,7 @@ class WifiFragment : Fragment(), OnWifiItemClickListener, WifiStatusChangeCallba
 			return
 		}
 
-		var message = "Wifi Connected with $ssid"
+		var message = "Wifi Connected to $ssid"
 		if (!connected) {
 			message = "Wifi Disconnected"
 		}

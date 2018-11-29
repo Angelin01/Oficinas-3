@@ -16,8 +16,7 @@ class WifiController : ViewModel(), BluetoothMessageCallback {
 	private val REQUEST_TYPE_WIFI = "wifi"
 	private val REQUEST_SUBTYPE_REQUEST_LIST_WIFI = "request-list"
 	private val REQUEST_SUBTYPE_CONNECT = "connect"
-	private val REQUEST_SUBTYPE_CONNECTION = "connection"
-	private val REQUEST_SUBTYPE_CONNECTION_STATUS = "connection-status"
+	private val REQUEST_SUBTYPE_CONNECTION = "connected"
 
 	override fun callbackMessageReceiver(values: Any, subtype: String?) {
 		Gson()
@@ -26,9 +25,6 @@ class WifiController : ViewModel(), BluetoothMessageCallback {
 				this.wifiList.postValue(getAvailableWifi(values as ArrayList<String>))
 			}
 			REQUEST_SUBTYPE_CONNECTION -> {
-				this.wifiList.postValue(getAvailableWifi(values as ArrayList<String>))
-			}
-			REQUEST_SUBTYPE_CONNECTION_STATUS -> {
 				updateWifiStatus(values)
 			}
 
@@ -37,7 +33,6 @@ class WifiController : ViewModel(), BluetoothMessageCallback {
 
 
 	var wifiList: MutableLiveData<List<Wifi>> = MutableLiveData()
-	var wifiCallback: WifiStatusChangeCallback? = null
 	var wifiConnectCallback: WifiStatusChangeCallback? = null
 
 	init {
@@ -103,7 +98,6 @@ class WifiController : ViewModel(), BluetoothMessageCallback {
 		val ssid = value["ssid"]
 		WifiController.connectedSSID = ssid
 
-		wifiCallback?.onWifiStatusChange(true, ssid)
 		wifiConnectCallback?.onWifiStatusChange(true, ssid)
 	}
 }

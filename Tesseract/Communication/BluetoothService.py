@@ -117,7 +117,7 @@ class BluetoothService(multiprocessing.Process):
 
 	@staticmethod
 	def connect_wifi(value):
-		json_list = {"type": "wifi", "subtype": "return", "value": {"success": False, "addr": None}}
+		json_list = {"type": "wifi", "subtype": "connected", "value": {"success": False, "addr": None}}
 
 		for cell in list(Cell.all('wlan0')):
 			if cell.ssid == value['ssid']:
@@ -135,7 +135,7 @@ class BluetoothService(multiprocessing.Process):
 
 				try:
 					addr = scheme.activate()
-					json_list.get("value").update({"success": True, "addr": addr})
+					json_list.get("value").update({"success": True, "ssid": value['ssid']})
 				except ConnectionError:
 					scheme.delete()
 
