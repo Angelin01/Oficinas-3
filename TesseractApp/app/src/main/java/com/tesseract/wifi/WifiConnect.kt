@@ -11,10 +11,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.tesseract.R
 
 
-class WifiConnect : Fragment() {
+class WifiConnect : Fragment(), WifiStatusChangeCallback {
 
 	private lateinit var wifiController: WifiController
 
@@ -34,11 +35,19 @@ class WifiConnect : Fragment() {
 		val buttonWifiConnect: Button = view.findViewById(R.id.buttonWifiConnect)
 		buttonWifiConnect.setOnClickListener {
 			Log.d("TAG", "Password: ${editTextWifiPassword.text}")
-			val wifiConnect: Wifi = Wifi(wifi.ssid, null, null, editTextWifiPassword.text.toString())
+			val wifiConnect = Wifi(wifi.ssid, null, null, editTextWifiPassword.text.toString())
 			wifiController.connectToWifi(wifiConnect)
 		}
 		return view
 	}
 
+	private fun updateWifiStatus(ssid: String?) {
+		Toast.makeText(context, "Wifi Connected: $ssid", Toast.LENGTH_SHORT).show()
+
+	}
+
+	override fun onWifiStatusChange(connected: Boolean, ssid: String?) {
+		updateWifiStatus(ssid)
+	}
 
 }

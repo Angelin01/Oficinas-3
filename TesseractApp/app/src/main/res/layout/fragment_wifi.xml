@@ -47,7 +47,7 @@
             app:layout_constraintTop_toTopOf="@+id/guideline137" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonRefreshWifi"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

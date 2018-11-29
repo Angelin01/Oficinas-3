@@ -1,6 +1,7 @@
 package com.tesseract.communication
 
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
@@ -13,7 +14,9 @@ import com.tesseract.bluetooth.BluetoothController
 import com.tesseract.bluetooth.BluetoothDeviceList
 import com.tesseract.bluetooth.BluetoothService
 import com.tesseract.bluetooth.BluetoothStatusChangeCallback
+import com.tesseract.wifi.WifiController
 import com.tesseract.wifi.WifiFragment
+import com.tesseract.wifi.WifiStatusChangeCallback
 import kotlinx.android.synthetic.main.fragment_connections.*
 
 
@@ -22,6 +25,7 @@ class ConnectionsFragment : Fragment(), BluetoothStatusChangeCallback {
 	override fun onStatusChange(connected: Boolean) {
 		updateBluetoothStatus()
 	}
+
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		// Inflate the layout for this fragment
@@ -66,5 +70,4 @@ class ConnectionsFragment : Fragment(), BluetoothStatusChangeCallback {
 			textViewBluetoothStatus.text = "Tesseract Disconnected"
 		}
 	}
-
 }

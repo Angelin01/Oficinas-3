@@ -40,25 +40,11 @@ class MusicController : ViewModel(), BluetoothMessageCallback, SpotifyController
 
 	val sampleMusic: String = """[
     {
-      "name": "music 1",
-      "band_name": "band 1",
-      "album_cover_url": "http://animallemundopet.com.br/wp-content/uploads/2014/10/Los-gatos-nos-ignoran-1-777x518.jpg",
+      "name": "Time",
+      "band_name": "Pink Floyd",
+      "album_cover_url": "https://i.scdn.co/image/e5f5a50956c2c7dd5411051ca507b4f771d6d816",
       "duration": "1.0",
       "volume": "30"
-    },
-    {
-      "name": "music 2",
-      "band_name": "band 2",
-      "album_cover_url": "https://i.ytimg.com/vi/_43lSXa1yDs/maxresdefault.jpg",
-      "duration": "2.0",
-      "volume": "80"
-    },
-    {
-      "name": "music 3",
-      "band_name": "band 3",
-      "album_cover_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiEzGp5Ww0avJTR2SiwaXEmE7vJQ__e-vaq-D4Yz4p1mN96_7SXQ",
-      "duration": "3.0",
-      "volume": "50"
     }
 ]"""
 
@@ -77,7 +63,7 @@ class MusicController : ViewModel(), BluetoothMessageCallback, SpotifyController
 	fun play() {
 		player.value = player.value!!.copy(playing = true)
 		sendCommand(COMMAND_PLAY)
-		this.music.value = getMusic(musicIndex)
+//		this.music.value = getMusic(musicIndex)
 	}
 
 	private fun sendCommand(command: String) {
@@ -147,11 +133,12 @@ class MusicController : ViewModel(), BluetoothMessageCallback, SpotifyController
 
 		// load last music from memory
 		val lastMusic: String = """{
-  name: "music 2",
-  band_name: "band 2",
-  album_cover_url: "https://i.ytimg.com/vi/_43lSXa1yDs/maxresdefault.jpg",
-  duration: 2.0
-}"""
+      "name": "Time",
+      "band_name": "Pink Floyd",
+      "album_cover_url": "https://i.scdn.co/image/e5f5a50956c2c7dd5411051ca507b4f771d6d816",
+      "duration": "1.0",
+      "volume": "30"
+    }"""
 
 		val gson = Gson()
 		this.music.value = gson.fromJson(lastMusic, Music::class.java)

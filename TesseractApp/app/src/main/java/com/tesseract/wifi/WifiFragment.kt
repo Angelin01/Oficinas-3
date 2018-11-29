@@ -11,10 +11,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
 import com.tesseract.R
 import com.tesseract.wifi.WifiListAdapter.OnWifiItemClickListener
 
-class WifiFragment : Fragment(), OnWifiItemClickListener {
+class WifiFragment : Fragment(), OnWifiItemClickListener, WifiStatusChangeCallback {
 
 	private fun updateWifiList(wifiList: ArrayList<Wifi>) {
 		if (activity != null) {
@@ -44,9 +46,16 @@ class WifiFragment : Fragment(), OnWifiItemClickListener {
 		val view: View = inflater.inflate(R.layout.fragment_wifi, container, false)
 
 		wifiController = activity?.run { ViewModelProviders.of(this).get(WifiController::class.java) }!!
+		wifiController.wifiConnectCallback = this
 
+		configureWifiDeviceList(view)
+		configureRefreshButton(view)
+
+		return view
+	}
+
+	private fun configureWifiDeviceList(view: View) {
 		recyclerViewWifi = view.findViewById(R.id.recyclerViewListWifi)
-
 		wifiListAdapter = WifiListAdapter(wifiController.wifiList.value as ArrayList<Wifi>, clickListener)
 		recyclerViewWifi.adapter = wifiListAdapter
 
@@ -57,10 +66,28 @@ class WifiFragment : Fragment(), OnWifiItemClickListener {
 
 		val layoutManager = LinearLayoutManager(this.context)
 		recyclerViewWifi.layoutManager = layoutManager
-
 		recyclerViewWifi.addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
+	}
 
-		return view
+	private fun configureRefreshButton(view: View) {
+		val refreshButton: Button = view.findViewById(R.id.buttonRefreshWifi)
+		refreshButton.setOnClickListener {
+			wifiController.requestAvailableWifi()
+		}
+	}
+
+	override fun onWifiStatusChange(connected: Boolean, ssid: String?) {
+		if (activity == null) {
+			return
+		}
+
+		var message = "Wifi Connected to $ssid"
+		if (!connected) {
+			message = "Wifi Disconnected"
+		}
+		activity!!.runOnUiThread {
+			Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+		}
 	}
 
 }

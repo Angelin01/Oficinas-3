@@ -129,6 +129,10 @@ class LightController() : ViewModel() {
 		return FRONT_FACE_INDEX
 	}
 
+	fun deletePattern(light: Light) {
+		this.lightPatterns.remove(light)
+	}
+
 	companion object {
 		private const val sampleLights: String = """[
 		{
