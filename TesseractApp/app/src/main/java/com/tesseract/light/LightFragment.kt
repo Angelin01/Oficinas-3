@@ -12,6 +12,7 @@ import android.widget.*
 import com.tesseract.R
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileOutputStream
 
 
 class LightFragment : Fragment() {
@@ -46,6 +47,7 @@ class LightFragment : Fragment() {
 		setupPatternSpinner(view)
 		setupEditPatternsButton(view, savedInstanceState)
 		setupFinishSelectButton(view)
+		setupDeletePatternButton(view)
 
 		return view
 	}
@@ -75,6 +77,17 @@ class LightFragment : Fragment() {
 		}
 	}
 
+	private fun setupDeletePatternButton(view: View) {
+		val imageButtonDeletePattern: ImageButton = view.findViewById(R.id.imageButtonDeletePattern)
+		imageButtonDeletePattern.setOnClickListener {
+			lightController.deletePattern(lightController.selectedPatterns[lightController.currentFace]!!)
+			updateLightParameters(lightController.lightPatterns[0])
+			updateSelectedPattern(lightController.lightPatterns[0], 0)
+			writeToMemory(lightController.getListPatternsAsString().toString())
+			spinner.setSelection(0)
+		}
+	}
+
 	private fun updateSelectedPattern(light: Light, position: Int) {
 		lightController.selectedPatterns[lightController.currentFace] = light.copy()
 		lightController.selectedPatternsIndexes[lightController.currentFace] = position
@@ -94,14 +107,10 @@ class LightFragment : Fragment() {
 				lightController.currentFace = position
 				updateLightParameters(lightController.selectedPatterns[lightController.currentFace]!!)
 				spinner.setSelection(lightController.selectedPatternsIndexes[position])
-				updatePatternSpinner()
 			}
 		}
 	}
 
-	private fun updatePatternSpinner() {
-
-	}
 
 	private fun setupEditPatternsButton(view: View, savedInstanceState: Bundle?) {
 		val imageViewEditPatters: ImageButton = view.findViewById(R.id.imageButtonEditPatterns)
@@ -226,6 +235,21 @@ class LightFragment : Fragment() {
 		}
 
 		return String(bytes)
+	}
+
+	private fun writeToMemory(string: String) {
+		val path = context!!.filesDir
+		val file = File(path, lightController.filename)
+		if (!file.exists()) {
+			file.createNewFile()
+		}
+
+		val stream = FileOutputStream(file)
+		try {
+			stream.write(string.toByteArray())
+		} finally {
+			stream.close()
+		}
 	}
 
 }
