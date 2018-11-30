@@ -84,14 +84,6 @@ class MainActivity : AppCompatActivity() {
             val response = AuthenticationClient.getResponse(resultCode, intent)
             if (response.type == AuthenticationResponse.Type.TOKEN)
             {
-                //region Message box
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Deu boa!")
-                builder.setMessage("Spotify conectado!")
-                val alerta = builder.create()
-                alerta.show()
-                //endregion
-
                 SpotifyController.setSpotifyConnection(response.accessToken)
             }
         }

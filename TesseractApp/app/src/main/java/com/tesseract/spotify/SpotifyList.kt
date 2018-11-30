@@ -22,7 +22,6 @@ import com.tesseract.spotify.SpotifyPlaylist
 class SpotifyList : Fragment(), SpotifyListAdapter.OnSpotifyPlaylistItemClickListener {
 
 	override fun onItemClick(item: SpotifyPlaylist) {
-		Toast.makeText(this.context, "Spotify Playlist clicked", Toast.LENGTH_SHORT).show()
 		spotifyController.selectPlaylist(item.uri)
 	}
 
