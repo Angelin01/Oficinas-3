@@ -197,9 +197,9 @@ def fft_bars_handler(args_dict: dict):
     highs = fft_result[10:20]
 
     # Getting greatest sample.
-    max_low = sum(lows) / len(lows)
-    max_mid = sum(mids) / len(mids)
-    max_high = sum(highs) / len(highs)
+    max_low = max(lows)
+    max_mid = max(mids)
+    max_high = max(highs)
 
     scale = 3 * max_intensity
 
